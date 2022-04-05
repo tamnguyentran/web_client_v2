@@ -53,7 +53,8 @@ class globalService {
 
         this.configInfo['domain'] = 'http://171.244.133.198:5555' // -- dev
 
-        this.version = 'v1.1'
+        this.oldVersion = 'v1.0'
+        this.newVersion = 'v1.1'
 
         // -------------------------------
         this.setReqInfoMapValue = (key = 0, valObj = new requestInfo()) => {

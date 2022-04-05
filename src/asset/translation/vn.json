@@ -9,6 +9,10 @@
         "profile": "Thông tin",
         "emptyData": "Không có dữ liệu cần tra cứu!"
     },
+    "save": "Lưu",
+    "delete": "Xóa",
+    "cancel": "Rời khỏi",
+    "update": "Chỉnh sửa",
     "required_note": "Là thông tin bắt buộc nhập",
     "choose_file": "Chọn file excel",
     "example_file": "Tải file mẫu",
@@ -650,7 +654,10 @@
             "time_export": "Thời gian xuất",
             "bill_invoice": "Giá trị hóa đơn",
             "invoice_no_hd": "Số HD",
-            "action": "Hành động"
+            "action": "Hành động",
+            "name_product": "Tên SP",
+            "export_quantity": "SL xuất",
+            "unit": "ĐV tính"
         },
         "exportRepay": {
             "productAdd": "Thêm sản phẩm vào đơn xuất - trả",

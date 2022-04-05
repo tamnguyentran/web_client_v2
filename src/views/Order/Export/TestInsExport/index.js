@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import './Export.css';
 import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import WithClickOutside from "../../../../components/WithClickOutside";
+// import WithClickOutside from "../../../../components/WithClickOutside";
 import TextImage from "../../../../components/TextImage";
 import Modal from "../../../../components/Modal/View";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
@@ -161,7 +161,7 @@ const InsExport = () => {
   const [productDeleteIndex, setProductDeleteIndex] = useState(null);
   const [shouldOpenDeleteModal, setShouldOpenDeleteModal] = useState(false);
   const [deleteProcess, setDeleteProcess] = useState(false);
-  const [searchProcess, setSearchProcess] = useState(false);
+  // const [searchProcess, setSearchProcess] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
   const [searchModal, setSearchModal] = useState({ ...searchDefaultModal });
   const [listInventory, setListInventory] = useState([]);
@@ -179,9 +179,13 @@ const InsExport = () => {
   const step4Ref = useRef(null);
 
   useEffect(() => {
-    const dataTableTop = JSON.parse(localStorage.getItem("exportTableTop"));
+    const dataTableTop = JSON.parse(localStorage.getItem(`exportTableTop-${glb_sv.newVersion}`));
     if (dataTableTop) {
       setColumn(dataTableTop);
+      const oldVersion = `exportTableTop-${glb_sv.oldVersion}`
+      if(localStorage.getItem(oldVersion)){
+        localStorage.removeItem(oldVersion);
+      }
     }
   }, []);
   useEffect(() => {
@@ -305,7 +309,7 @@ const InsExport = () => {
   };
 
   const getList = (last_product_id, last_lot_no_id, group_id, invent_yn) => {
-    setSearchProcess(true);
+    // setSearchProcess(true);
     const inputParam = [
       last_product_id || glb_sv.defaultValueSearch,
       last_lot_no_id || "ZZZ",
@@ -322,7 +326,7 @@ const InsExport = () => {
   };
 
   const handleResultGetAll = (reqInfoMap, message) => {
-    setSearchProcess(false);
+    // setSearchProcess(false);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
@@ -602,7 +606,6 @@ const InsExport = () => {
   };
 
   const handleResultGetInvoiceByID = (reqInfoMap, message) => {
-    // SnackBarService.alert(message['PROC_MESSAGE'], true, message['PROC_STATUS'], 3000)
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
@@ -778,7 +781,7 @@ const InsExport = () => {
     const index = newColumn.findIndex((obj) => obj.field === item.field);
     if (index >= 0) {
       newColumn[index]["show"] = !column[index]["show"];
-      localStorage.setItem("exportTableTop", JSON.stringify(newColumn));
+      localStorage.setItem(`exportTableTop-${glb_sv.newVersion}`, JSON.stringify(newColumn));
       setColumn(newColumn);
     }
   };
@@ -1203,7 +1206,7 @@ const InsExport = () => {
                                     <>
                                       <TableCell align="center" nowrap="true">
                                         {isIndexRow === index ? (
-                                          <Tooltip placement="top" title="Lưu">
+                                          <Tooltip placement="top" title={t('save')}>
                                             <IconButton
                                               size="small"
                                               onClick={() => {
@@ -1217,7 +1220,7 @@ const InsExport = () => {
                                             </IconButton>
                                           </Tooltip>
                                         ) : (
-                                          <Tooltip placement="top" title="Xóa">
+                                          <Tooltip placement="top" title={t('delete')}>
                                             <IconButton
                                               size="small"
                                               onClick={() => {
@@ -1240,7 +1243,7 @@ const InsExport = () => {
                                         {isIndexRow === index ? (
                                           <Tooltip
                                             placement="top"
-                                            title="Rời khỏi"
+                                            title={t('cancel')}
                                           >
                                             <IconButton
                                               size="small"
@@ -1258,7 +1261,7 @@ const InsExport = () => {
                                           <>
                                             <Tooltip
                                               placement="top"
-                                              title="Chỉnh sửa"
+                                              title={t('update')}
                                             >
                                               <IconButton
                                                 size="small"
@@ -1813,7 +1816,6 @@ const InsExport = () => {
                 />
                 <NumberFormat
                   className="inputNumber w-100"
-                  //style={{ width: "100%" }}
                   required
                   value={Export.payment_amount}
                   label={t("settlement.payment_amount")}
@@ -1928,7 +1930,6 @@ const InsExport = () => {
             </CardContent>
             <CardActions
               className="align-items-end"
-              style={{ justifyContent: "flex-end" }}
             >
               <Button
                 size="small"
@@ -1960,4 +1961,4 @@ const InsExport = () => {
   );
 };
 
-export default WithClickOutside(InsExport);
+export default InsExport;
