@@ -1,0 +1,13 @@
+.boxModal{
+    top: 35% !important;
+    left: 50% !important;
+    width: 420px !important;
+    border: 1px solid rgb(0, 0, 0) !important;
+    padding: 32px !important;
+    position: absolute !important;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 24;
+}
+

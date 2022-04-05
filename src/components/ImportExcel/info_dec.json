@@ -1,0 +1,20 @@
+﻿{
+    "groups": [
+        { "code": 1, "name": "DƯỢC PHẨM" },
+        { "code": 2, "name": "THỰC PHẨM CHỨC NĂNG" },
+        { "code": 3, "name": "HÀNG HOÁ KHÁC" },
+        { "code": 4, "name": "VẬT TƯ Y TẾ" }
+    ],
+    "units": [
+        { "code": 1, "name": "VỈ" },
+        { "code": 2, "name": "ỐNG" },
+        { "code": 3, "name": "VIÊN" },
+        { "code": 4, "name": "CÁI" },
+        { "code": 5, "name": "BỊCH" },
+        { "code": 6, "name": "LỌ" },
+        { "code": 7, "name": "CHAI" },
+        { "code": 8, "name": "TUÝP" },
+        { "code": 9, "name": "HỘP" },
+        { "code": 10, "name": "THÙNG" }
+    ]
+}
