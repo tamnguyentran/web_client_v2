@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import './Export.css';
+import "./Export.css";
 import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -9,7 +9,7 @@ import Modal from "../../../../components/Modal/View";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import HistoryIcon from "@material-ui/icons/History";
 import FastForwardIcon from "@material-ui/icons/FastForward";
-import { debounce } from "lodash";
+import { debounce, sortBy } from "lodash";
 import {
   Grid,
   Tooltip,
@@ -63,13 +63,18 @@ import CustomerAdd_Autocomplete from "../../../Partner/Customer/Control/Customer
 import { useReactToPrint } from "react-to-print";
 import Export_Bill from "../../../../components/Bill/Export_Bill";
 import ExportExcel from "../../../../components/ExportExcel";
-import { searchDefaultModal, defaultDataUpdateProduct } from "../Modal/Export.modal";
+import {
+  searchDefaultModal,
+  defaultDataUpdateProduct,
+} from "../Modal/Export.modal";
 import { ReactComponent as IC_ADD_BASIC } from "../../../../asset/images/add-basic.svg";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CancelIcon from "@material-ui/icons/Cancel";
 import SaveIcon from "@material-ui/icons/Save";
 import SearchIcon from "@material-ui/icons/Search";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
 const serviceInfo = {
   GET_INVOICE_BY_ID: {
@@ -167,7 +172,11 @@ const InsExport = () => {
   const [listInventory, setListInventory] = useState([]);
   const [openModalShowBill, setOpenModalShowBill] = useState(false);
   const [dataHistoryListInvoice, setDataHistoryListInvoice] = useState([]);
-  const [productInfo, setProductInfo] = useState({...defaultDataUpdateProduct});
+  const [productInfo, setProductInfo] = useState({
+    ...defaultDataUpdateProduct,
+  });
+
+  const [sortColumn, setSortColumn] = useState({columIndex: null, status: 'DESC'});
 
   const componentPrint = useRef(null);
   const dataWaitAdd = useRef({});
@@ -178,12 +187,16 @@ const InsExport = () => {
   const step3Ref = useRef(null);
   const step4Ref = useRef(null);
 
+  const keySort = useRef("");
+
   useEffect(() => {
-    const dataTableTop = JSON.parse(localStorage.getItem(`exportTableTop-${glb_sv.newVersion}`));
+    const dataTableTop = JSON.parse(
+      localStorage.getItem(`exportTableTop-${glb_sv.newVersion}`)
+    );
     if (dataTableTop) {
       setColumn(dataTableTop);
-      const oldVersion = `exportTableTop-${glb_sv.oldVersion}`
-      if(localStorage.getItem(oldVersion)){
+      const oldVersion = `exportTableTop-${glb_sv.oldVersion}`;
+      if (localStorage.getItem(oldVersion)) {
         localStorage.removeItem(oldVersion);
       }
     }
@@ -217,14 +230,14 @@ const InsExport = () => {
   }, [dataSource]);
 
   useEffect(() => {
-    dataSourceRef.current = []
+    dataSourceRef.current = [];
     getList(
       glb_sv.defaultValueSearch,
       "ZZZ",
       searchModal.group_id,
       searchModal.invent_yn
     );
-  }, [dataSource,searchModal]);
+  }, [dataSource, searchModal]);
 
   useEffect(() => {
     getListInvoice();
@@ -781,7 +794,10 @@ const InsExport = () => {
     const index = newColumn.findIndex((obj) => obj.field === item.field);
     if (index >= 0) {
       newColumn[index]["show"] = !column[index]["show"];
-      localStorage.setItem(`exportTableTop-${glb_sv.newVersion}`, JSON.stringify(newColumn));
+      localStorage.setItem(
+        `exportTableTop-${glb_sv.newVersion}`,
+        JSON.stringify(newColumn)
+      );
       setColumn(newColumn);
     }
   };
@@ -863,13 +879,13 @@ const InsExport = () => {
     } else {
       setSearchModal({ ...searchDefaultModal });
     }
-    dataSourceRef.current = []
+    dataSourceRef.current = [];
   };
 
   const handleChange = (e) => {
     const newSearchModal = { ...searchModal };
     newSearchModal[e.target.name] = e.target.value;
-    dataSourceRef.current = []
+    dataSourceRef.current = [];
     setSearchModal(newSearchModal);
   };
 
@@ -885,16 +901,40 @@ const InsExport = () => {
     });
   };
 
-  const getNextData = () =>{
-    const lastIndex = dataSourceRef.current.length - 1
-    const lastProdId = dataSourceRef.current[lastIndex].o_1
-    const lastLotNoId = dataSourceRef.current[lastIndex].o_3
+  const getNextData = () => {
+    const lastIndex = dataSourceRef.current.length - 1;
+    const lastProdId = dataSourceRef.current[lastIndex].o_1;
+    const lastLotNoId = dataSourceRef.current[lastIndex].o_3;
     getList(
       lastProdId,
       lastLotNoId,
       searchModal.group_id,
       searchModal.invent_yn
     );
+  };
+
+  const showIconSort = () => {
+
+    switch (sortColumn?.status) {
+      case "DSC":
+        return <ExpandLessIcon/>
+      case "DESC":
+        return <KeyboardArrowDownIcon/>
+      default:
+        return null
+    }
+  };
+
+  const handleClickSortColum = (col,index) =>{
+    let sortData
+    if (sortColumn?.status === 'DESC') {
+      sortData = sortBy(dataSource, [col.field],'DESC');
+      setSortColumn({columIndex: index, status: 'DSC'})
+    } else {
+      sortData = sortBy(dataSource, [col.field]).reverse();
+      setSortColumn({columIndex: index, status: 'DESC'})
+    }
+    setDataSource(sortData);
   }
   return (
     <>
@@ -1160,7 +1200,7 @@ const InsExport = () => {
                   </caption>
                   <TableHead>
                     <TableRow>
-                      {column.map((col) => {
+                      {column.map((col,index) => {
                         return (
                           <Tooltip
                             placement="top"
@@ -1173,12 +1213,15 @@ const InsExport = () => {
                               nowrap="true"
                               align={col.align}
                               className={[
-                                "p-2 border-0",
+                                "p-2 border-0 cursor-pointer",
                                 col.show ? "d-table-cell" : "d-none",
                               ].join(" ")}
                               key={col.field}
+                              onClick={() =>{
+                                handleClickSortColum(col,index)
+                              }}
                             >
-                              {t(col.title)}
+                              {t(col.title)}{" "}{(sortColumn?.columIndex === index) && showIconSort()}
                             </TableCell>
                           </Tooltip>
                         );
@@ -1206,7 +1249,10 @@ const InsExport = () => {
                                     <>
                                       <TableCell align="center" nowrap="true">
                                         {isIndexRow === index ? (
-                                          <Tooltip placement="top" title={t('save')}>
+                                          <Tooltip
+                                            placement="top"
+                                            title={t("save")}
+                                          >
                                             <IconButton
                                               size="small"
                                               onClick={() => {
@@ -1220,7 +1266,10 @@ const InsExport = () => {
                                             </IconButton>
                                           </Tooltip>
                                         ) : (
-                                          <Tooltip placement="top" title={t('delete')}>
+                                          <Tooltip
+                                            placement="top"
+                                            title={t("delete")}
+                                          >
                                             <IconButton
                                               size="small"
                                               onClick={() => {
@@ -1243,7 +1292,7 @@ const InsExport = () => {
                                         {isIndexRow === index ? (
                                           <Tooltip
                                             placement="top"
-                                            title={t('cancel')}
+                                            title={t("cancel")}
                                           >
                                             <IconButton
                                               size="small"
@@ -1261,7 +1310,7 @@ const InsExport = () => {
                                           <>
                                             <Tooltip
                                               placement="top"
-                                              title={t('update')}
+                                              title={t("update")}
                                             >
                                               <IconButton
                                                 size="small"
@@ -1491,7 +1540,7 @@ const InsExport = () => {
             </CardContent>
           </Card>
           <Card
-          style={{ height: "calc(47% - 8px)" }}
+            style={{ height: "calc(47% - 8px)" }}
             className="list-product-bottom"
           >
             <CardHeader
@@ -1537,9 +1586,7 @@ const InsExport = () => {
                 </div>
               }
             />
-            <CardContent
-              style={{ height: "calc(35vh)", overflow: "auto" }}
-            >
+            <CardContent style={{ height: "calc(35vh)", overflow: "auto" }}>
               <MuiThemeProvider theme={theme}>
                 <Grid container spacing={2}>
                   {listInventory.map((item, index) => {
@@ -1928,9 +1975,7 @@ const InsExport = () => {
                   ")"}
               </Grid>
             </CardContent>
-            <CardActions
-              className="align-items-end"
-            >
+            <CardActions className="align-items-end">
               <Button
                 size="small"
                 onClick={(e) => {
