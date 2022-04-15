@@ -14,6 +14,7 @@ import {
     Button,
     TextField,
 } from '@material-ui/core'
+import Breadcrumb from "../../../components/Breadcrumb/View";
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 
@@ -42,7 +43,7 @@ const serviceInfo = {
     },
 }
 
-const AddProduct = ({ onAddProduct, resetFlag }) => {
+const AddProduct = ({ onAddProduct, resetFlag, style }) => {
     const { t } = useTranslation()
     const [productInfo, setProductInfo] = useState({ ...productImportModal })
     const [productImportInfoData, setproductImportInfoData] = useState([])
@@ -272,8 +273,11 @@ const AddProduct = ({ onAddProduct, resetFlag }) => {
     }
 
     return (
-        <Card className="mb-2">
-            <CardHeader title={t('order.import.productAddee')} />
+        <Card className="mb-2" style={style}>
+            {/* <CardHeader title={t('order.import.productAddeee')} /> */}
+            <CardHeader  title={
+                <div className="flex aligh-item-center">{<Breadcrumb />}</div>
+              }/>
             <CardContent>
                 <Grid container spacing={1}>
                     <Grid item xs={3}>

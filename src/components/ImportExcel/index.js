@@ -145,6 +145,7 @@ const productDefaulModal = {
 }
 
 const ImportExcel = ({ title, onRefresh }) => {
+    console.log(title)
     const { t } = useTranslation()
 
     const [shouldOpenModal, setShouldOpenModal] = useState(false)

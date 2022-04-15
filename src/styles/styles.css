@@ -490,9 +490,6 @@ tr.warning td {
     display: 'none' !important;
 }
 
-.tableOrder.tableContainer {
-    height: calc(50vh - 100px) !important;
-}
 
 .flex {
     display: flex;
@@ -555,4 +552,11 @@ tr.warning td {
 
 .display-none{
     display: none !important;
+}
+
+.insImport.tableContainer {
+    height: calc(83vh - 100px) !important;
+    border-left: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
 }

@@ -63,6 +63,8 @@ import CustomerAdd_Autocomplete from "../../../Partner/Customer/Control/Customer
 import { useReactToPrint } from "react-to-print";
 import Export_Bill from "../../../../components/Bill/Export_Bill";
 import ExportExcel from "../../../../components/ExportExcel";
+import ImportExcel1 from '../../../../components/ImportExcel1'
+import ImportExcel from '../../../../components/ImportExcel'
 import {
   searchDefaultModal,
   defaultDataUpdateProduct,
@@ -187,8 +189,6 @@ const InsExport = () => {
   const step3Ref = useRef(null);
   const step4Ref = useRef(null);
 
-  const keySort = useRef("");
-
   useEffect(() => {
     const dataTableTop = JSON.parse(
       localStorage.getItem(`exportTableTop-${glb_sv.newVersion}`)
@@ -222,7 +222,7 @@ const InsExport = () => {
         );
       }, 0) || 0;
     newData["invoice_needpay"] =
-      newData.invoice_val - newData.invoice_discount + newData.invoice_vat || 0;
+      newData.invoice_val - newData.invoice_discount - newData.invoice_vat || 0;
     setExport((prevState) => {
       return { ...prevState, ...{ payment_amount: newData.invoice_needpay } };
     });
@@ -462,6 +462,7 @@ const InsExport = () => {
         0, // Phần trăm chiết khấu
         0, // Phần trăm VAT
       ];
+
       sendRequest(
         serviceInfo.ADD_PRODUCT_TO_INVOICE,
         inputParam,
@@ -728,6 +729,7 @@ const InsExport = () => {
     }
     setProductDeleteModal(!!item ? item : {});
     setShouldOpenDeleteModal(!!item ? true : false);
+    
   };
 
   const handleDelete = () => {
@@ -1181,6 +1183,9 @@ const InsExport = () => {
                     headers={headersCSV}
                     style={{ backgroundColor: "#00A248", color: "#066190" }}
                   />
+                  {/* <ImportExcel1
+                    // title={'title'}
+                  /> */}
                   <DisplayColumn
                     style={{ backgroundColor: "#066190", color: "#fff" }}
                     columns={column}
@@ -1188,7 +1193,7 @@ const InsExport = () => {
                   />
                 </div>
               </div>
-              <TableContainer className="tableContainer tableOrder">
+              <TableContainer className="export tableContainer tableOrder">
                 <Table stickyHeader>
                   <caption
                     className={[
@@ -1407,7 +1412,8 @@ const InsExport = () => {
                                       )}
                                     </TableCell>
                                   );
-                                case "o_10":
+                              
+                                  case "o_10":
                                   return (
                                     <TableCell align="center" nowrap="true">
                                       {isIndexRow === index ? (
@@ -1447,7 +1453,8 @@ const InsExport = () => {
                                       )}
                                     </TableCell>
                                   );
-                                case "o_11":
+                               
+                                  case "o_11":
                                   return (
                                     <TableCell align="center" nowrap="true">
                                       {isIndexRow === index ? (
@@ -1518,7 +1525,8 @@ const InsExport = () => {
                                       )}
                                     </TableCell>
                                   );
-                                default:
+                               
+                                  default:
                                   return (
                                     <TableCell
                                       nowrap="true"
@@ -1701,7 +1709,7 @@ const InsExport = () => {
                     <div className="mr-1">
                       <Tooltip
                         disableFocusListener
-                        title={t("order.exportRepay.new_invoices")}
+                        title={t("order.exportRepay.new_invoice")}
                       >
                         <AddShoppingCartIcon
                           onClick={() => {
