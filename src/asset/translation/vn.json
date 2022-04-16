@@ -538,7 +538,16 @@
             "person_s": "Người giao hàng",
             "person_r": "Người nhận hàng",
             "upd_user": "Người cập nhật",
-            "upd_date": "Thời gian cập nhật"
+            "upd_date": "Thời gian cập nhật",
+            "name_product": "Tên SP",
+            "HSD": "HSD",
+            "import_quantity":"SL nhập",
+            "unit":"ĐV tính"
+
+
+
+
+
         },
         "importInventory": {
             "invoice_info": "Thông tin hóa đơn nhập tồn",

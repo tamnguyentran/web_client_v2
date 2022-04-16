@@ -499,6 +499,10 @@ tr.warning td {
     justify-content: space-between;
 }
 
+.justify-content-end {
+    justify-content: flex-end;
+}
+
 .dl-none {
     display: none !important;
 }
@@ -554,8 +558,8 @@ tr.warning td {
     display: none !important;
 }
 
-.insImport.tableContainer {
-    height: calc(83vh - 100px) !important;
+.insImport .tableContainer {
+    height: calc(100vh - 300px) !important;
     border-left: 1px solid #e0e0e0;
     border-right: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;

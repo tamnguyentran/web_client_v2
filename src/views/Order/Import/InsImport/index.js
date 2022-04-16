@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, memo } from "react";
+import React, { useState, useCallback, useRef, useEffect, memo } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Grid,
@@ -70,7 +70,7 @@ import HistoryIcon from "@material-ui/icons/History";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import CancelIcon from "@material-ui/icons/Cancel";
-import { sortBy } from "lodash";
+import { debounce, sortBy } from "lodash";
 
 const serviceInfo = {
   CREATE_INVOICE: {
@@ -128,11 +128,11 @@ const serviceInfo = {
     object: "rp_import",
   },
   UPDATE_PRODUCT_TO_INVOICE: {
-    functionName: 'update',
+    functionName: "update",
     reqFunct: reqFunction.PRODUCT_IMPORT_INVOICE_UPDATE,
-    biz: 'import',
-    object: 'imp_invoices_dt',
-},
+    biz: "import",
+    object: "imp_invoices_dt",
+  },
 };
 
 const ProductImport = () => {
@@ -141,7 +141,7 @@ const ProductImport = () => {
   const [supplierSelect, setSupplierSelect] = useState("");
   const [dataSource, setDataSource] = useState([]);
   const [productDeleteModal, setProductDeleteModal] = useState({});
-  const [productEditID, setProductEditID] = useState(-1);
+  // const [productEditID, setProductEditID] = useState(-1);
   const [column, setColumn] = useState([...tableListAddColumn]);
   const [shouldOpenPaymentModal, setShouldOpenPaymentModal] = useState(false);
   const [productDeleteIndex, setProductDeleteIndex] = useState(null);
@@ -208,7 +208,7 @@ const ProductImport = () => {
         );
       }, 0) || 0;
     newData["invoice_needpay"] =
-      newData.invoice_val - newData.invoice_discount - newData.invoice_vat || 0;
+      newData.invoice_val - newData.invoice_discount + newData.invoice_vat || 0;
     setPaymentInfo(newData);
     setImport((prevState) => {
       return { ...prevState, ...{ payment_amount: newData.invoice_needpay } };
@@ -267,7 +267,6 @@ const ProductImport = () => {
       control_sv.clearReqInfoMapRequest(cltSeqResult);
     } else if (message["PROC_DATA"]) {
       let newData = message["PROC_DATA"];
-      console.log(newData);
       setDataHistoryListInvoice(newData.rows);
       // if (newData.rows.length > 0) {
       //     if (
@@ -300,7 +299,6 @@ const ProductImport = () => {
     cltSeqResult = 0,
     reqInfoMap = new requestInfo()
   ) => {
-    console.log("create settlement result: ", reqInfoMap, message);
     control_sv.clearTimeOutRequest(reqInfoMap.timeOutKey);
     if (reqInfoMap.procStat !== 0 && reqInfoMap.procStat !== 1) {
       return;
@@ -326,31 +324,31 @@ const ProductImport = () => {
     }
   };
 
-  const createSettlement = (invoiceNo) => {
-    const inputParams = [
-      "10",
-      invoiceNo || newInvoiceId.current,
-      importDataRef.current.payment_type,
-      moment(importDataRef.current.order_dt).format("YYYYMMDD"),
-      importDataRef.current.payment_amount > paymentInfo.invoice_needpay
-        ? paymentInfo.invoice_needpay
-        : importDataRef.current.payment_amount,
-      importDataRef.current.bank_transf_acc_number,
-      importDataRef.current.bank_transf_acc_name,
-      importDataRef.current.bank_transf_name || "",
-      importDataRef.current.bank_recei_acc_number,
-      importDataRef.current.bank_recei_acc_name,
-      importDataRef.current.bank_recei_name || "",
-      importDataRef.current.note,
-    ];
-    sendRequest(
-      serviceInfo.CREATE_SETTLEMENT,
-      inputParams,
-      null,
-      true,
-      handleTimeOut
-    );
-  };
+  // const createSettlement = (invoiceNo) => {
+  //   const inputParams = [
+  //     "10",
+  //     invoiceNo || newInvoiceId.current,
+  //     importDataRef.current.payment_type,
+  //     moment(importDataRef.current.order_dt).format("YYYYMMDD"),
+  //     importDataRef.current.payment_amount > paymentInfo.invoice_needpay
+  //       ? paymentInfo.invoice_needpay
+  //       : importDataRef.current.payment_amount,
+  //     importDataRef.current.bank_transf_acc_number,
+  //     importDataRef.current.bank_transf_acc_name,
+  //     importDataRef.current.bank_transf_name || "",
+  //     importDataRef.current.bank_recei_acc_number,
+  //     importDataRef.current.bank_recei_acc_name,
+  //     importDataRef.current.bank_recei_name || "",
+  //     importDataRef.current.note,
+  //   ];
+  //   sendRequest(
+  //     serviceInfo.CREATE_SETTLEMENT,
+  //     inputParams,
+  //     null,
+  //     true,
+  //     handleTimeOut
+  //   );
+  // };
 
   const handleSelectSupplier = (obj) => {
     const newImport = { ...Import };
@@ -437,7 +435,6 @@ const ProductImport = () => {
         productObject.discount_per,
         productObject.vat_per,
       ];
-      console.log("inputParam3", inputParam);
       sendRequest(
         serviceInfo.ADD_PRODUCT_TO_INVOICE,
         inputParam,
@@ -455,13 +452,17 @@ const ProductImport = () => {
 
   const handleDelete = () => {
     if (!productDeleteModal.o_1 || !productDeleteModal.o_2) return;
+    setDeleteProcess(true);
     const inputParam = [productDeleteModal.o_2, productDeleteModal.o_1];
     sendRequest(
       serviceInfo.DELETE_PRODUCT_TO_INVOICE,
       inputParam,
       handleResultDeleteProduct,
       true,
-      handleTimeOut
+      (e) => {
+        handleTimeOut(e);
+        setDeleteProcess(false);
+      }
     );
   };
 
@@ -518,7 +519,6 @@ const ProductImport = () => {
       Import.person_r,
       Import.note,
     ];
-    console.log("inputParam2", inputParam);
     sendRequest(
       serviceInfo.CREATE_INVOICE,
       inputParam,
@@ -683,6 +683,7 @@ const ProductImport = () => {
       // xử lý thành công
       dataWaitAdd.current = [];
       setResetFormAddFlag(true);
+      setIsIndexRow(null)
       setTimeout(() => {
         setResetFormAddFlag(false);
       }, 1000);
@@ -731,6 +732,7 @@ const ProductImport = () => {
       };
       setImport(dataImport);
       setSupplierSelect(newData.rows[0].o_5);
+      setIsIndexRow(null)
     }
   };
 
@@ -876,8 +878,6 @@ const ProductImport = () => {
     }
   };
 
-  console.log(dataSource);
-  console.log(column);
   const handleClickEdit = (item, index) => {
     setIsIndexRow(index);
     setProductInfo({
@@ -916,24 +916,23 @@ const ProductImport = () => {
       setProductInfo(newProductInfo);
     }
   };
-console.log(dataHistoryListInvoice)
 
-const updateDataListProduct = (rowData) => {
-  if (!rowData) {
-    SnackBarService.alert(t("wrongData"), true, "error", 3000);
-    return;
-  }
-  if (
-    productInfo.expPrice < 0 ||
-    productInfo.expQty <= 0 ||
-    productInfo.expVAT < 0 ||
-    productInfo.expVAT > 100 ||
-    productInfo.expDisCount < 0 ||
-    productInfo.expDisCount > 100
-  )
-    return;
-  // setProcess(true)
-  const inputParam = [
+  const updateDataListProduct = (rowData) => {
+    if (!rowData) {
+      SnackBarService.alert(t("wrongData"), true, "error", 3000);
+      return;
+    }
+    if (
+      productInfo.expPrice < 0 ||
+      productInfo.expQty <= 0 ||
+      productInfo.expVAT < 0 ||
+      productInfo.expVAT > 100 ||
+      productInfo.expDisCount < 0 ||
+      productInfo.expDisCount > 100
+    )
+      return;
+    // setProcess(true)
+    const inputParam = [
       newInvoiceId.current,
       rowData.o_1,
       productInfo.expType,
@@ -941,31 +940,54 @@ const updateDataListProduct = (rowData) => {
       productInfo.expPrice,
       productInfo.expDisCount,
       productInfo.expVAT,
-  ]
+    ];
+    sendRequest(
+      serviceInfo.UPDATE_PRODUCT_TO_INVOICE,
+      inputParam,
+      handleResultUpdateProduct,
+      true,
+      handleTimeOut
+    );
+  };
 
-  console.log(inputParam)
-  sendRequest(serviceInfo.UPDATE_PRODUCT_TO_INVOICE, inputParam, handleResultUpdateProduct, true, handleTimeOut)
-}
-
-const handleResultUpdateProduct = (reqInfoMap, message) => {
-  if (message['PROC_STATUS'] !== 1) {
+  const handleResultUpdateProduct = (reqInfoMap, message) => {
+    if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
-      const cltSeqResult = message['REQUEST_SEQ']
-      glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap)
-      control_sv.clearReqInfoMapRequest(cltSeqResult)
-  } else if (message['PROC_DATA']) {
-    handleRefresh()
-    setIsIndexRow(null);
+      const cltSeqResult = message["REQUEST_SEQ"];
+      glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
+      control_sv.clearReqInfoMapRequest(cltSeqResult);
+    } else if (message["PROC_DATA"]) {
+      handleRefresh();
+      setIsIndexRow(null);
+    }
+  };
+
+  const handleFilterProduct = (e) =>{
+    e.target.value = e.target.value.trim().toUpperCase()
+    if(e.target.value === ''){
+      handleRefresh()
+    }else{
+      debouncedSave({value:e.target.value,dataSource});
+    }
   }
-}
+
+  const debouncedSave = useCallback(
+    debounce((data) => {
+      let result = data.dataSource.filter((item)=>{
+        return data.value.search(item.o_6) != -1 || item.o_6.search(data.value) != -1
+      })
+    setDataSource(result)
+    }, 100),
+    []
+  );
   return (
     <Grid container spacing={1} className="h-100">
-      <EditProductRows
+      {/* <EditProductRows
         productEditID={productEditID}
         invoiceID={newInvoiceId.current}
         onRefresh={handleRefresh}
         setProductEditID={setProductEditID}
-      />
+      /> */}
       <Drawer
         anchor="right"
         open={openModalShowBill}
@@ -986,7 +1008,9 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
             </div>
           }
         />
-        <List style={{ minWidth: "270px", overflowY: "scroll",height:'auto' }}>
+        <List
+          style={{ minWidth: "270px", overflowY: "scroll", height: "auto" }}
+        >
           {!dataHistoryListInvoice.length && (
             <ListItem>
               <div className="w-100">
@@ -1058,21 +1082,13 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
         <AddProduct
           resetFlag={resetFormAddFlag}
           onAddProduct={handleAddProduct}
-          style={{ height: "calc(17%)" }}
+          style={{ height: "160px" }}
         />
-        <Card style={{ height: "calc(83% - 8px)" }}>
+        <Card style={{ height: "calc(100% - 168px)" }}>
           <CardHeader
             title={t("order.import.productImportList")}
-            // action={
-            //   <ExportExcel
-            //     filename={`import_${Import.invoice_no}`}
-            //     data={dataCSV()}
-            //     headers={headersCSV}
-            //     style={{ backgroundColor: "#00A248", color: "#fff" }}
-            //   />
-            // }
           />
-          <CardContent>
+          <CardContent className="insImport">
             <div className="flex justify-content-between aligh-item-center mb-1">
               <div className="flex aligh-item-center">
                 <TextField
@@ -1080,6 +1096,7 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
                   size={"small"}
                   label={t("search_btn")}
                   variant="outlined"
+                  onChange={handleFilterProduct}
                 />
               </div>
               <div>
@@ -1096,44 +1113,45 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
                 />
               </div>
             </div>
-            <TableContainer className="insImport tableContainer tableOrder">
+            <TableContainer className="tableContainer tableOrder">
               <Table stickyHeader>
                 <caption
-                    className={[
-                      "text-center text-danger border-bottom-0",
-                      dataSource.length > 0 ? "d-none" : "",
-                    ].join(" ")}
-                  >
-                    {t("lbl.emptyData")}
-                  </caption>
+                  className={[
+                    "text-center text-danger border-bottom-0",
+                    dataSource.length > 0 ? "d-none" : "",
+                  ].join(" ")}
+                >
+                  {t("lbl.emptyData")}
+                </caption>
                 <TableHead>
                   <TableRow>
-                  {column.map((col,index) => {
-                        return (
-                          <Tooltip
-                            placement="top"
-                            disableFocusListener
-                            disableTouchListener
-                            title={t(col.tootip)}
+                    {column.map((col, index) => {
+                      return (
+                        <Tooltip
+                          placement="top"
+                          disableFocusListener
+                          disableTouchListener
+                          title={t(col.tootip)}
+                        >
+                          <TableCell
+                            colSpan={col.field === "action" ? 2 : 1}
+                            nowrap="true"
+                            align={col.align}
+                            className={[
+                              "p-2 border-0 cursor-pointer",
+                              col.show ? "d-table-cell" : "d-none",
+                            ].join(" ")}
+                            key={col.field}
+                            onClick={() => {
+                              handleClickSortColum(col, index);
+                            }}
                           >
-                            <TableCell
-                              colSpan={col.field === "action" ? 2 : 1}
-                              nowrap="true"
-                              align={col.align}
-                              className={[
-                                "p-2 border-0 cursor-pointer",
-                                col.show ? "d-table-cell" : "d-none",
-                              ].join(" ")}
-                              key={col.field}
-                              onClick={() =>{
-                                handleClickSortColum(col,index)
-                              }}
-                            >
-                              {t(col.title)}{" "}{(sortColumn?.columIndex === index) && showIconSort()}
-                            </TableCell>
-                          </Tooltip>
-                        );
-                      })}
+                            {t(col.title)}{" "}
+                            {sortColumn?.columIndex === index && showIconSort()}
+                          </TableCell>
+                        </Tooltip>
+                      );
+                    })}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -1232,33 +1250,6 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
                                     </TableCell>
                                   </>
                                 );
-                              // case "action":
-                              //   return (
-                              //     <TableCell
-                              //       nowrap="true"
-                              //       key={indexRow}
-                              //       align={col.align}
-                              //     >
-                              //       <IconButton
-                              //         onClick={(e) => {
-                              //           onRemove(item);
-                              //           setProductDeleteIndex(index + 1);
-                              //         }}
-                              //       >
-                              //         <DeleteIcon
-                              //           style={{ color: "red" }}
-                              //           fontSize="small"
-                              //         />
-                              //       </IconButton>
-                              //       <IconButton
-                              //         onClick={(e) => {
-                              //           setProductEditID(item.o_1);
-                              //         }}
-                              //       >
-                              //         <EditIcon fontSize="small" />
-                              //       </IconButton>
-                              //     </TableCell>
-                              //   );
                               case "stt":
                                 return (
                                   <TableCell
@@ -1269,19 +1260,6 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
                                     {index + 1}
                                   </TableCell>
                                 );
-                              // case "imp_tp":
-                              //   return (
-                              //     <TableCell
-                              //       nowrap="true"
-                              //       key={indexRow}
-                              //       align={col.align}
-                              //     >
-                              //       {value === "1"
-                              //         ? t("order.import.import_type_buy")
-                              //         : t("order.import.import_type_selloff")}
-                              //     </TableCell>
-                              //   );
-
                               case "o_4":
                                 return (
                                   <TableCell align="center" nowrap="true">
@@ -1379,7 +1357,7 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
                                         }}
                                       />
                                     ) : (
-                                      glb_sv.formatValue(item.o_13,col["type"])
+                                      glb_sv.formatValue(item.o_13, col["type"])
                                     )}
                                   </TableCell>
                                 );
@@ -1480,7 +1458,6 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
       </Grid>
       <Grid item md={3} xs={12}>
         <Card className="h-100">
-          {/* <CardHeader title={t("order.import.invoice_info")} /> */}
           <CardHeader
             title={
               <div className="flex justify-content-between aligh-item-center">
@@ -1494,28 +1471,26 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
                       <HistoryIcon
                         onClick={() => {
                           setOpenModalShowBill((pre) => !pre);
-                          // getListInvoice();
                         }}
                       />
                     </Tooltip>
                   </div>
                   <div className="mr-1">
-                      <Tooltip
-                        disableFocusListener
-                        title={t("order.exportRepay.new_invoice")}
-                      >
-                        <AddShoppingCartIcon
-                          onClick={() => {
-                            // setExport({ ...invoiceExportModal });
-                            setImport({ ...invoiceImportModal})
-                            setDataSource([]);
-                            setInvoiceFlag(false);
-                            setSupplierSelect("")
-                            // setCustomerSelect("");
-                          }}
-                        />
-                      </Tooltip>
-                    </div>
+                    <Tooltip
+                      disableFocusListener
+                      title={t("order.exportRepay.new_invoice")}
+                    >
+                      <AddShoppingCartIcon
+                        onClick={() => {  
+                          setImport({ ...invoiceImportModal });
+                          setDataSource([]);
+                          setInvoiceFlag(false);
+                          setSupplierSelect("");
+                          setIsIndexRow(null)
+                        }}
+                      />
+                    </Tooltip>
+                  </div>
                 </div>
               </div>
             }
@@ -1580,7 +1555,7 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
                 margin="dense"
                 multiline
                 autoComplete="off"
-                rows={2}
+                rows={1}
                 rowsMax={5}
                 label={t("order.import.note")}
                 onChange={handleChange}
@@ -1859,8 +1834,7 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
             </Grid>
           </CardContent>
           <CardActions
-            className="align-items-end"
-            style={{ justifyContent: "flex-end" }}
+            className="align-items-end justify-content-end"
           >
             <Button
               size="small"
@@ -1880,7 +1854,7 @@ const handleResultUpdateProduct = (reqInfoMap, message) => {
               onClick={handleDelete}
               variant="contained"
               color="secondary"
-              startIcon={<DeleteIcon />}
+              startIcon={!deleteProcess && <DeleteIcon />}
             >
               {t("btn.delete")} (f10)
             </Button>

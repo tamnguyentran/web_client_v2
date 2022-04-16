@@ -222,7 +222,7 @@ const InsExport = () => {
         );
       }, 0) || 0;
     newData["invoice_needpay"] =
-      newData.invoice_val - newData.invoice_discount - newData.invoice_vat || 0;
+      newData.invoice_val - newData.invoice_discount + newData.invoice_vat || 0;
     setExport((prevState) => {
       return { ...prevState, ...{ payment_amount: newData.invoice_needpay } };
     });
@@ -1726,7 +1726,7 @@ const InsExport = () => {
               }
             />
             <CardContent>
-              <Grid container spacing={1}>
+              <Grid container>
                 <FormControlLabel
                   style={{ margin: 0 }}
                   control={
@@ -1983,7 +1983,7 @@ const InsExport = () => {
                   ")"}
               </Grid>
             </CardContent>
-            <CardActions className="align-items-end">
+            <CardActions className="align-items-end justify-content-end">
               <Button
                 size="small"
                 onClick={(e) => {
@@ -2002,7 +2002,7 @@ const InsExport = () => {
                 onClick={handleDelete}
                 variant="contained"
                 color="secondary"
-                startIcon={<DeleteIcon />}
+                startIcon={!deleteProcess && <DeleteIcon />}
               >
                 {t("btn.delete")} (f10)
               </Button>
