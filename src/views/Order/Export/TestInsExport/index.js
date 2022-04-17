@@ -3,7 +3,6 @@ import "./Export.css";
 import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-// import WithClickOutside from "../../../../components/WithClickOutside";
 import TextImage from "../../../../components/TextImage";
 import Modal from "../../../../components/Modal/View";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
@@ -77,6 +76,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import { ContactlessOutlined } from "@material-ui/icons";
 
 const serviceInfo = {
   GET_INVOICE_BY_ID: {
@@ -174,6 +174,8 @@ const InsExport = () => {
   const [listInventory, setListInventory] = useState([]);
   const [openModalShowBill, setOpenModalShowBill] = useState(false);
   const [dataHistoryListInvoice, setDataHistoryListInvoice] = useState([]);
+  const [barCode, setBarCode] = useState('')
+  const [dataProductBarCode, setDataProductBarCode] = useState({})
   const [productInfo, setProductInfo] = useState({
     ...defaultDataUpdateProduct,
   });
@@ -188,6 +190,8 @@ const InsExport = () => {
   const step2Ref = useRef(null);
   const step3Ref = useRef(null);
   const step4Ref = useRef(null);
+
+  const dataProduct = useRef(null)
 
   useEffect(() => {
     const dataTableTop = JSON.parse(
@@ -213,11 +217,12 @@ const InsExport = () => {
       }, 0) || 0;
     newData["invoice_vat"] =
       dataSource.reduce(function (acc, obj) {
+        console.log(obj)
         return (
           acc +
           Math.round(
             (obj.o_12 / 100) *
-              Math.round(newData.invoice_val * (1 - obj.o_11 / 100))
+              Math.round((newData.invoice_val) * (1 - obj.o_11 / 100))
           )
         );
       }, 0) || 0;
@@ -242,6 +247,12 @@ const InsExport = () => {
   useEffect(() => {
     getListInvoice();
   }, []);
+
+  useEffect(() => {
+    if(Object.keys(dataProductBarCode).length){
+      handleShowModalPrice(dataProductBarCode);
+    }
+  }, [dataProductBarCode])
   //-- xử lý khi timeout -> ko nhận được phản hồi từ server
 
   const headersCSV = [
@@ -397,8 +408,14 @@ const InsExport = () => {
   };
 
   const handleBarcode = (e) => {
-    if (e.key === "Enter" && !!e.target.value) {
-      const inputParam = [e.target.value, "Y"];
+    debouncedSaveBarCode(e.target.value);
+  };
+
+  const debouncedSaveBarCode = useCallback(
+    debounce((valueBarCode) => {
+      if (!!valueBarCode) {
+      setBarCode(valueBarCode)
+      const inputParam = [valueBarCode, "Y"];
       sendRequest(
         serviceInfo.SEARCH_INVEN_PROD,
         inputParam,
@@ -406,19 +423,25 @@ const InsExport = () => {
         true,
         handleTimeOut
       );
-      e.target.value = "";
+      // e.target.value = "";
     }
-  };
+    }, 200),
+    []
+  );
 
   const handleResultSearchBarcode = (reqInfoMap, message) => {
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
     } else if (message["PROC_DATA"] && message["PROC_DATA"].rows.length) {
-      handleShowModalPrice(message["PROC_DATA"].rows[0]);
+      setBarCode('')
+      setDataProductBarCode(message["PROC_DATA"].rows[0])
+    }else{
+      setBarCode('')
+      SnackBarService.alert(t("Sản phẩm trong kho đã hết hoặc mã code chưa đúng"), true, 4, 3000);
     }
   };
-
+console.log(dataProductBarCode);
   const typePrice = (typeCheck, retailPrice, wholesalePrice) => {
     return typeCheck ? retailPrice : wholesalePrice;
   };
@@ -440,6 +463,7 @@ const InsExport = () => {
   const handleAddProduce = () => {
     setListInventoryProduct([]);
     setDataSearchInput("");
+    console.log(Export)
     if (!Export.customer || !Export.order_dt) {
       SnackBarService.alert(t("message.requireExportInvoice"), true, 4, 3000);
       return;
@@ -606,6 +630,7 @@ const InsExport = () => {
       true,
       handleTimeOut
     );
+    dataProduct.current = null
   };
 
   const handleGetAllProductByInvoiceID = (reqInfoMap, message) => {
@@ -1151,7 +1176,8 @@ const InsExport = () => {
                       label={t("product.barcode")}
                       variant="outlined"
                       autoFocus={true}
-                      onKeyUp={handleBarcode}
+                      value={barCode}
+                      onChange={handleBarcode}
                     />
                   )}
                   <span className="ml-2 p-1 action_ctr">

@@ -151,6 +151,7 @@ const ProductImport = () => {
   const [resetFormAddFlag, setResetFormAddFlag] = useState(false);
   const [deleteProcess, setDeleteProcess] = useState(false);
   const [updateProcess, setUpdateProcess] = useState(false);
+  const [saveProcess, setSaveProcess] = useState(false);
   const [searchModal, setSearchModal] = useState({ ...searchDefaultModal });
   const [openModalShowBill, setOpenModalShowBill] = useState(false);
   const [dataHistoryListInvoice, setDataHistoryListInvoice] = useState([]);
@@ -414,7 +415,9 @@ const ProductImport = () => {
   };
 
   const handleAddProduct = (productObject) => {
+    setSaveProcess(true)
     if (!Import.supplier || !Import.order_dt) {
+      setSaveProcess(false)
       SnackBarService.alert(t("message.requireImportInvoice"), true, 4, 3000);
       return;
     } else if (!invoiceFlag) {
@@ -496,6 +499,7 @@ const ProductImport = () => {
 
   const handleCreateInvoice = () => {
     if (!Import.supplier || !Import.order_dt) {
+      setSaveProcess(false)
       SnackBarService.alert(t("message.supplierRequire"), true, 4, 3000);
       return;
     }
@@ -682,25 +686,27 @@ const ProductImport = () => {
     } else if (message["PROC_DATA"]) {
       // xử lý thành công
       dataWaitAdd.current = [];
+      setSaveProcess(false)
       setResetFormAddFlag(true);
       setIsIndexRow(null)
       setTimeout(() => {
         setResetFormAddFlag(false);
       }, 1000);
-      sendRequest(
-        serviceInfo.GET_ALL_PRODUCT_BY_INVOICE_ID,
-        [newInvoiceId.current],
-        handleGetAllProductByInvoiceID,
-        true,
-        handleTimeOut
-      );
-      sendRequest(
-        serviceInfo.GET_INVOICE_BY_ID,
-        [newInvoiceId.current],
-        handleResultGetInvoiceByID,
-        true,
-        handleTimeOut
-      );
+      handleRefresh()
+      // sendRequest(
+      //   serviceInfo.GET_ALL_PRODUCT_BY_INVOICE_ID,
+      //   [newInvoiceId.current],
+      //   handleGetAllProductByInvoiceID,
+      //   true,
+      //   handleTimeOut
+      // );
+      // sendRequest(
+      //   serviceInfo.GET_INVOICE_BY_ID,
+      //   [newInvoiceId.current],
+      //   handleResultGetInvoiceByID,
+      //   true,
+      //   handleTimeOut
+      // );
     }
   };
 
@@ -1080,6 +1086,7 @@ const ProductImport = () => {
       </Drawer>
       <Grid item md={9} xs={12}>
         <AddProduct
+          saveProcess={saveProcess}
           resetFlag={resetFormAddFlag}
           onAddProduct={handleAddProduct}
           style={{ height: "160px" }}

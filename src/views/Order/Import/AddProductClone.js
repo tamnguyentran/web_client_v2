@@ -17,6 +17,8 @@ import {
 import Breadcrumb from "../../../components/Breadcrumb/View";
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
+import LoopIcon from "@material-ui/icons/Loop";
+import SaveIcon from "@material-ui/icons/Save";
 
 import glb_sv from '../../../utils/service/global_service'
 import control_sv from '../../../utils/service/control_services'
@@ -43,7 +45,7 @@ const serviceInfo = {
     },
 }
 
-const AddProduct = ({ onAddProduct, resetFlag, style }) => {
+const AddProduct = ({ onAddProduct, resetFlag, style, saveProcess }) => {
     const { t } = useTranslation()
     const [productInfo, setProductInfo] = useState({ ...productImportModal })
     const [productImportInfoData, setproductImportInfoData] = useState([])
@@ -508,9 +510,11 @@ const AddProduct = ({ onAddProduct, resetFlag, style }) => {
                             onClick={() => {
                                 onAddProduct(productInfo)
                             }}
+                            endIcon={saveProcess && <LoopIcon />}
                             variant="contained"
                             disabled={checkValidate()}
-                            className={checkValidate() === false ? 'bg-success text-white' : ''}
+                            className={`${checkValidate() === false ? 'bg-success text-white' : ''} ${saveProcess ? "button-loading" : ""}`}
+                            startIcon={!saveProcess && <SaveIcon />}
                         >
                             {t('btn.save')} (F3)
                         </Button>
