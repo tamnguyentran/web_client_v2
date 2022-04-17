@@ -87,7 +87,7 @@ const tableListAddColumn1 = [
         { field: 'o_5', title: 'order.export.name_product',tootip: 'order.export.prod_nm', show: false, disabled: false, minWidth: 100, align: 'center' },
         { field: 'o_6', title: 'order.export.lot_no',tootip: 'order.export.lot_no', show: true, disabled: true, minWidth: 100, align: 'center' },
         { field: 'o_14', title: 'order.export.HSD',tootip: 'order.export.exp_dt', show: false, disabled: false, minWidth: 100, align: 'center' },
-        { field: 'o_7', title: 'order.export.export_quantity',tootip: 'order.export.qty', show: true, disabled: true, minWidth: 100, align: 'center' },
+        { field: 'o_7', title: 'order.export.export_quantity',tootip: 'order.export.qty', show: true, disabled: true, minWidth: 100, align: 'center',type: 'currency' },
         { field: 'o_9', title: 'order.export.unit',tootip: 'order.export.unit_nm', show: true, disabled: true, minWidth: 200, align: 'center' },
         { field: 'o_10', title: 'order.export.price',tootip: 'order.export.price', show: true, disabled: true, minWidth: 100, align: 'center', type: 'currency'},
         { field: 'o_11', title: '%CK',tootip: 'order.export.discount_per', show: false, disabled: false, minWidth: 100, align: 'center' },

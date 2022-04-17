@@ -111,15 +111,15 @@ const invoiceImportModal = {
 const tableListAddColumn = [
     { field: 'stt', title: 'stt',tootip: 'stt', show: true, disabled: true, minWidth: 100, align: 'center' },
     { field: 'o_4',title: 'order.import.imp_tp_nm', tootip: 'order.import.imp_tp_nm', show: true, disabled: false, minWidth: 100, align: 'center' },
-    { field: 'o_6',title: 'order.import.name_product', tootip: 'order.import.prod_nm', show: true, disabled: false, minWidth: 100, align: 'center' },
-    { field: 'o_7',title: 'order.import.lot_no', tootip: 'order.import.lot_no', show: true, disabled: false, minWidth: 100, className: 'uppercase', align: 'center' },
-    { field: 'o_9',title: 'order.import.HSD', tootip: 'order.import.exp_dt', show: true, disabled: false, minWidth: 100, type: 'dated', align: 'right', align: 'center' },
-    { field: 'o_10',title: 'order.import.import_quantity', tootip: 'order.import.qty', show: true, disabled: true, minWidth: 100, align: 'center' },
-    { field: 'o_12',title: 'order.import.unit', tootip: 'order.import.unit_nm', show: true, disabled: false, minWidth: 100, align: 'center' },
-    { field: 'o_13',title: 'order.import.price', tootip: 'order.import.price', show: true, disabled: false, minWidth: 100, align: 'center', type: 'currency' },
-    { field: 'o_15',title: '%CK', tootip: 'order.import.discount_per', show: true, disabled: false, minWidth: 100, align: 'center' },
-    { field: 'o_14',title: 'order.import.vat_per', tootip: 'order.import.vat_per', show: true, disabled: false, minWidth: 100, align: 'center' },
-    { field: 'action', title: 'Hành động', show: true, disabled: false, minWidth: 100, align: 'center' },
+    { field: 'o_6',title: 'order.import.name_product', tootip: 'order.import.prod_nm', show: false, disabled: false, minWidth: 100, align: 'center' },
+    { field: 'o_7',title: 'order.import.lot_no', tootip: 'order.import.lot_no', show: true, disabled: true, minWidth: 100, className: 'uppercase', align: 'center' },
+    { field: 'o_9',title: 'order.import.HSD', tootip: 'order.import.exp_dt', show: false, disabled: false, minWidth: 100, type: 'dated', align: 'right', align: 'center' },
+    { field: 'o_10',title: 'order.import.import_quantity', tootip: 'order.import.qty', show: true, disabled: true, minWidth: 100, align: 'center', type: 'currency' },
+    { field: 'o_12',title: 'order.import.unit', tootip: 'order.import.unit_nm', show: true, disabled: true, minWidth: 100, align: 'center' },
+    { field: 'o_13',title: 'order.import.price', tootip: 'order.import.price', show: true, disabled: true, minWidth: 100, align: 'center', type: 'currency' },
+    { field: 'o_15',title: '%CK', tootip: 'order.import.discount_per', show: false, disabled: false, minWidth: 100, align: 'center' },
+    { field: 'o_14',title: 'order.import.vat_per', tootip: 'order.import.vat_per', show: true, disabled: true, minWidth: 100, align: 'center' },
+    { field: 'action', title: 'Hành động', show: true, disabled: true, minWidth: 100, align: 'center' },
 ]
 
 const tableListEditColumn = [

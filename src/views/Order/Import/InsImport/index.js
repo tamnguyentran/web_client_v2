@@ -1311,6 +1311,7 @@ const ProductImport = () => {
                                         autoFocus={true}
                                         margin="dense"
                                         variant="outlined"
+                                        thousandSeparator={true}
                                         // onFocus={handleFocus}
                                         onKeyPress={(event) => {
                                           if (event.key === "Tab") {
@@ -1326,7 +1327,7 @@ const ProductImport = () => {
                                         value={productInfo.expQty}
                                       />
                                     ) : (
-                                      item.o_10
+                                      glb_sv.formatValue(item.o_10, col["type"])
                                     )}
                                   </TableCell>
                                 );

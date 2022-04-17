@@ -1420,6 +1420,7 @@ console.log(dataProductBarCode);
                                           margin="dense"
                                           variant="outlined"
                                           onFocus={handleFocus}
+                                          thousandSeparator={true}
                                           onKeyPress={(event) => {
                                             if (event.key === "Tab") {
                                               step2Ref.current.focus();
@@ -1434,7 +1435,7 @@ console.log(dataProductBarCode);
                                           value={productInfo.expQty}
                                         />
                                       ) : (
-                                        item.o_7
+                                        glb_sv.formatValue(item.o_7, col["type"])
                                       )}
                                     </TableCell>
                                   );
