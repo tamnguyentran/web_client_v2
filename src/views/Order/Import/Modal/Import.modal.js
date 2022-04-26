@@ -138,17 +138,12 @@ const tableListEditColumn = [
     { field: 'action', title: '', show: true, disabled: false, minWidth: 100, align: 'center' },
 ]
 
-const searchDefaultModal = {
+const searchDefaultModalInvoice = {
     start_dt: moment().subtract(1, 'months').format('YYYYMMDD'),
     end_dt: moment().format('YYYYMMDD'),
-    supplier_id: 0,
-    supplier_nm: '',
-    invoice_no: '%',
-    invoice_status: '1',
-    product_id: 0,
-    product_nm: '',
-    last_invoice_id: 999999999999,
-    last_invoice_detail_id: 999999999999,
+    last_id: 999999999999,
+    id_status: 1,
+    vender_nm: '%',
 }
 
 const defaultDataUpdateProduct = {
@@ -167,6 +162,6 @@ export {
     productImportModal,
     tableColumn,
     config,
-    searchDefaultModal,
+    searchDefaultModalInvoice,
     defaultDataUpdateProduct
 }

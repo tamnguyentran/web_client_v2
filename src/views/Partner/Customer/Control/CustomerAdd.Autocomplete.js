@@ -236,10 +236,10 @@ const CustomerAdd_Autocomplete = ({
     setShouldOpenModal(false);
     setCustomerInfo({ ...defaultModalAdd });
   };
-console.log(valueSelect)
   return (
     <>
       <Autocomplete
+        disableClearable
         disabled={disabled}
         onChange={onChange}
         onInputChange={handleChangeInput}

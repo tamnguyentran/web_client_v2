@@ -133,6 +133,12 @@ const searchDefaultModal = {
     last_lot_no_id: 'ZZZ',
 }
 
+const searchDefaultModalInvoice = {
+    start_dt: moment().format("YYYYMMDD"),
+    end_dt: moment().format("YYYYMMDD"),
+    last_id: 999999999999,
+}
+
 const defaultDataUpdateProduct = {
     expType: "1",
     expQty: 1,
@@ -150,5 +156,6 @@ export {
     productExportModal,
     tableColumn,
     config,
-    defaultDataUpdateProduct
+    defaultDataUpdateProduct,
+    searchDefaultModalInvoice
 }

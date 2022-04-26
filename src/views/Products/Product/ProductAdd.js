@@ -295,8 +295,10 @@ const ProductAdd = ({ onRefresh }) => {
             Price.exportVAT || 0,
 
             unitRate.unit || 0,
-            Number(unitRate.rate) || 0,
+            // Number(unitRate.rate) || 0,
         ]
+
+        console.log(inputParam)
         sendRequest(serviceInfo.CREATE_PRODUCT, inputParam, handleResultCreate, true, handleTimeOut)
     }
 

@@ -179,6 +179,7 @@ const SupplierAdd_Autocomplete = ({
     return (
         <>
             <Autocomplete
+                disableClearable
                 disabled={disabled}
                 onChange={onChange}
                 onInputChange={handleChangeInput}

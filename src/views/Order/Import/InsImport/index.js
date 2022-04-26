@@ -23,6 +23,7 @@ import {
   ListItem,
   Select,
   MenuItem,
+  Chip,
 } from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -52,7 +53,7 @@ import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import {
   tableListAddColumn,
   invoiceImportModal,
-  searchDefaultModal,
+  searchDefaultModalInvoice,
   defaultDataUpdateProduct,
 } from "../Modal/Import.modal";
 import moment from "moment";
@@ -70,6 +71,7 @@ import HistoryIcon from "@material-ui/icons/History";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import CancelIcon from "@material-ui/icons/Cancel";
+import FastForwardIcon from "@material-ui/icons/FastForward";
 import { debounce, sortBy } from "lodash";
 
 const serviceInfo = {
@@ -122,10 +124,10 @@ const serviceInfo = {
     object: "imp_settl",
   },
   GET_ALL_BILL: {
-    functionName: "imp_time",
+    functionName: "get_all",
     reqFunct: reqFunction.REPORT_IMPORT_TIME,
-    biz: "report",
-    object: "rp_import",
+    biz: "import",
+    object: "imp_invoices",
   },
   UPDATE_PRODUCT_TO_INVOICE: {
     functionName: "update",
@@ -152,7 +154,7 @@ const ProductImport = () => {
   const [deleteProcess, setDeleteProcess] = useState(false);
   const [updateProcess, setUpdateProcess] = useState(false);
   const [saveProcess, setSaveProcess] = useState(false);
-  const [searchModal, setSearchModal] = useState({ ...searchDefaultModal });
+  const [searchModalInvoice, setSearchModalInvoice] = useState({ ...searchDefaultModalInvoice });
   const [openModalShowBill, setOpenModalShowBill] = useState(false);
   const [dataHistoryListInvoice, setDataHistoryListInvoice] = useState([]);
   const [sortColumn, setSortColumn] = useState({
@@ -163,6 +165,9 @@ const ProductImport = () => {
   const [productInfo, setProductInfo] = useState({
     ...defaultDataUpdateProduct,
   });
+  const [totalRecordsListInvoice, setTotalRecordsListInvoice] = useState(0);
+
+  const [disableUpdateInvoice, setDisableUpdateInvoice] = useState(false);
 
   const componentPrint = useRef(null);
   const dataWaitAdd = useRef([]);
@@ -173,6 +178,10 @@ const ProductImport = () => {
   const step1Ref = useRef(null);
   const step2Ref = useRef(null);
   const step3Ref = useRef(null);
+
+  const importRef = useRef({});
+
+  const dataHistoryListInvoiceRef = useRef([])
 
   // useHotkeys('f6', () => handleCreateInvoice(), { enableOnTags: ['INPUT', 'SELECT', 'TEXTAREA'] })
 
@@ -217,39 +226,19 @@ const ProductImport = () => {
   }, [dataSource]);
 
   useEffect(() => {
+    dataHistoryListInvoiceRef.current = []
     getListBill(
-      searchModal.start_dt,
-      searchModal.end_dt,
-      searchModal.supplier_id,
-      searchModal.invoice_no,
-      searchModal.invoice_status,
-      searchModal.product_id,
-      glb_sv.defaultValueSearch,
-      glb_sv.defaultValueSearch
+      searchModalInvoice.start_dt,
+      searchModalInvoice.end_dt,
+      searchModalInvoice.last_id,
+      searchModalInvoice.id_status,
+      searchModalInvoice.vender_nm
     );
-  }, []);
+  }, [openModalShowBill]);
 
-  const getListBill = (
-    startdate,
-    endDate,
-    supplier_id,
-    invoice_no,
-    invoice_status,
-    product_id,
-    last_invoice_id,
-    last_invoice_detail_id
-  ) => {
+  const getListBill = (startdate, endDate, last_id, id_status, vender_nm) => {
     // setSearchProcess(true)
-    const inputParam = [
-      startdate,
-      endDate,
-      supplier_id,
-      invoice_no,
-      invoice_status,
-      product_id,
-      last_invoice_id || glb_sv.defaultValueSearch,
-      last_invoice_detail_id || glb_sv.defaultValueSearch,
-    ];
+    const inputParam = [startdate, endDate, last_id, id_status, vender_nm];
     sendRequest(
       serviceInfo.GET_ALL_BILL,
       inputParam,
@@ -260,6 +249,7 @@ const ProductImport = () => {
   };
 
   const handleResultGetAll = (reqInfoMap, message) => {
+    console.log(reqInfoMap, message);
     // setSearchProcess(false)
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
@@ -268,23 +258,24 @@ const ProductImport = () => {
       control_sv.clearReqInfoMapRequest(cltSeqResult);
     } else if (message["PROC_DATA"]) {
       let newData = message["PROC_DATA"];
-      setDataHistoryListInvoice(newData.rows);
-      // if (newData.rows.length > 0) {
-      //     if (
-      //         reqInfoMap.inputParam[6] === glb_sv.defaultValueSearch &&
-      //         reqInfoMap.inputParam[7] === glb_sv.defaultValueSearch
-      //     ) {
-      //         setTotalRecords(newData.rowTotal)
-      //     } else {
-      //         setTotalRecords(dataSourceRef.current.length - newData.rows.length + newData.rowTotal)
-      //     }
-      //     dataSourceRef.current = dataSourceRef.current.concat(newData.rows)
-      //     setDataSource(dataSourceRef.current)
-      // } else {
-      //     dataSourceRef.current = []
-      //     setDataSource([])
-      //     // setTotalRecords(0)
-      // }
+      if (newData.rows.length > 0) {
+        dataHistoryListInvoiceRef.current = dataHistoryListInvoiceRef.current.concat(newData.rows)
+        setDataHistoryListInvoice(dataHistoryListInvoiceRef.current);
+          if (
+              reqInfoMap.inputParam[2] === glb_sv.defaultValueSearch 
+              // reqInfoMap.inputParam[7] === glb_sv.defaultValueSearch
+          ) {
+            console.log("vhdvhd")
+            setTotalRecordsListInvoice(newData.rowTotal)
+          } else {
+            console.log("vhdv242hd")
+            setTotalRecordsListInvoice(dataHistoryListInvoiceRef.current.length - newData.rows.length + newData.rowTotal)
+          }
+      } else {
+        dataHistoryListInvoiceRef.current = []
+        setDataHistoryListInvoice([])
+          // setTotalRecords(0)
+      }
     }
   };
 
@@ -354,6 +345,16 @@ const ProductImport = () => {
   const handleSelectSupplier = (obj) => {
     const newImport = { ...Import };
     newImport["supplier"] = !!obj ? obj?.o_1 : null;
+
+    if (
+      importRef.current?.supplierSelect !== (!!obj ? obj?.o_2 : "") ||
+      importRef.current?.note !== Import.note
+    ) {
+      setDisableUpdateInvoice(true);
+    } else {
+      setDisableUpdateInvoice(false);
+    }
+
     importDataRef.current = newImport;
     setSupplierSelect(!!obj ? obj?.o_2 : "");
     setImport(newImport);
@@ -374,6 +375,18 @@ const ProductImport = () => {
   };
 
   const handleChange = (e) => {
+    console.log(importRef.current);
+    console.log(e.target.name);
+    if (e.target.name === "note") {
+      if (
+        importRef.current?.note !== e.target.value ||
+        importRef.current?.supplierSelect !== supplierSelect
+      ) {
+        setDisableUpdateInvoice(true);
+      } else {
+        setDisableUpdateInvoice(false);
+      }
+    }
     const newImport = { ...Import };
     newImport[e.target.name] = e.target.value;
     if (e.target.name === "payment_type" && e.target.value === "1") {
@@ -415,9 +428,9 @@ const ProductImport = () => {
   };
 
   const handleAddProduct = (productObject) => {
-    setSaveProcess(true)
+    setSaveProcess(true);
     if (!Import.supplier || !Import.order_dt) {
-      setSaveProcess(false)
+      setSaveProcess(false);
       SnackBarService.alert(t("message.requireImportInvoice"), true, 4, 3000);
       return;
     } else if (!invoiceFlag) {
@@ -491,7 +504,12 @@ const ProductImport = () => {
   };
 
   const checkValidate = () => {
-    if (invoiceFlag && !!Import.supplier && !!Import.order_dt) {
+    if (
+      invoiceFlag &&
+      !!Import.supplier &&
+      !!Import.order_dt &&
+      disableUpdateInvoice
+    ) {
       return false;
     }
     return true;
@@ -499,7 +517,7 @@ const ProductImport = () => {
 
   const handleCreateInvoice = () => {
     if (!Import.supplier || !Import.order_dt) {
-      setSaveProcess(false)
+      setSaveProcess(false);
       SnackBarService.alert(t("message.supplierRequire"), true, 4, 3000);
       return;
     }
@@ -678,6 +696,8 @@ const ProductImport = () => {
       message["PROC_STATUS"],
       3000
     );
+    setDisableUpdateInvoice(false);
+    setSaveProcess(false);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       const cltSeqResult = message["REQUEST_SEQ"];
@@ -686,13 +706,12 @@ const ProductImport = () => {
     } else if (message["PROC_DATA"]) {
       // xử lý thành công
       dataWaitAdd.current = [];
-      setSaveProcess(false)
       setResetFormAddFlag(true);
-      setIsIndexRow(null)
+      setIsIndexRow(null);
       setTimeout(() => {
         setResetFormAddFlag(false);
       }, 1000);
-      handleRefresh()
+      handleRefresh();
       // sendRequest(
       //   serviceInfo.GET_ALL_PRODUCT_BY_INVOICE_ID,
       //   [newInvoiceId.current],
@@ -736,9 +755,11 @@ const ProductImport = () => {
         invoice_vat: newData.rows[0].o_15,
         invoice_settl: newData.rows[0].o_16,
       };
+      importRef.current["note"] = newData.rows[0].o_11;
+      importRef.current["supplierSelect"] = newData.rows[0].o_5;
       setImport(dataImport);
       setSupplierSelect(newData.rows[0].o_5);
-      setIsIndexRow(null)
+      setIsIndexRow(null);
     }
   };
 
@@ -968,24 +989,38 @@ const ProductImport = () => {
     }
   };
 
-  const handleFilterProduct = (e) =>{
-    e.target.value = e.target.value.trim().toUpperCase()
-    if(e.target.value === ''){
-      handleRefresh()
-    }else{
-      debouncedSave({value:e.target.value,dataSource});
+  const handleFilterProduct = (e) => {
+    e.target.value = e.target.value.trim().toUpperCase();
+    if (e.target.value === "") {
+      handleRefresh();
+    } else {
+      debouncedSave({ value: e.target.value, dataSource });
     }
-  }
+  };
 
   const debouncedSave = useCallback(
     debounce((data) => {
-      let result = data.dataSource.filter((item)=>{
-        return data.value.search(item.o_6) != -1 || item.o_6.search(data.value) != -1
-      })
-    setDataSource(result)
+      let result = data.dataSource.filter((item) => {
+        return (
+          data.value.search(item.o_6) != -1 || item.o_6.search(data.value) != -1
+        );
+      });
+      setDataSource(result);
     }, 100),
     []
   );
+
+  const getNextDataListInvoice = () =>{
+    const lastIndex = dataHistoryListInvoiceRef.current.length - 1;
+    const last_id = dataHistoryListInvoiceRef.current[lastIndex].o_1;
+    getListBill(
+      searchModalInvoice.start_dt,
+      searchModalInvoice.end_dt,
+      last_id,
+      searchModalInvoice.id_status,
+      searchModalInvoice.vender_nm
+    );
+  }
   return (
     <Grid container spacing={1} className="h-100">
       {/* <EditProductRows
@@ -1038,6 +1073,7 @@ const ProductImport = () => {
                     handleRefresh();
                     setOpenModalShowBill(false);
                     setInvoiceFlag(true);
+                    setDisableUpdateInvoice(false);
                     // setIsIndexRow(null);
                   }}
                 >
@@ -1055,14 +1091,14 @@ const ProductImport = () => {
                           {t("order.export.bill_invoice")}
                         </span>
                         <span>
-                          : {glb_sv.formatValue(data.o_16, "currency")}
+                          : {glb_sv.formatValue(data.o_13, "currency")}
                         </span>
                       </div>
                       <div className="flex">
                         <span className="weight-title">
                           {t("order.export.cust_nm_v")}
                         </span>
-                        <span>: {data.o_3}</span>
+                        <span>: {data.o_5}</span>
                       </div>
                       <div>
                         <span className="weight-title">
@@ -1082,6 +1118,33 @@ const ProductImport = () => {
               </>
             );
           })}
+          <ListItem>
+            <div className="d-flex align-items-center justify-content-between">
+              <Chip
+                size="small"
+                variant="outlined"
+                className="mr-1"
+                label={
+                  dataHistoryListInvoiceRef.current.length +
+                  "/" +
+                  totalRecordsListInvoice +
+                  " " +
+                  t("Hóa đơn")
+                }
+              />
+              <Chip
+                variant="outlined"
+                size="small"
+                className="mr-1"
+                deleteIcon={<FastForwardIcon />}
+                onDelete={() => null}
+                color="primary"
+                label={t("getMoreData")}
+                onClick={getNextDataListInvoice}
+                disabled={dataHistoryListInvoiceRef.current.length >= totalRecordsListInvoice}
+              />
+            </div>
+          </ListItem>
         </List>
       </Drawer>
       <Grid item md={9} xs={12}>
@@ -1092,9 +1155,7 @@ const ProductImport = () => {
           style={{ height: "160px" }}
         />
         <Card style={{ height: "calc(100% - 168px)" }}>
-          <CardHeader
-            title={t("order.import.productImportList")}
-          />
+          <CardHeader title={t("order.import.productImportList")} />
           <CardContent className="insImport">
             <div className="flex justify-content-between aligh-item-center mb-1">
               <div className="flex aligh-item-center">
@@ -1489,12 +1550,12 @@ const ProductImport = () => {
                       title={t("order.exportRepay.new_invoice")}
                     >
                       <AddShoppingCartIcon
-                        onClick={() => {  
+                        onClick={() => {
                           setImport({ ...invoiceImportModal });
                           setDataSource([]);
                           setInvoiceFlag(false);
                           setSupplierSelect("");
-                          setIsIndexRow(null)
+                          setIsIndexRow(null);
                         }}
                       />
                     </Tooltip>
@@ -1537,6 +1598,7 @@ const ProductImport = () => {
               </div>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
+                  disabled={true}
                   disableToolbar
                   margin="dense"
                   variant="outlined"
@@ -1841,9 +1903,7 @@ const ProductImport = () => {
                 ")"}
             </Grid>
           </CardContent>
-          <CardActions
-            className="align-items-end justify-content-end"
-          >
+          <CardActions className="align-items-end justify-content-end">
             <Button
               size="small"
               onClick={(e) => {

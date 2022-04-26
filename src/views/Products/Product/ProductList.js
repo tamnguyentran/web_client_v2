@@ -43,7 +43,7 @@ import ProductEdit from "./ProductEdit";
 import SearchOne from "../../../components/SearchOne";
 import ExportExcel from "../../../components/ExportExcel";
 import DisplayColumn from "../../../components/DisplayColumn";
-// import ImportExcel from '../../../components/ImportExcel'
+import ImportExcel from '../../../components/ImportExcel'
 import { useHotkeys } from "react-hotkeys-hook";
 
 const serviceInfo = {
@@ -362,6 +362,8 @@ const ProductList = () => {
           }
           action={
             <div className="d-flex align-items-center">
+              <ImportExcel onRefresh={handleRefresh}/>
+              &ensp;
               <ProductAdd onRefresh={handleRefresh} />
             </div>
           }

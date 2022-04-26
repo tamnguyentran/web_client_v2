@@ -62,11 +62,12 @@ import CustomerAdd_Autocomplete from "../../../Partner/Customer/Control/Customer
 import { useReactToPrint } from "react-to-print";
 import Export_Bill from "../../../../components/Bill/Export_Bill";
 import ExportExcel from "../../../../components/ExportExcel";
-import ImportExcel1 from '../../../../components/ImportExcel1'
-import ImportExcel from '../../../../components/ImportExcel'
+//import ImportExcel1 from '../../../../components/ImportExcel1'
+//import ImportExcel from '../../../../components/ImportExcel'
 import {
   searchDefaultModal,
   defaultDataUpdateProduct,
+  searchDefaultModalInvoice
 } from "../Modal/Export.modal";
 import { ReactComponent as IC_ADD_BASIC } from "../../../../asset/images/add-basic.svg";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -134,7 +135,7 @@ const serviceInfo = {
     object: "rp_inventory",
   },
   GET_ALL_LIST_INVOICE: {
-    functionName: "get_all",
+    functionName: "get_inv_dt",
     reqFunct: reqFunction.EXPORT_LIST,
     biz: "export",
     object: "exp_invoices",
@@ -182,6 +183,11 @@ const InsExport = () => {
 
   const [sortColumn, setSortColumn] = useState({columIndex: null, status: 'DESC'});
 
+  const [disableUpdateInvoice, setDisableUpdateInvoice] = useState(false)
+
+  const [searchModalInvoice, setSearchModalInvoice] = useState({...searchDefaultModalInvoice})
+  const [totalRecordsListInvoice, setTotalRecordsListInvoice] = useState(0);
+
   const componentPrint = useRef(null);
   const dataWaitAdd = useRef({});
   const newInvoiceId = useRef(-1);
@@ -192,6 +198,12 @@ const InsExport = () => {
   const step4Ref = useRef(null);
 
   const dataProduct = useRef(null)
+
+  const barCodeRef = useRef('')
+
+  const exportRef = useRef({})
+
+  const dataHistoryListInvoiceRef = useRef([])
 
   useEffect(() => {
     const dataTableTop = JSON.parse(
@@ -245,7 +257,11 @@ const InsExport = () => {
   }, [dataSource, searchModal]);
 
   useEffect(() => {
-    getListInvoice();
+    getListInvoice(
+      searchModalInvoice.start_dt, 
+      searchModalInvoice.end_dt, 
+      searchModalInvoice.last_id
+    );
   }, []);
 
   useEffect(() => {
@@ -304,14 +320,13 @@ const InsExport = () => {
 
     return result;
   };
-  const getListInvoice = () => {
-    const inputParam = [
-      moment().format("YYYYMMDD"),
-      moment().format("YYYYMMDD"),
-      999999999999,
-      "1",
-      "%%",
-    ];
+  const getListInvoice = (
+    start_dt, 
+    end_dt, 
+    last_id
+  ) => {
+    const inputParam = ["20220420", end_dt, last_id];
+console.log(inputParam)
     sendRequest(
       serviceInfo.GET_ALL_LIST_INVOICE,
       inputParam,
@@ -322,13 +337,30 @@ const InsExport = () => {
   };
 
   const handleResultGetAllListInvoice = (reqInfoMap, message) => {
+    console.log(reqInfoMap, message)
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
     } else if (message["PROC_DATA"]) {
       // xử lý thành công
       let newData = message["PROC_DATA"];
-      setDataHistoryListInvoice(newData.rows);
+      if (newData.rows.length > 0) {
+        dataHistoryListInvoiceRef.current = dataHistoryListInvoiceRef.current.concat(newData.rows)
+        setDataHistoryListInvoice(dataHistoryListInvoiceRef.current);
+          if (
+              reqInfoMap.inputParam[2] === glb_sv.defaultValueSearch 
+          ) {
+            setTotalRecordsListInvoice(newData.rowTotal)
+          } else {
+            setTotalRecordsListInvoice(dataHistoryListInvoiceRef.current.length - newData.rows.length + newData.rowTotal)
+          }
+      } else {
+        dataHistoryListInvoiceRef.current = []
+        setDataHistoryListInvoice([])
+          // setTotalRecords(0)
+      }
+      // let newData = message["PROC_DATA"];
+      // setDataHistoryListInvoice(newData.rows);
     }
   };
 
@@ -350,11 +382,13 @@ const InsExport = () => {
   };
 
   const handleResultGetAll = (reqInfoMap, message) => {
+    console.log(reqInfoMap, message)
     // setSearchProcess(false);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
     } else if (message["PROC_DATA"]) {
+      console.log(reqInfoMap.inputParam)
       let newData = message["PROC_DATA"];
       if (newData.rows.length > 0) {
         dataSourceRef.current = dataSourceRef.current.concat(newData.rows);
@@ -408,14 +442,8 @@ const InsExport = () => {
   };
 
   const handleBarcode = (e) => {
-    debouncedSaveBarCode(e.target.value);
-  };
-
-  const debouncedSaveBarCode = useCallback(
-    debounce((valueBarCode) => {
-      if (!!valueBarCode) {
-      setBarCode(valueBarCode)
-      const inputParam = [valueBarCode, "Y"];
+    if(e.keyCode === 13){
+      const inputParam = [e.target.value, "Y"];
       sendRequest(
         serviceInfo.SEARCH_INVEN_PROD,
         inputParam,
@@ -423,25 +451,49 @@ const InsExport = () => {
         true,
         handleTimeOut
       );
-      // e.target.value = "";
     }
-    }, 200),
-    []
-  );
+    if(e.keyCode == 46){
+      barCodeRef.current.value = ''
+    }
+  };
+
+  // const debouncedSaveBarCode = useCallback(
+  //   debounce((valueBarCode) => {
+  //     if (!!valueBarCode) {
+  //     setBarCode(valueBarCode)
+  //     const inputParam = [valueBarCode, "Y"];
+  //     sendRequest(
+  //       serviceInfo.SEARCH_INVEN_PROD,
+  //       inputParam,
+  //       handleResultSearchBarcode,
+  //       true,
+  //       handleTimeOut
+  //     );
+  //     // e.target.value = "";
+  //   }
+  //   }, 200),
+  //   []
+  // );
+
+  const resetValueBarCode = () =>{
+    setTimeout(()=>{
+      document.getElementById('bar-code-id').value = ''
+    },[1000])
+  }
 
   const handleResultSearchBarcode = (reqInfoMap, message) => {
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
+      resetValueBarCode()
     } else if (message["PROC_DATA"] && message["PROC_DATA"].rows.length) {
-      setBarCode('')
       setDataProductBarCode(message["PROC_DATA"].rows[0])
-    }else{
-      setBarCode('')
+      resetValueBarCode()
+    }else {
       SnackBarService.alert(t("Sản phẩm trong kho đã hết hoặc mã code chưa đúng"), true, 4, 3000);
+      resetValueBarCode()
     }
   };
-console.log(dataProductBarCode);
   const typePrice = (typeCheck, retailPrice, wholesalePrice) => {
     return typeCheck ? retailPrice : wholesalePrice;
   };
@@ -463,8 +515,7 @@ console.log(dataProductBarCode);
   const handleAddProduce = () => {
     setListInventoryProduct([]);
     setDataSearchInput("");
-    console.log(Export)
-    if (!Export.customer || !Export.order_dt) {
+    if (!Export.customer_id || !Export.order_dt) {
       SnackBarService.alert(t("message.requireExportInvoice"), true, 4, 3000);
       return;
     } else if (!invoiceFlag) {
@@ -515,6 +566,16 @@ console.log(dataProductBarCode);
     }
   };
   const handleChangeBill = (e) => {
+    if(e.target.name === 'note'){
+      if(
+        exportRef.current?.note !== e.target.value 
+        || exportRef.current?.customerSelect !== customerSelect
+      ){
+        setDisableUpdateInvoice(true)
+      }else{
+        setDisableUpdateInvoice(false)
+      }
+    }
     const newExport = { ...Export };
     newExport[e.target.name] = e.target.value;
     setExport(newExport);
@@ -528,7 +589,15 @@ console.log(dataProductBarCode);
 
   const handleSelectCustomer = (obj) => {
     const newExport = { ...Export };
-    newExport["customer"] = !!obj ? obj?.o_1 : null;
+    newExport["customer_id"] = !!obj ? obj?.o_1 : null;
+    if(
+      exportRef.current?.customerSelect !== (!!obj ? obj?.o_2 : "") 
+      || exportRef.current?.note !== Export.note
+    ){
+      setDisableUpdateInvoice(true)
+    }else{
+      setDisableUpdateInvoice(false)
+    }
     setCustomerSelect(!!obj ? obj?.o_2 : "");
     setExport(newExport);
   };
@@ -540,14 +609,14 @@ console.log(dataProductBarCode);
   };
 
   const handleCreateInvoice = () => {
-    if (!Export.customer || !Export.order_dt) {
+    if (!Export.customer_id || !Export.order_dt) {
       SnackBarService.alert(t("message.requireExportInvoice"), true, 4, 3000);
       return;
     }
     //bắn event tạo invoice
     const inputParam = [
       !!Export.invoice_no.trim() ? Export.invoice_no.trim() : "AUTO",
-      Export.customer,
+      Export.customer_id,
       moment(Export.order_dt).format("YYYYMMDD"),
       Export.staff_exp,
       Export.note,
@@ -666,6 +735,8 @@ console.log(dataProductBarCode);
         invoice_discount: newData.rows[0].o_13,
         invoice_vat: newData.rows[0].o_14,
       };
+      exportRef.current['note'] = newData.rows[0].o_10
+      exportRef.current['customerSelect'] = newData.rows[0].o_5
       // list hóa đơn
       setCustomerSelect(newData.rows[0].o_5);
       setExport(dataExport);
@@ -803,6 +874,7 @@ console.log(dataProductBarCode);
   const handleShowModalPrice = (dataProduct) => {
     dataWaitAdd.current = dataProduct;
     setTypeSale("1");
+    setDisableUpdateInvoice(false)
     if (typePrice(invoiceType, dataProduct?.o_13, dataProduct?.o_14)) {
       handleAddProduce();
       return;
@@ -830,7 +902,7 @@ console.log(dataProductBarCode);
   };
 
   const checkValidate = () => {
-    if (!!Export.customer && !!Export.order_dt && invoiceFlag) {
+    if (!!Export.customer_id && !!Export.order_dt && invoiceFlag && disableUpdateInvoice) {
       return false;
     }
     return true;
@@ -840,7 +912,7 @@ console.log(dataProductBarCode);
     if (!Export.invoice_id && !invoiceFlag) {
       handleCreateInvoice();
       return;
-    } else if (!Export.customer || !Export.order_dt) {
+    } else if (!Export.customer_id || !Export.order_dt) {
       SnackBarService.alert(
         t("message.requireExportInvoice"),
         true,
@@ -882,6 +954,7 @@ console.log(dataProductBarCode);
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
     } else if (message["PROC_DATA"]) {
+      setDisableUpdateInvoice(false)
       // xử lý thành công
       sendRequest(
         serviceInfo.GET_INVOICE_BY_ID,
@@ -932,6 +1005,8 @@ console.log(dataProductBarCode);
     const lastIndex = dataSourceRef.current.length - 1;
     const lastProdId = dataSourceRef.current[lastIndex].o_1;
     const lastLotNoId = dataSourceRef.current[lastIndex].o_3;
+    console.log(lastProdId)
+    console.log(lastLotNoId)
     getList(
       lastProdId,
       lastLotNoId,
@@ -963,6 +1038,17 @@ console.log(dataProductBarCode);
     }
     setDataSource(sortData);
   }
+
+  const getNextDataListInvoice = () => {
+    const lastIndex = dataHistoryListInvoiceRef.current.length - 1;
+    const last_id = dataHistoryListInvoiceRef.current[lastIndex].o_1;
+    getListInvoice(
+      searchModalInvoice.start_dt, 
+      searchModalInvoice.end_dt, 
+      last_id
+    );
+  }
+
   return (
     <>
       <Modal
@@ -992,7 +1078,7 @@ console.log(dataProductBarCode);
         }}
       >
         <CardHeader
-          title={t("order.export.list_invoice")}
+          title={t("order.export.list_invoiced")}
           action={
             <div
               className="cursor-pointer"
@@ -1016,7 +1102,7 @@ console.log(dataProductBarCode);
           )}
           {dataHistoryListInvoice.map((data, index) => {
             return (
-              <>
+              <> 
                 <ListItem
                   button
                   className="w-100"
@@ -1027,6 +1113,8 @@ console.log(dataProductBarCode);
                     setOpenModalShowBill(false);
                     setInvoiceFlag(true);
                     setIsIndexRow(null);
+                    setDisableUpdateInvoice(false)
+                    
                   }}
                 >
                   <div className="w-100">
@@ -1043,14 +1131,14 @@ console.log(dataProductBarCode);
                           {t("order.export.bill_invoice")}
                         </span>
                         <span>
-                          : {glb_sv.formatValue(data.o_12, "currency")}
+                          : {glb_sv.formatValue(data.o_9, "currency")}
                         </span>
                       </div>
                       <div className="flex">
                         <span className="weight-title">
                           {t("order.export.cust_nm_v")}
                         </span>
-                        <span>: {data.o_5}</span>
+                        <span>: {data.o_4}</span>
                       </div>
                       <div>
                         <span className="weight-title">
@@ -1058,8 +1146,8 @@ console.log(dataProductBarCode);
                         </span>
                         <span>
                           :{" "}
-                          {moment(data.o_17, "DDMMYYYYHHmmss").format(
-                            "DD/MM/YYYY HH:mm:ss"
+                          {moment(data.o_5, "YYYYMMDD").format(
+                            "DD/MM/YYYY"
                           )}
                         </span>
                       </div>
@@ -1070,6 +1158,33 @@ console.log(dataProductBarCode);
               </>
             );
           })}
+           <ListItem>
+            <div className="d-flex align-items-center justify-content-between">
+              <Chip
+                size="small"
+                variant="outlined"
+                className="mr-1"
+                label={
+                  dataHistoryListInvoiceRef.current.length +
+                  "/" +
+                  totalRecordsListInvoice +
+                  " " +
+                  t("Hóa đơn")
+                }
+              />
+              <Chip
+                variant="outlined"
+                size="small"
+                className="mr-1"
+                deleteIcon={<FastForwardIcon />}
+                onDelete={() => null}
+                color="primary"
+                label={t("getMoreData")}
+                onClick={getNextDataListInvoice}
+                disabled={dataHistoryListInvoiceRef.current.length >= totalRecordsListInvoice}
+              />
+            </div>
+          </ListItem>
         </List>
       </Drawer>
       <Grid container spacing={1} className="h-100">
@@ -1171,13 +1286,14 @@ console.log(dataProductBarCode);
                     </div>
                   ) : (
                     <TextField
+                      id="bar-code-id"
                       style={{ width: "300px" }}
                       size={"small"}
                       label={t("product.barcode")}
                       variant="outlined"
                       autoFocus={true}
-                      value={barCode}
-                      onChange={handleBarcode}
+                      ref = {barCodeRef}
+                      onKeyUp={handleBarcode}
                     />
                   )}
                   <span className="ml-2 p-1 action_ctr">
@@ -1718,7 +1834,7 @@ console.log(dataProductBarCode);
             <CardHeader
               title={
                 <div className="flex justify-content-between aligh-item-center">
-                  <div>{t("order.export.invoice_info")}</div>{" "}
+                  <div>{t("order.export.invoice_infod")}</div>{" "}
                   <div className="cursor-pointer flex">
                     <div className="mr-1">
                       <Tooltip
@@ -1728,7 +1844,6 @@ console.log(dataProductBarCode);
                         <HistoryIcon
                           onClick={() => {
                             setOpenModalShowBill((pre) => !pre);
-                            getListInvoice();
                           }}
                         />
                       </Tooltip>
@@ -1814,6 +1929,7 @@ console.log(dataProductBarCode);
                 </div>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
+                    disabled
                     className="w-100"
                     disableToolbar
                     margin="dense"
@@ -1824,6 +1940,7 @@ console.log(dataProductBarCode);
                     label={t("order.export.order_dt")}
                     value={Export.order_dt}
                     onChange={handleDateChange}
+                    // disabled = {true}
                     KeyboardButtonProps={{
                       "aria-label": "change date",
                     }}
