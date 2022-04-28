@@ -81,8 +81,8 @@ const columns = [
   // { key: 'code', title: 'product.code' },
   { key: "proctatus", title: "product.procstat" },
   { key: "name", title: "product.name", status: 1 },
-  { key: "group", title: "menu.productGroupp", status: 1 },
-  { key: "unit", title: "product.minUnitt", status: 1 },
+  { key: "group", title: "menu.productGroup", status: 1 },
+  { key: "unit", title: "product.minUnit", status: 1 },
   { key: "barcode", title: "product.barcode" },
   { key: "contents", title: "product.content" },
   { key: "designate", title: "product.designate" },
@@ -962,9 +962,6 @@ const ImportExcel = ({ title, onRefresh }) => {
                           >
                             {columns?.map((col, indexRow) => {
                               let value = item[col.key];
-                              console.log(item);
-                              console.log("key", col.key);
-                              console.log("value", value);
                               if (col.key === "proctatus")
                                 console.log("key-proctatus", value);
                               return col.key === "proctatus" ? (
@@ -983,10 +980,10 @@ const ImportExcel = ({ title, onRefresh }) => {
                                   {item?.warning && (
                                     <Tooltip
                                       placement="top"
-                                      title={t(item?.warning)}
+                                      title={<div style={{fontSize: '13px'}}>{t(item?.warning)}</div>}
                                       arrow
                                     >
-                                      <InfoOutlinedIcon style={{color:'orange'}} className="cursor-pointer" />
+                                      <InfoOutlinedIcon style={{color:'red'}} className="cursor-pointer" />
                                     </Tooltip>
                                   )}
                                   {/* {value === 0 ? (

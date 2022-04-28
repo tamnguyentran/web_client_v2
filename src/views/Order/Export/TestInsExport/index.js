@@ -175,7 +175,6 @@ const InsExport = () => {
   const [listInventory, setListInventory] = useState([]);
   const [openModalShowBill, setOpenModalShowBill] = useState(false);
   const [dataHistoryListInvoice, setDataHistoryListInvoice] = useState([]);
-  const [barCode, setBarCode] = useState('')
   const [dataProductBarCode, setDataProductBarCode] = useState({})
   const [productInfo, setProductInfo] = useState({
     ...defaultDataUpdateProduct,
@@ -188,6 +187,8 @@ const InsExport = () => {
   const [searchModalInvoice, setSearchModalInvoice] = useState({...searchDefaultModalInvoice})
   const [totalRecordsListInvoice, setTotalRecordsListInvoice] = useState(0);
 
+  // const [disableInputBarCode, setDisableInputBarCode] = useState(false)
+
   const componentPrint = useRef(null);
   const dataWaitAdd = useRef({});
   const newInvoiceId = useRef(-1);
@@ -199,7 +200,6 @@ const InsExport = () => {
 
   const dataProduct = useRef(null)
 
-  const barCodeRef = useRef('')
 
   const exportRef = useRef({})
 
@@ -229,7 +229,6 @@ const InsExport = () => {
       }, 0) || 0;
     newData["invoice_vat"] =
       dataSource.reduce(function (acc, obj) {
-        console.log(obj)
         return (
           acc +
           Math.round(
@@ -325,7 +324,8 @@ const InsExport = () => {
     end_dt, 
     last_id
   ) => {
-    const inputParam = ["20220420", end_dt, last_id];
+    //const inputParam = ["20220420", end_dt, last_id];
+    const inputParam = [start_dt, end_dt, last_id];
 console.log(inputParam)
     sendRequest(
       serviceInfo.GET_ALL_LIST_INVOICE,
@@ -337,7 +337,6 @@ console.log(inputParam)
   };
 
   const handleResultGetAllListInvoice = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message)
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
@@ -357,10 +356,7 @@ console.log(inputParam)
       } else {
         dataHistoryListInvoiceRef.current = []
         setDataHistoryListInvoice([])
-          // setTotalRecords(0)
       }
-      // let newData = message["PROC_DATA"];
-      // setDataHistoryListInvoice(newData.rows);
     }
   };
 
@@ -382,13 +378,11 @@ console.log(inputParam)
   };
 
   const handleResultGetAll = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message)
     // setSearchProcess(false);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
     } else if (message["PROC_DATA"]) {
-      console.log(reqInfoMap.inputParam)
       let newData = message["PROC_DATA"];
       if (newData.rows.length > 0) {
         dataSourceRef.current = dataSourceRef.current.concat(newData.rows);
@@ -449,31 +443,13 @@ console.log(inputParam)
         inputParam,
         handleResultSearchBarcode,
         true,
-        handleTimeOut
+        (e)=>{
+          // setDisableInputBarCode(true)
+          handleTimeOut(e)
+        }
       );
     }
-    if(e.keyCode == 46){
-      barCodeRef.current.value = ''
-    }
   };
-
-  // const debouncedSaveBarCode = useCallback(
-  //   debounce((valueBarCode) => {
-  //     if (!!valueBarCode) {
-  //     setBarCode(valueBarCode)
-  //     const inputParam = [valueBarCode, "Y"];
-  //     sendRequest(
-  //       serviceInfo.SEARCH_INVEN_PROD,
-  //       inputParam,
-  //       handleResultSearchBarcode,
-  //       true,
-  //       handleTimeOut
-  //     );
-  //     // e.target.value = "";
-  //   }
-  //   }, 200),
-  //   []
-  // );
 
   const resetValueBarCode = () =>{
     setTimeout(()=>{
@@ -490,7 +466,7 @@ console.log(inputParam)
       setDataProductBarCode(message["PROC_DATA"].rows[0])
       resetValueBarCode()
     }else {
-      SnackBarService.alert(t("Sản phẩm trong kho đã hết hoặc mã code chưa đúng"), true, 4, 3000);
+      SnackBarService.alert(t("order.export.products_in_stock_are_out_of_stock_or_wrong_code"), true, 4, 3000);
       resetValueBarCode()
     }
   };
@@ -1005,8 +981,6 @@ console.log(inputParam)
     const lastIndex = dataSourceRef.current.length - 1;
     const lastProdId = dataSourceRef.current[lastIndex].o_1;
     const lastLotNoId = dataSourceRef.current[lastIndex].o_3;
-    console.log(lastProdId)
-    console.log(lastLotNoId)
     getList(
       lastProdId,
       lastLotNoId,
@@ -1292,7 +1266,7 @@ console.log(inputParam)
                       label={t("product.barcode")}
                       variant="outlined"
                       autoFocus={true}
-                      ref = {barCodeRef}
+                      // disabled={disableInputBarCode}
                       onKeyUp={handleBarcode}
                     />
                   )}
@@ -1799,7 +1773,6 @@ console.log(inputParam)
                 </Grid>
               </MuiThemeProvider>
             </CardContent>
-
             <CardActions disableSpacing>
               <div className="d-flex align-items-center">
                 <Chip
@@ -1834,7 +1807,7 @@ console.log(inputParam)
             <CardHeader
               title={
                 <div className="flex justify-content-between aligh-item-center">
-                  <div>{t("order.export.invoice_infod")}</div>{" "}
+                  <div>{t("order.export.invoice_info")}</div>{" "}
                   <div className="cursor-pointer flex">
                     <div className="mr-1">
                       <Tooltip

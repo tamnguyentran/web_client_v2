@@ -249,7 +249,6 @@ const ProductImport = () => {
   };
 
   const handleResultGetAll = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message);
     // setSearchProcess(false)
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
@@ -265,10 +264,8 @@ const ProductImport = () => {
               reqInfoMap.inputParam[2] === glb_sv.defaultValueSearch 
               // reqInfoMap.inputParam[7] === glb_sv.defaultValueSearch
           ) {
-            console.log("vhdvhd")
             setTotalRecordsListInvoice(newData.rowTotal)
           } else {
-            console.log("vhdv242hd")
             setTotalRecordsListInvoice(dataHistoryListInvoiceRef.current.length - newData.rows.length + newData.rowTotal)
           }
       } else {
@@ -375,8 +372,6 @@ const ProductImport = () => {
   };
 
   const handleChange = (e) => {
-    console.log(importRef.current);
-    console.log(e.target.name);
     if (e.target.name === "note") {
       if (
         importRef.current?.note !== e.target.value ||
@@ -599,11 +594,6 @@ const ProductImport = () => {
       glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
       control_sv.clearReqInfoMapRequest(cltSeqResult);
     } else if (message["PROC_DATA"]) {
-      console.log(
-        "handleResultGetSettlementByInvoiceID: ",
-        reqInfoMap,
-        message
-      );
       let newData = message["PROC_DATA"];
       if (newData.rowTotal === 0) {
         // chưa có bút toán nào => tạo bút toán cho nó

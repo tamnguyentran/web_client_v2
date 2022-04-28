@@ -666,7 +666,8 @@
             "action": "Hành động",
             "name_product": "Tên SP",
             "export_quantity": "SL xuất",
-            "unit": "ĐV tính"
+            "unit": "ĐV tính",
+            "products_in_stock_are_out_of_stock_or_wrong_code": "Sản phẩm trong kho đã hết hoặc mã code chưa đúng"
         },
         "exportRepay": {
             "productAdd": "Thêm sản phẩm vào đơn xuất - trả",
