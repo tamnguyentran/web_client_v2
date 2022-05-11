@@ -301,7 +301,7 @@ const UserList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('user.titleList')}
+                            {t('user.titleListcscs')}
                             {/* <IconButton className='ml-2' style={{ padding: 0, backgroundColor: '#fff' }} onClick={onClickColumn}>
                             <MoreVertIcon />
                         </IconButton> */}
@@ -310,19 +310,6 @@ const UserList = () => {
                     }
                     action={
                         <div className="d-flex align-items-center">
-                            <Chip
-                                size="small"
-                                variant="outlined"
-                                className="mr-1"
-                                label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
-                            />
-                            {/* <Chip size="small" className='mr-1' deleteIcon={<FastForwardIcon />} onDelete={() => null} color="primary" label={t('getMoreData')} onClick={getNextData} disabled={dataSourceRef.current.length >= totalRecords} /> */}
-                            <ExportExcel
-                                filename="user"
-                                data={dataCSV()}
-                                headers={headersCSV}
-                                style={{ backgroundColor: '#00A248', color: '#fff' }}
-                            />
                             <UserAdd onRefresh={handleRefresh} />
                         </div>
                     }
@@ -438,6 +425,17 @@ const UserList = () => {
                         </Table>
                     </TableContainer>
                 </CardContent>
+                <CardActions>
+                    <div className="d-flex align-items-center">
+                        <Chip
+                            size="small"
+                            variant="outlined"
+                            className="mr-1"
+                            label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
+                        />
+                        <ExportExcel filename="user" data={dataCSV()} headers={headersCSV} />
+                    </div>
+                </CardActions>
             </Card>
 
             {/* modal update password */}

@@ -245,7 +245,7 @@ const UnitList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('config.unit.titleList')}
+                            {t('config.unit.titleListdbd')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }

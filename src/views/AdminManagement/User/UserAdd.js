@@ -129,175 +129,185 @@ const UserAdd = ({ onRefresh }) => {
     }
 
     return (
-        <>
-            <Chip
+      <>
+        <Button
+          size="small"
+          variant="outlined"
+          startIcon={<AddIcon />}
+          onClick={() => setShouldOpenModal(true)}
+          style={{
+            color: "var(--white)",
+            border: "1px solid white",
+            maxHeight: 22,
+          }}
+        >
+          Thêm mới (F2)
+        </Button>
+        <Dialog fullWidth={true} maxWidth="sm" open={shouldOpenModal}>
+          <Card>
+            <CardHeader title={t("user.addUser")} />
+            <CardContent>
+              <Grid container spacing={1}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth={true}
+                    required
+                    autoFocus
+                    autoComplete="off"
+                    margin="dense"
+                    label={t("user.userName")}
+                    name="username"
+                    onChange={handleChange}
+                    value={userInfo.username}
+                    variant="outlined"
+                    inputRef={step1Ref}
+                    onKeyPress={(event) => {
+                      if (event.key === "Enter") {
+                        step2Ref.current.focus();
+                      }
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth={true}
+                    margin="dense"
+                    autoComplete="off"
+                    label={t("user.userID")}
+                    onChange={handleChange}
+                    name="user_id"
+                    value={userInfo.user_id || ""}
+                    variant="outlined"
+                    inputRef={step2Ref}
+                    onKeyPress={(event) => {
+                      if (event.key === "Enter") {
+                        step3Ref.current.focus();
+                      }
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth={true}
+                    margin="dense"
+                    autoComplete="off"
+                    label={t("user.userPass")}
+                    onChange={handleChange}
+                    name="user_pass"
+                    value={userInfo.user_pass || ""}
+                    variant="outlined"
+                    inputRef={step3Ref}
+                    onKeyPress={(event) => {
+                      if (event.key === "Enter") {
+                        step4Ref.current.focus();
+                      }
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth={true}
+                    margin="dense"
+                    autoComplete="off"
+                    label={t("user.userEmail")}
+                    onChange={handleChange}
+                    name="user_email"
+                    value={userInfo.user_email || ""}
+                    variant="outlined"
+                    inputRef={step4Ref}
+                    onKeyPress={(event) => {
+                      if (event.key === "Enter") {
+                        step5Ref.current.focus();
+                      }
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth={true}
+                    margin="dense"
+                    autoComplete="off"
+                    label={t("user.userPhone")}
+                    onChange={handleChange}
+                    name="user_phone"
+                    value={userInfo.user_phone || ""}
+                    variant="outlined"
+                    inputRef={step6Ref}
+                    onKeyPress={(event) => {
+                      if (event.key === "Enter") {
+                        handleCreate();
+                      }
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </CardContent>
+            <CardActions
+              className="align-items-end"
+              style={{ justifyContent: "flex-end" }}
+            >
+              <Button
                 size="small"
-                className="mr-1"
-                deleteIcon={<AddIcon />}
-                onDelete={() => setShouldOpenModal(true)}
-                style={{ backgroundColor: 'var(--primary)', color: '#fff' }}
-                onClick={() => setShouldOpenModal(true)}
-                label={t('btn.add')}
-            />
-            <Dialog fullWidth={true} maxWidth="sm" open={shouldOpenModal}>
-                <Card>
-                    <CardHeader title={t('user.addUser')} />
-                    <CardContent>
-                        <Grid container spacing={1}>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    fullWidth={true}
-                                    required
-                                    autoFocus
-                                    autoComplete="off"
-                                    margin="dense"
-                                    label={t('user.userName')}
-                                    name="username"
-                                    onChange={handleChange}
-                                    value={userInfo.username}
-                                    variant="outlined"
-                                    inputRef={step1Ref}
-                                    onKeyPress={(event) => {
-                                        if (event.key === 'Enter') {
-                                            step2Ref.current.focus()
-                                        }
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    fullWidth={true}
-                                    margin="dense"
-                                    autoComplete="off"
-                                    label={t('user.userID')}
-                                    onChange={handleChange}
-                                    name="user_id"
-                                    value={userInfo.user_id || ''}
-                                    variant="outlined"
-                                    inputRef={step2Ref}
-                                    onKeyPress={(event) => {
-                                        if (event.key === 'Enter') {
-                                            step3Ref.current.focus()
-                                        }
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <TextField
-                                    fullWidth={true}
-                                    margin="dense"
-                                    autoComplete="off"
-                                    label={t('user.userPass')}
-                                    onChange={handleChange}
-                                    name="user_pass"
-                                    value={userInfo.user_pass || ''}
-                                    variant="outlined"
-                                    inputRef={step3Ref}
-                                    onKeyPress={(event) => {
-                                        if (event.key === 'Enter') {
-                                            step4Ref.current.focus()
-                                        }
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <TextField
-                                    fullWidth={true}
-                                    margin="dense"
-                                    autoComplete="off"
-                                    label={t('user.userEmail')}
-                                    onChange={handleChange}
-                                    name="user_email"
-                                    value={userInfo.user_email || ''}
-                                    variant="outlined"
-                                    inputRef={step4Ref}
-                                    onKeyPress={(event) => {
-                                        if (event.key === 'Enter') {
-                                            step5Ref.current.focus()
-                                        }
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <TextField
-                                    fullWidth={true}
-                                    margin="dense"
-                                    autoComplete="off"
-                                    label={t('user.userPhone')}
-                                    onChange={handleChange}
-                                    name="user_phone"
-                                    value={userInfo.user_phone || ''}
-                                    variant="outlined"
-                                    inputRef={step6Ref}
-                                    onKeyPress={(event) => {
-                                        if (event.key === 'Enter') {
-                                            handleCreate()
-                                        }
-                                    }}
-                                />
-                            </Grid>
-                        </Grid>
-                    </CardContent>
-                    <CardActions className="align-items-end" style={{ justifyContent: 'flex-end' }}>
-                        <Button
-                            size="small"
-                            onClick={(e) => {
-                                if (controlTimeOutKey && control_sv.ControlTimeOutObj[controlTimeOutKey]) {
-                                    return
-                                }
-                                setShouldOpenModal(false)
-                                setUserInfo({ ...defaultUserModalAdd })
-                            }}
-                            startIcon={<ExitToAppIcon />}
-                            variant="contained"
-                            disableElevation
-                        >
-                            {t('btn.close')} (Esc)
-                        </Button>
-                        <Button
-                            size="small"
-                            onClick={() => {
-                                handleCreate()
-                            }}
-                            variant="contained"
-                            disabled={checkValidate()}
-                            className={
-                                checkValidate() === false
-                                    ? process
-                                        ? 'button-loading bg-success text-white'
-                                        : 'bg-success text-white'
-                                    : ''
-                            }
-                            endIcon={process && <LoopIcon />}
-                            startIcon={<SaveIcon />}
-                        >
-                            {t('btn.save')} (F3)
-                        </Button>
-                        <Button
-                            size="small"
-                            onClick={() => {
-                                saveContinue.current = true
-                                handleCreate()
-                            }}
-                            variant="contained"
-                            disabled={checkValidate()}
-                            className={
-                                checkValidate() === false
-                                    ? process
-                                        ? 'button-loading bg-success text-white'
-                                        : 'bg-success text-white'
-                                    : ''
-                            }
-                            endIcon={process && <LoopIcon />}
-                            startIcon={<SaveIcon />}
-                        >
-                            {t('save_continue')} (F4)
-                        </Button>
-                    </CardActions>
-                </Card>
-            </Dialog>
-        </>
-    )
+                onClick={(e) => {
+                  if (
+                    controlTimeOutKey &&
+                    control_sv.ControlTimeOutObj[controlTimeOutKey]
+                  ) {
+                    return;
+                  }
+                  setShouldOpenModal(false);
+                  setUserInfo({ ...defaultUserModalAdd });
+                }}
+                startIcon={<ExitToAppIcon />}
+                variant="contained"
+                disableElevation
+              >
+                {t("btn.close")} (Esc)
+              </Button>
+              <Button
+                size="small"
+                onClick={() => {
+                  handleCreate();
+                }}
+                variant="contained"
+                disabled={checkValidate()}
+                className={
+                  checkValidate() === false
+                    ? process
+                      ? "button-loading bg-success text-white"
+                      : "bg-success text-white"
+                    : ""
+                }
+                endIcon={process && <LoopIcon />}
+                startIcon={<SaveIcon />}
+              >
+                {t("btn.save")} (F3)
+              </Button>
+              <Button
+                size="small"
+                onClick={() => {
+                  saveContinue.current = true;
+                  handleCreate();
+                }}
+                variant="contained"
+                disabled={checkValidate()}
+                className={
+                  checkValidate() === false
+                    ? process
+                      ? "button-loading bg-success text-white"
+                      : "bg-success text-white"
+                    : ""
+                }
+                endIcon={process && <LoopIcon />}
+                startIcon={<SaveIcon />}
+              >
+                {t("save_continue")} (F4)
+              </Button>
+            </CardActions>
+          </Card>
+        </Dialog>
+      </>
+    );
 }
 
 export default UserAdd

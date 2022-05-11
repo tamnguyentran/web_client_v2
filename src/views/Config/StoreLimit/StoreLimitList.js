@@ -238,34 +238,12 @@ const StoreLimitList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('config.store_limit.titleList')}
+                            {t('config.store_limit.titleListsvs')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }
                     action={
                         <div className="d-flex align-items-center">
-                            <Chip
-                                size="small"
-                                variant="outlined"
-                                className="mr-1"
-                                label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
-                            />
-                            <Chip
-                                size="small"
-                                className="mr-1"
-                                deleteIcon={<FastForwardIcon />}
-                                onDelete={() => null}
-                                color="primary"
-                                label={t('getMoreData')}
-                                onClick={getNextData}
-                                disabled={dataSourceRef.current.length >= totalRecords}
-                            />
-                            <ExportExcel
-                                filename="storeLimit"
-                                data={dataCSV()}
-                                headers={headersCSV}
-                                style={{ backgroundColor: '#00A248', color: '#fff' }}
-                            />
                             <StoreLimitAdd onRefresh={handleRefresh} />
                         </div>
                     }
@@ -368,7 +346,7 @@ const StoreLimitList = () => {
                             onClick={getNextData}
                             disabled={dataSourceRef.current.length >= totalRecords}
                         />
-                        <ExportExcel filename="unit" data={dataCSV()} headers={headersCSV} />
+                        <ExportExcel filename="storeLimit" data={dataCSV()} headers={headersCSV} />
                     </div>
                 </CardActions>
             </Card>

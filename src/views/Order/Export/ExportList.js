@@ -297,41 +297,33 @@ const ExportList = () => {
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }
+
                     action={
                         <div className="d-flex align-items-center">
-                            <Chip
+                            <Button
                                 size="small"
                                 variant="outlined"
-                                className="mr-1"
-                                label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
-                            />
-                            <Chip
-                                size="small"
-                                className="mr-1"
-                                deleteIcon={<FastForwardIcon />}
-                                onDelete={() => null}
-                                color="primary"
-                                label={t('getMoreData')}
-                                onClick={getNextData}
-                                disabled={dataSourceRef.current.length >= totalRecords}
-                            />
-                            <ExportExcel
-                                filename="export"
-                                data={dataCSV()}
-                                headers={headersCSV}
-                                style={{ backgroundColor: '#00A248', color: '#fff' }}
-                            />
-                            <Chip
-                                onClick={() => history.push('/page/order/ins-export')}
-                                size="small"
-                                className="mr-1"
-                                deleteIcon={<AddIcon />}
-                                onDelete={() => history.push('/page/order/ins-export')}
-                                label={t('btn.add')}
-                                style={{ backgroundColor: 'var(--primary)', color: '#fff' }}
-                            />
+                                startIcon={<AddIcon />}
+                                onClick={() => history.push('/page/order/ins-exportt')}
+                                style={{ color: 'var(--white)', border: '1px solid white', maxHeight: 22 }}
+                            >
+                                Thêm mới (F2)
+                            </Button>
                         </div>
                     }
+                    // action={
+                    //     <div className="d-flex align-items-center">
+                    //         <Chip
+                    //             onClick={() => history.push('/page/order/ins-export')}
+                    //             size="small"
+                    //             className="mr-1"
+                    //             deleteIcon={<AddIcon />}
+                    //             onDelete={() => history.push('/page/order/ins-export')}
+                    //             label={t('btn.add')}
+                    //             style={{ backgroundColor: 'var(--primary)', color: '#fff' }}
+                    //         />
+                    //     </div>
+                    // }
                 />
                 <CardContent>
                     <TableContainer className="tableContainer">
@@ -436,6 +428,27 @@ const ExportList = () => {
                         </Table>
                     </TableContainer>
                 </CardContent>
+                <CardActions>
+                    <div className="d-flex align-items-center">
+                        <Chip
+                            size="small"
+                            variant="outlined"
+                            className="mr-1"
+                            label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
+                        />
+                        <Chip
+                            variant="outlined"
+                            size="small"
+                            className="mr-1"
+                            deleteIcon={<FastForwardIcon />}
+                            onDelete={() => null}
+                            label={t('getMoreData')}
+                            onClick={getNextData}
+                            disabled={dataSourceRef.current.length >= totalRecords}
+                        />
+                        <ExportExcel filename="export" data={dataCSV()} headers={headersCSV} />
+                    </div>
+                </CardActions>
             </Card>
 
             {/* modal delete */}

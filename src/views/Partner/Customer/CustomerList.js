@@ -48,6 +48,7 @@ import SearchOne from '../../../components/SearchOne'
 import LoopIcon from '@material-ui/icons/Loop'
 import ExportExcel from '../../../components/ExportExcel'
 import DisplayColumn from '../../../components/DisplayColumn'
+import AddIcon from '@material-ui/icons/Add'
 
 const serviceInfo = {
     GET_ALL: {
@@ -281,7 +282,7 @@ const CustomerList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('partner.customer.titleList')}
+                            {t('partner.customer.titleListkjkj')}
                             {/* <IconButton className='ml-2' style={{ padding: 0, backgroundColor: '#fff' }} onClick={onClickColumn}>
                         <MoreVertIcon />
                     </IconButton> */}
@@ -290,28 +291,6 @@ const CustomerList = () => {
                     }
                     action={
                         <div className="d-flex align-items-center">
-                            <Chip
-                                size="small"
-                                variant="outlined"
-                                className="mr-1"
-                                label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
-                            />
-                            <Chip
-                                size="small"
-                                className="mr-1"
-                                deleteIcon={<FastForwardIcon />}
-                                onDelete={() => null}
-                                color="primary"
-                                label={t('getMoreData')}
-                                onClick={getNextData}
-                                disabled={dataSourceRef.current.length >= totalRecords}
-                            />
-                            <ExportExcel
-                                filename="customer"
-                                data={dataCSV()}
-                                headers={headersCSV}
-                                style={{ backgroundColor: '#00A248', color: '#fff' }}
-                            />
                             <CustomerAdd onRefresh={handleRefresh} />
                         </div>
                     }
@@ -405,6 +384,27 @@ const CustomerList = () => {
                         </Table>
                     </TableContainer>
                 </CardContent>
+                <CardActions>
+                    <div className="d-flex align-items-center">
+                        <Chip
+                            size="small"
+                            variant="outlined"
+                            className="mr-1"
+                            label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
+                        />
+                        <Chip
+                            variant="outlined"
+                            size="small"
+                            className="mr-1"
+                            deleteIcon={<FastForwardIcon />}
+                            onDelete={() => null}
+                            label={t('getMoreData')}
+                            onClick={getNextData}
+                            disabled={dataSourceRef.current.length >= totalRecords}
+                        />
+                        <ExportExcel filename="customer" data={dataCSV()} headers={headersCSV} />
+                    </div>
+                </CardActions>
             </Card>
 
             {/* modal delete */}

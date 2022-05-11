@@ -210,15 +210,19 @@ const PriceAdd = ({ onRefresh }) => {
 
     return (
         <>
-            <Chip
-                size="small"
-                className="mr-1"
-                deleteIcon={<AddIcon />}
-                onDelete={() => setShouldOpenModal(true)}
-                style={{ backgroundColor: 'var(--primary)', color: '#fff' }}
-                onClick={() => setShouldOpenModal(true)}
-                label={t('btn.add')}
-            />
+           <Button
+        size="small"
+        variant="outlined"
+        startIcon={<AddIcon />}
+        onClick={() => setShouldOpenModal(true)}
+        style={{
+          color: "var(--white)",
+          border: "1px solid white",
+          maxHeight: 22,
+        }}
+      >
+        Thêm mới (F2)
+      </Button>
             <Dialog
                 fullWidth={false}
                 maxWidth="md"

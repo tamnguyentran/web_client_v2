@@ -281,45 +281,36 @@ const ExportDestroyList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('order.exportDestroy.titleList')}
+                            {t('order.exportDestroy.titleListvsvs')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }
                     action={
                         <div className="d-flex align-items-center">
-                            <Chip
+                            <Button
                                 size="small"
                                 variant="outlined"
-                                className="mr-1"
-                                label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
-                            />
-                            <Chip
-                                size="small"
-                                className="mr-1"
-                                deleteIcon={<FastForwardIcon />}
-                                onDelete={() => null}
-                                color="primary"
-                                label={t('getMoreData')}
-                                onClick={getNextData}
-                                disabled={dataSourceRef.current.length >= totalRecords}
-                            />
-                            <ExportExcel
-                                filename="export-destroy"
-                                data={dataCSV()}
-                                headers={headersCSV}
-                                style={{ backgroundColor: '#00A248', color: '#fff' }}
-                            />
-                            <Chip
-                                onClick={() => history.push('/page/order/ins-exportDestroy')}
-                                size="small"
-                                className="mr-1"
-                                deleteIcon={<AddIcon />}
-                                onDelete={() => history.push('/page/order/ins-exportDestroy')}
-                                label={t('btn.add')}
-                                style={{ backgroundColor: 'var(--primary)', color: '#fff' }}
-                            />
+                                startIcon={<AddIcon />}
+                                onClick={() => history.push('/page/order/ins-exportRepay')}
+                                style={{ color: 'var(--white)', border: '1px solid white', maxHeight: 22 }}
+                            >
+                                Thêm mới (F2)
+                            </Button>
                         </div>
                     }
+                    // action={
+                    //     <div className="d-flex align-items-center">
+                    //         <Chip
+                    //             onClick={() => history.push('/page/order/ins-exportDestroy')}
+                    //             size="small"
+                    //             className="mr-1"
+                    //             deleteIcon={<AddIcon />}
+                    //             onDelete={() => history.push('/page/order/ins-exportDestroy')}
+                    //             label={t('btn.add')}
+                    //             style={{ backgroundColor: 'var(--primary)', color: '#fff' }}
+                    //         />
+                    //     </div>
+                    // }
                 />
                 <CardContent>
                     <TableContainer className="tableContainer">
@@ -357,7 +348,6 @@ const ExportDestroyList = () => {
                                                         case 'action':
                                                             return (
                                                                 <TableCell
-                                                                    nowrap="true"
                                                                     nowrap="true"
                                                                     key={indexRow}
                                                                     align={col.align}
@@ -416,6 +406,27 @@ const ExportDestroyList = () => {
                         </Table>
                     </TableContainer>
                 </CardContent>
+                <CardActions>
+                    <div className="d-flex align-items-center">
+                        <Chip
+                            size="small"
+                            variant="outlined"
+                            className="mr-1"
+                            label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
+                        />
+                        <Chip
+                            variant="outlined"
+                            size="small"
+                            className="mr-1"
+                            deleteIcon={<FastForwardIcon />}
+                            onDelete={() => null}
+                            label={t('getMoreData')}
+                            onClick={getNextData}
+                            disabled={dataSourceRef.current.length >= totalRecords}
+                        />
+                        <ExportExcel filename="export-destroy" data={dataCSV()} headers={headersCSV} />
+                    </div>
+                </CardActions>
             </Card>
 
             {/* modal delete */}

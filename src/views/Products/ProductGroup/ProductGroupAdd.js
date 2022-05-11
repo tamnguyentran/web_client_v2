@@ -111,15 +111,15 @@ const ProductGroupAdd = ({ onRefresh }) => {
 
     return (
         <>
-            <Chip
+             <Button
                 size="small"
-                className="mr-1"
-                deleteIcon={<AddIcon />}
-                onDelete={() => setShouldOpenModal(true)}
-                style={{ backgroundColor: 'var(--primary)', color: '#fff' }}
+                variant="outlined"
+                startIcon={<AddIcon />}
                 onClick={() => setShouldOpenModal(true)}
-                label={t('btn.add')}
-            />
+                style={{ color: 'var(--white)', border: '1px solid white', maxHeight: 22 }}
+            >
+                {t('btn.add')} (F2)
+            </Button>
             <Dialog
                 fullWidth={true}
                 maxWidth="sm"

@@ -266,32 +266,6 @@ const ExportRepayList = () => {
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }
-                    action={
-                        <div className="d-flex align-items-center">
-                            <Chip
-                                size="small"
-                                variant="outlined"
-                                className="mr-1"
-                                label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
-                            />
-                            <Chip
-                                size="small"
-                                className="mr-1"
-                                deleteIcon={<FastForwardIcon />}
-                                onDelete={() => null}
-                                color="primary"
-                                label={t('getMoreData')}
-                                onClick={getNextData}
-                                disabled={dataSourceRef.current.length >= totalRecords}
-                            />
-                            <ExportExcel
-                                filename="settlement-export"
-                                data={dataCSV()}
-                                headers={headersCSV}
-                                style={{ backgroundColor: '#00A248', color: '#fff' }}
-                            />
-                        </div>
-                    }
                 />
                 <CardContent>
                     <TableContainer className="tableContainer">
@@ -329,7 +303,6 @@ const ExportRepayList = () => {
                                                         case 'action':
                                                             return (
                                                                 <TableCell
-                                                                    nowrap="true"
                                                                     nowrap="true"
                                                                     key={indexRow}
                                                                     align={col.align}
@@ -396,6 +369,27 @@ const ExportRepayList = () => {
                         </Table>
                     </TableContainer>
                 </CardContent>
+                <CardActions>
+                    <div className="d-flex align-items-center">
+                        <Chip
+                            size="small"
+                            variant="outlined"
+                            className="mr-1"
+                            label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
+                        />
+                        <Chip
+                            variant="outlined"
+                            size="small"
+                            className="mr-1"
+                            deleteIcon={<FastForwardIcon />}
+                            onDelete={() => null}
+                            label={t('getMoreData')}
+                            onClick={getNextData}
+                            disabled={dataSourceRef.current.length >= totalRecords}
+                        />
+                        <ExportExcel filename="settlement-export" data={dataCSV()} headers={headersCSV} />
+                    </div>
+                </CardActions>
             </Card>
 
             {/* modal delete */}

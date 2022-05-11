@@ -353,7 +353,7 @@ const ProductList = () => {
         <CardHeader
           title={
             <>
-              {t("product.titleList")}
+              {t("product.titleListt")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}

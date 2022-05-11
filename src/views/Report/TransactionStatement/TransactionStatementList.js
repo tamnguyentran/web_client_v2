@@ -18,7 +18,7 @@ import sendRequest from '../../../utils/service/sendReq'
 
 import { tableColumn, searchDefaultModal } from './Modal/TransactionStatement.modal'
 import TransactionStatementSearch from './TransactionStatementSearch';
-import { Card, CardHeader, CardContent, IconButton, Tooltip, Grid } from '@material-ui/core'
+import { Card, CardHeader, CardContent, IconButton, Tooltip, Grid, CardActions } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import moment from 'moment'
 import ExportExcel from '../../../components/ExportExcel'
@@ -185,13 +185,6 @@ const TransactionStatementList = () => {
                     title={<>{t('transaction_statement_list')}
                         <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                     </>}
-                    action={
-                        <div className='d-flex align-items-center'>
-                            <Chip size="small" variant='outlined' className='mr-1' label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')} />
-                            <Chip size="small" className='mr-1' deleteIcon={<FastForwardIcon />} onDelete={() => null} color="primary" label={t('getMoreData')} onClick={getNextData} disabled={dataSourceRef.current.length >= totalRecords} />
-                            <ExportExcel filename='report-transaction-statement' data={dataCSV()} headers={headersCSV} style={{ backgroundColor: '#00A248', color: '#fff' }} />
-                        </div>
-                    }
                 />
                 <CardContent>
                     <TableContainer className="tableContainer">
@@ -239,6 +232,27 @@ const TransactionStatementList = () => {
                         </Table>
                     </TableContainer>
                 </CardContent>
+                <CardActions>
+                    <div className="d-flex align-items-center">
+                        <Chip
+                            size="small"
+                            variant="outlined"
+                            className="mr-1"
+                            label={dataSourceRef.current.length + '/' + totalRecords + ' ' + t('rowData')}
+                        />
+                        <Chip
+                            variant="outlined"
+                            size="small"
+                            className="mr-1"
+                            deleteIcon={<FastForwardIcon />}
+                            onDelete={() => null}
+                            label={t('getMoreData')}
+                            onClick={getNextData}
+                            disabled={dataSourceRef.current.length >= totalRecords}
+                        />
+                        <ExportExcel filename="report-transaction-statement" data={dataCSV()} headers={headersCSV} />
+                    </div>
+                </CardActions>
             </Card>
         </>
     )

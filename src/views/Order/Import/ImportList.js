@@ -101,7 +101,7 @@ const ImportList = () => {
     const dataSourceRef = useRef([])
     const idRef = useRef(0)
 
-    useHotkeys('f2', () => history.push('/page/order/ins-import'), { enableOnTags: ['INPUT', 'SELECT', 'TEXTAREA'] })
+    useHotkeys('F2', () => history.push('/page/order/ins-import'), { enableOnTags: ['INPUT', 'SELECT', 'TEXTAREA'] })
 
     useEffect(() => {
         getList(searchModal.start_dt, searchModal.end_dt, glb_sv.defaultValueSearch, searchModal.id_status, '')
@@ -304,7 +304,7 @@ const ImportList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('order.import.titleList')}
+                            {t('order.import.titleListvsvs')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }
@@ -317,7 +317,7 @@ const ImportList = () => {
                                 onClick={() => history.push('/page/order/ins-import')}
                                 style={{ color: 'var(--white)', border: '1px solid white', maxHeight: 22 }}
                             >
-                                Thêm mới
+                                Thêm mới (F2)
                             </Button>
                         </div>
                     }
@@ -358,7 +358,6 @@ const ImportList = () => {
                                                         case 'action':
                                                             return (
                                                                 <TableCell
-                                                                    nowrap="true"
                                                                     nowrap="true"
                                                                     key={indexRow}
                                                                     align={col.align}

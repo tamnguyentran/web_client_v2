@@ -27,6 +27,7 @@ const Unit_Autocomplete = ({
     disabled = false,
     onKeyPress = () => null,
     inputRef = null,
+    exceptOption = 0
 }) => {
     const { t } = useTranslation()
 
@@ -61,6 +62,12 @@ const Unit_Autocomplete = ({
             control_sv.clearReqInfoMapRequest(cltSeqResult)
         } else if (message['PROC_DATA']) {
             let newData = message['PROC_DATA']
+            console.log(newData.rows)
+            console.log(exceptOption)
+            if(exceptOption){
+                console.log(exceptOption)
+                newData.rows = newData.rows.filter((item)=> item.o_1 !== exceptOption)
+            }
             setDataSource(newData.rows)
         }
     }

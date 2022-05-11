@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as XLSX from "xlsx";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
 import {
   Button,
   Dialog,
@@ -44,6 +45,13 @@ import { ReactComponent as IC_DOCUMENT_FOLDER } from "../../asset/images/documen
 import { ReactComponent as IC_DOCUMENT_DOWNLOAD_EXAMPLE } from "../../asset/images/document-download-example.svg";
 import info_dec from "./info_dec.json";
 
+import { ExcelRenderer } from "react-excel-renderer";
+import { defaultModalAdd } from "../../views/Partner/Supplier/Modal/Supplier.modal";
+import { Delete } from "@material-ui/icons";
+import NumberFormat from "react-number-format";
+
+import ModalUpdateProduct from "./ModalUpdateProduct";
+
 const serviceInfo = {
   CREATE_UNIT: {
     functionName: "insert",
@@ -70,7 +78,7 @@ const serviceInfo = {
     object: "dropdown_list",
   },
   CREATE_PRODUCT: {
-    functionName: "insert",
+    functionName: "insert_full",
     reqFunct: reqFunction.PRODUCT_ADD,
     biz: "common",
     object: "products",
@@ -94,19 +102,27 @@ const columns = [
   { key: "storages", title: "product.storages" },
   { key: "effect", title: "product.effect" },
   { key: "overdose", title: "product.overdose" },
-  { key: "invenqty", title: "product.store_current" },
-  { key: "inven_price", title: "product.inven_price" },
+  { key: "invenqty", title: "product.store_current", type: "currency" },
+  { key: "inven_price", title: "product.inven_price", type: "currency" },
   { key: "lotno", title: "order.import.lot_no" },
   { key: "expire_date", title: "order.import.exp_dt" },
-  { key: "inven_min", title: "config.store_limit.minQuantity" },
-  { key: "inven_max", title: "config.store_limit.maxQuantity" },
-  { key: "imp_price", title: "config.price.importPrice" },
+  {
+    key: "inven_min",
+    title: "config.store_limit.minQuantity",
+    type: "currency",
+  },
+  {
+    key: "inven_max",
+    title: "config.store_limit.maxQuantity",
+    type: "currency",
+  },
+  { key: "imp_price", title: "config.price.importPrice", type: "currency" },
   { key: "imp_vat", title: "config.price.importVAT" },
-  { key: "exp_price", title: "config.price.price" },
-  { key: "exp_wprice", title: "config.price.wholePrice" },
+  { key: "exp_price", title: "config.price.price", type: "currency" },
+  { key: "exp_wprice", title: "config.price.wholePrice", type: "currency" },
   { key: "exp_vat", title: "config.price.exportVAT" },
   { key: "unit_other", title: "config.price.unit" },
-  { key: "convert_rate", title: "config.unitRate.rate" },
+  { key: "convert_rate", title: "config.unitRate.rate", type: "currency" },
   //-- Key for validate
   { key: "validate", title: "" },
   { key: "noted", title: "" },
@@ -122,7 +138,7 @@ const productDefaulModal = {
   unitID: null,
   barcode: "",
   packing: "",
-  content: "",
+  contents: "",
   designate: "",
   contraind: "",
   dosage: "",
@@ -146,6 +162,37 @@ const productDefaulModal = {
   convert_rate: 0,
 };
 
+const arrKeyProduct = [
+  "code",
+  "name",
+  "group",
+  "unit",
+  "barcode",
+  "packing",
+  "contents",
+  "designate",
+  "contraind",
+  "dosage",
+  "manufact",
+  "interact",
+  "storages",
+  "effect",
+  "overdose",
+  "invenqty",
+  "inven_price",
+  "lotno",
+  "expire_date",
+  "inven_min",
+  "inven_max",
+  "imp_price",
+  "imp_vat",
+  "exp_price",
+  "exp_wprice",
+  "exp_vat",
+  "unit_other",
+  "convert_rate",
+];
+
 const ImportExcel = ({ title, onRefresh }) => {
   console.log(title);
   const { t } = useTranslation();
@@ -159,7 +206,12 @@ const ImportExcel = ({ title, onRefresh }) => {
 
   const [unitList, setUnitList] = useState([]);
   const [groupList, setGroupList] = useState([]);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isInfoObj, setIsInfoObj] = useState({
+    isInventory: false,
+    isExpanded: false,
+    isAddUnit: false,
+    isInfoPrice: false
+  });
   const [shouldOpenModalEdit, setShouldOpenModalEdit] = useState(false);
   const [editID, setEditID] = useState(null);
   const [editModal, setEditModal] = useState(productDefaulModal);
@@ -184,6 +236,20 @@ const ImportExcel = ({ title, onRefresh }) => {
   const step13Ref = useRef(null);
   const step14Ref = useRef(null);
   const step15Ref = useRef(null);
+  const step16Ref = useRef(null);
+  const step17Ref = useRef(null);
+  const step18Ref = useRef(null);
+  const step19Ref = useRef(null);
+  const step20Ref = useRef(null);
+  const step21Ref = useRef(null);
+  const step22Ref = useRef(null);
+  const step23Ref = useRef(null);
+  const step24Ref = useRef(null);
+  const step25Ref = useRef(null);
+  const step26Ref = useRef(null);
+  const step27Ref = useRef(null);
+  const step28Ref = useRef(null);
+
   const allowFileTypes = useRef([
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "application/vnd.ms-excel",
@@ -319,6 +385,7 @@ const ImportExcel = ({ title, onRefresh }) => {
         continue;
       } else if (!!e?.groupID && !!e?.unitID) {
         // Đủ thông tin tên sp, nhóm, đơn vị => gửi lên sv
+        console.log(e.code)
         const inputParam = [
           e.groupID,
           !e.code || e.code.trim() === "" ? "AUTO" : e.code.trim(),
@@ -335,8 +402,25 @@ const ImportExcel = ({ title, onRefresh }) => {
           e.overdose || "",
           e.storages || "",
           e.packing || "",
-          "",
+
+          e.invenqty || 0,
+          e.lotno || "",
+          e.inven_price || 0,
+          e.expire_date ? moment(e.expire_date).format("YYYYMMDD") : "",
+
+          Number(e.inven_min) || 0,
+          Number(e.inven_max) || 0,
+
+          e.imp_price || 0,
+          e.imp_vat || 0,
+          e.exp_price || 0,
+          e.exp_wprice || 0,
+          e.exp_vat || 0,
+
+          e.unit_other_id || 0,
+          Number(e.convert_rate) || 0,
         ];
+        console.log(e);
         console.log(inputParam);
         sendRequest(
           serviceInfo.CREATE_PRODUCT,
@@ -357,11 +441,11 @@ const ImportExcel = ({ title, onRefresh }) => {
         ) {
           // Hệ thống đã có các thông tin đơn vị tính và nhóm cần thiết => gửi lên
           const inputParam = [
-            groupObject.o_1,
+            e.groupID,
             !e.code || e.code.trim() === "" ? "AUTO" : e.code.trim(),
             e.name,
             e.barcode,
-            unitObject.o_1,
+            e.unitID,
             e.contents || "",
             e.contraind || "",
             e.designate || "",
@@ -372,7 +456,23 @@ const ImportExcel = ({ title, onRefresh }) => {
             e.overdose || "",
             e.storages || "",
             e.packing || "",
-            "",
+
+            e.invenqty || 0,
+            e.lotno || "",
+            e.inven_price || 0,
+            e.expire_date ? moment(e.expire_date).format("YYYYMMDD") : "",
+
+            Number(e.inven_min) || 0,
+            Number(e.inven_max) || 0,
+
+            e.imp_price || 0,
+            e.imp_vat || 0,
+            e.exp_price || 0,
+            e.exp_wprice || 0,
+            e.exp_vat || 0,
+
+            e.unit || 0,
+            Number(e.convert_rate) || 0,
           ];
           sendRequest(
             serviceInfo.CREATE_PRODUCT,
@@ -396,7 +496,7 @@ const ImportExcel = ({ title, onRefresh }) => {
               !e.code || e.code.trim() === "" ? "AUTO" : e.code.trim(),
               e.name,
               e.barcode,
-              unitObject.o_1,
+              e.unitID,
               e.contents || "",
               e.contraind || "",
               e.designate || "",
@@ -407,7 +507,23 @@ const ImportExcel = ({ title, onRefresh }) => {
               e.overdose || "",
               e.storages || "",
               e.packing || "",
-              "",
+
+              e.invenqty || 0,
+              e.lotno || "",
+              e.inven_price || 0,
+              e.expire_date ? moment(e.expire_date).format("YYYYMMDD") : "",
+
+              Number(e.inven_min) || 0,
+              Number(e.inven_max) || 0,
+
+              e.imp_price || 0,
+              e.imp_vat || 0,
+              e.exp_price || 0,
+              e.exp_wprice || 0,
+              e.exp_vat || 0,
+
+              e.unit || 0,
+              Number(e.convert_rate) || 0,
             ];
             sendRequest(
               serviceInfo.CREATE_PRODUCT,
@@ -425,7 +541,7 @@ const ImportExcel = ({ title, onRefresh }) => {
           if (!!groupObject && !!groupObject?.o_1) {
             // Hệ thống đã có thông tin nhóm sản phẩm => gửi lên
             const inputParam = [
-              groupObject.o_1,
+              e.groupID,
               !e.code || e.code.trim() === "" ? "AUTO" : e.code.trim(),
               e.name,
               e.barcode,
@@ -440,7 +556,23 @@ const ImportExcel = ({ title, onRefresh }) => {
               e.overdose || "",
               e.storages || "",
               e.packing || "",
-              "",
+
+              e.invenqty || 0,
+              e.lotno || "",
+              e.inven_price || 0,
+              e.expire_date ? moment(e.expire_date).format("YYYYMMDD") : "",
+
+              Number(e.inven_min) || 0,
+              Number(e.inven_max) || 0,
+
+              e.imp_price || 0,
+              e.imp_vat || 0,
+              e.exp_price || 0,
+              e.exp_wprice || 0,
+              e.exp_vat || 0,
+
+              e.unit || 0,
+              Number(e.convert_rate) || 0,
             ];
             sendRequest(
               serviceInfo.CREATE_PRODUCT,
@@ -475,7 +607,7 @@ const ImportExcel = ({ title, onRefresh }) => {
       dataAddExcelFaild.current.push(e);
       if (i === dataSource.length - 1) {
         setDataSource(dataAddExcelFaild.current);
-        dataAddExcelFaild.current = []
+        dataAddExcelFaild.current = [];
       }
     } else if (message["PROC_DATA"]) {
       if (dataSource.length === 1) {
@@ -495,91 +627,137 @@ const ImportExcel = ({ title, onRefresh }) => {
 
   const getDataBeginRow = (file, beginRow) => {
     setIsEnableSave(false);
-    let data = [];
-    const fileReader = new FileReader();
-    fileReader.readAsBinaryString(file);
+    // let data = [];
+    // const fileReader = new FileReader();
+    // fileReader.readAsBinaryString(file);
 
-    fileReader.onload = (event) => {
-      try {
-        const { result } = event.target;
-        console.log(result);
-        const workbook = XLSX.read(result, { type: "binary" });
-        const sheetNameList = workbook.SheetNames;
-        console.log(sheetNameList);
-        sheetNameList.forEach(function (y) {
-          const workSheet = workbook.Sheets[y];
-          console.log(workSheet);
-          const headers = {};
-          for (const w in workSheet) {
-            if (w[0] === "!") continue;
-            //parse out the column, row, and value
-            const row = parseInt(w.substring(1));
-            console.log(row);
-            if (row == beginRow - 1) {
-              continue;
-            }
-            const col = w.substring(0, 1);
-            const value = workSheet[w].v;
-            //store header names
-            if (row === beginRow) {
-              headers[col] = value;
-              continue;
-            }
-            if (!data[row - 1]) {
-              data[row - 1] = {
-                groupID: null,
-                unitID: null,
-              };
-            }
-            //-- set default process status
-            // data[row - 1]['proctatus'] = 0
-            data[row - 1][headers[col]] = value;
-            // Thêm unitID và groupID cho data
-            const unitObject = unitList.find(
-              (x) => x.o_2 === data[row - 1]?.unit
-            );
-            const groupObject = groupList.find(
-              (x) => x.o_2 === data[row - 1]?.group
-            );
-            data[row - 1]["unitID"] = !!unitObject?.o_1
-              ? unitObject?.o_1
-              : null;
-            data[row - 1]["groupID"] = !!groupObject?.o_1
-              ? groupObject?.o_1
-              : null;
-            // console.log('read file, col, value, row', col, value, row)
-            // console.log('read file, data', JSON.stringify(data))
-            console.log(data[row - 1]);
-          }
-          //drop those first two rows which are empty
-          data.shift();
-          data.shift();
+    // fileReader.onload = (event) => {
+    //   try {
+    //     const { result } = event.target;
+    //     console.log(result);
+    //     const workbook = XLSX.read(result, { type: "binary" });
+    //     const sheetNameList = workbook.SheetNames;
+    //     console.log(sheetNameList);
+    //     sheetNameList.forEach(function (y) {
+    //       const workSheet = workbook.Sheets[y];
+    //       console.log(workSheet);
+    //       const headers = {};
+    //       for (const w in workSheet) {
+    //         console.log(w);
+    //         if (w[0] === "!") continue;
+    //         //parse out the column, row, and value
+    //         const row = parseInt(w.substring(1));
+    //         console.log(row);
+    //         if (row == beginRow - 1) {
+    //           continue;
+    //         }
+    //         const col = w.substring(0, 1);
+    //         const value = workSheet[w].v;
+    //         //store header names
+    //         if (row === beginRow) {
+    //           headers[col] = value;
+    //           continue;
+    //         }
+    //         if (!data[row - 1]) {
+    //           data[row - 1] = {
+    //             groupID: null,
+    //             unitID: null,
+    //           };
+    //         }
+    //         //-- set default process status
+    //         // data[row - 1]['proctatus'] = 0
+    //         data[row - 1][headers[col]] = value;
+    //         // Thêm unitID và groupID cho data
+    //         const unitObject = unitList.find(
+    //           (x) => x.o_2 === data[row - 1]?.unit
+    //         );
+    //         const groupObject = groupList.find(
+    //           (x) => x.o_2 === data[row - 1]?.group
+    //         );
+    //         data[row - 1]["unitID"] = !!unitObject?.o_1
+    //           ? unitObject?.o_1
+    //           : null;
+    //         data[row - 1]["groupID"] = !!groupObject?.o_1
+    //           ? groupObject?.o_1
+    //           : null;
+    //         // console.log('read file, col, value, row', col, value, row)
+    //         // console.log('read file, data', JSON.stringify(data))
+    //         console.log(data[row - 1]);
+    //       }
+    //       //drop those first two rows which are empty
+    //       data.shift();
+    //       data.shift();
 
-          // Check những đơn vị tính và nhóm sp chưa có
-          const unitSysNameList = unitList.map((x) => x.o_2);
-          const groupSysNameList = groupList.map((x) => x.o_2);
-          const unitDataNameList = data.map((x) => x.unit);
-          const groupDataNameList = data.map((x) => x.group);
-          // Lưu các đơn vị/nhóm sp chưa có trên system => gửi event tạo các đơn vị/nhóm sp mới
-          setUnitNotAvailable([
-            ...new Set(
-              unitDataNameList.filter((item) => !unitSysNameList.includes(item))
-            ),
-          ]);
-          setGroupNotAvailable([
-            ...new Set(
-              groupDataNameList.filter(
-                (item) => !groupSysNameList.includes(item)
-              )
-            ),
-          ]);
+    //       // Check những đơn vị tính và nhóm sp chưa có
+    //       const unitSysNameList = unitList.map((x) => x.o_2);
+    //       const groupSysNameList = groupList.map((x) => x.o_2);
+    //       const unitDataNameList = data.map((x) => x.unit);
+    //       const groupDataNameList = data.map((x) => x.group);
+    //       // Lưu các đơn vị/nhóm sp chưa có trên system => gửi event tạo các đơn vị/nhóm sp mới
+    //       setUnitNotAvailable([
+    //         ...new Set(
+    //           unitDataNameList.filter((item) => !unitSysNameList.includes(item))
+    //         ),
+    //       ]);
+    //       setGroupNotAvailable([
+    //         ...new Set(
+    //           groupDataNameList.filter(
+    //             (item) => !groupSysNameList.includes(item)
+    //           )
+    //         ),
+    //       ]);
 
-          console.log(data);
-          setDataSource([...data]);
-          console.log("read file, data", JSON.stringify([...data]));
+    //       console.log(data);
+    //       setDataSource([...data]);
+    //       console.log("read file, data", JSON.stringify([...data]));
+    //     });
+    //   } catch (e) {}
+    // };
+
+    ExcelRenderer(file, (err, resp) => {
+      if (err) {
+        console.log(err);
+      } else {
+        const resultList = resp.rows
+          .filter((data, index) => {
+            return data.length > 0 && index != 0;
+          })
+          .map((item) => {
+            for (let i = 0; i < item.length; i++) {
+              if (item[i] === undefined) {
+                item[i] = null;
+              }
+            }
+            return [...item].filter((item2, index) => index !== 0);
+          });
+        let arrTam = [];
+        resultList.forEach((item, index) => {
+          let objTam = {};
+          item.forEach((x, i) => {
+            objTam[arrKeyProduct[i]] = x;
+            if (arrKeyProduct[i] === "unit") {
+              let unitObject = unitList.find((x) => x.o_2 === objTam?.unit);
+              objTam["unitID"] = !!unitObject?.o_1 ? unitObject?.o_1 : null;
+            }
+            if (arrKeyProduct[i] === "group") {
+              const groupObject = groupList.find(
+                (x) => x.o_2 === objTam?.group
+              );
+              console.log(groupObject, groupList);
+              objTam["groupID"] = !!groupObject?.o_1 ? groupObject?.o_1 : null;
+            }
+            if (arrKeyProduct[i] === "unit_other") {
+              let unitObject = unitList.find((x) => x.o_2 === objTam?.unit_other);
+              objTam["unit_other_id"] = !!unitObject?.o_1
+                ? unitObject?.o_1
+                : null;
+            }
+          });
+          arrTam.push(objTam);
         });
-      } catch (e) {}
-    };
+        setDataSource(arrTam);
+      }
+    });
   };
 
   const valiadateData = (data) => {
@@ -795,7 +973,6 @@ const ImportExcel = ({ title, onRefresh }) => {
     if (files.length === 1) {
       // Process a file if we have exactly one
       if (validateFile(files[0]) === true) {
-        console.log(files[0]);
         getDataBeginRow(files[0], 2);
         setFileSelected(files[0].name);
         setIsError(false);
@@ -815,15 +992,45 @@ const ImportExcel = ({ title, onRefresh }) => {
   const handleChange = (e) => {
     const newModal = { ...editModal };
     newModal[e.target.name] =
-      e.target.name === "name" ? e.target.value.toUpperCase() : e.target.value;
-    setEditModal(newModal);
+      (e.target.name === "name" || e.target.code === "name") ? e.target.value.toUpperCase() : e.target.value;
+    setEditModal({...newModal});
   };
 
-  const handleChangeExpand = () => {
-    setIsExpanded((e) => !e);
+  // const handleValueChange = (name,value)=>{
+  //   const newModal = { ...editModal };
+  //   if(name === "imp_vat" || name === "exp_vat"){
+  //     newModal[name] = (value < 0 || value > 100) ? 10 : value
+  //   }if(name === "convert_rate"){
+  //     console.log("vsvsss")
+  //     newModal[name] = (value < 2) ? 2 : value
+  //   }
+  //   else{
+  //     newModal[name] = value
+  //   }
+  //   setEditModal({...newModal});
+  // };
+  
+
+  const handleChangeShowDropdownInfoProduct = (keyShow) => {
+    switch (keyShow) {
+      case "infoExpanded":
+        setIsInfoObj({ ...isInfoObj, isExpanded: !isInfoObj.isExpanded });
+        break;
+      case "infoInventory":
+        console.log();
+        setIsInfoObj({ ...isInfoObj, isInventory: !isInfoObj.isInventory });
+        break;
+      case "infoPrice":
+        setIsInfoObj({ ...isInfoObj, isInfoPrice: !isInfoObj.isInfoPrice });
+        break;
+      case "infoAddUnit":
+        setIsInfoObj({ ...isInfoObj, isAddUnit: !isInfoObj.isAddUnit });
+        break;
+    }
   };
 
   const handleSelectProductGroup = (obj) => {
+    console.log(obj)
     const newModal = { ...editModal };
     newModal["groupID"] = !!obj ? obj?.o_1 : null;
     newModal["group"] = !!obj ? obj?.o_2 : "";
@@ -838,12 +1045,19 @@ const ImportExcel = ({ title, onRefresh }) => {
   };
 
   const handleUpdateRow = () => {
-    let newDataSource = JSON.parse(JSON.stringify(dataSource));
-    newDataSource.splice(editID, 1, editModal);
-    setDataSource(newDataSource);
-    setEditID(null);
-    setEditModal({ ...productDefaulModal });
-    setShouldOpenModalEdit(false);
+    if (
+      (editModal.groupID === 19 || editModal.groupID === 20) &&
+      editModal.expire_date === ""
+    ) {
+      step19Ref.current.focus();
+    } else {
+      let newDataSource = JSON.parse(JSON.stringify(dataSource));
+      newDataSource.splice(editID, 1, editModal);
+      setDataSource(newDataSource);
+      setEditID(null);
+      setEditModal({ ...productDefaulModal });
+      setShouldOpenModalEdit(false);
+    }
   };
 
   return (
@@ -975,42 +1189,27 @@ const ImportExcel = ({ title, onRefresh }) => {
                                     title={t("Chỉnh sửa")}
                                     arrow
                                   >
-                                    <EditIcon color={"primary"} className="cursor-pointer"/>
+                                    <EditIcon
+                                      color={"primary"}
+                                      className="cursor-pointer"
+                                    />
                                   </Tooltip>
                                   {item?.warning && (
                                     <Tooltip
                                       placement="top"
-                                      title={<div style={{fontSize: '13px'}}>{t(item?.warning)}</div>}
+                                      title={
+                                        <div style={{ fontSize: "13px" }}>
+                                          {t(item?.warning)}
+                                        </div>
+                                      }
                                       arrow
                                     >
-                                      <InfoOutlinedIcon style={{color:'red'}} className="cursor-pointer" />
+                                      <InfoOutlinedIcon
+                                        style={{ color: "red" }}
+                                        className="cursor-pointer"
+                                      />
                                     </Tooltip>
                                   )}
-                                  {/* {value === 0 ? (
-                                    <Tooltip
-                                      placement="top"
-                                      title={t("product.tooltip.not_process")}
-                                      arrow
-                                    >
-                                      <PauseCircleOutlineIcon />
-                                    </Tooltip>
-                                  ) : value === 1 ? (
-                                    <Tooltip
-                                      placement="top"
-                                      title={t("product.tooltip.success")}
-                                      arrow
-                                    >
-                                      <CheckCircleOutlineIcon color="primary" />
-                                    </Tooltip>
-                                  ) : (
-                                    <Tooltip
-                                      placement="top"
-                                      title={t('product.tooltip.fail')}
-                                      arrow
-                                    >
-                                      <ErrorOutlineIcon color="secondary" />
-                                    </Tooltip>
-                                  )} */}
                                 </TableCell>
                               ) : (
                                 <Tooltip
@@ -1040,6 +1239,7 @@ const ImportExcel = ({ title, onRefresh }) => {
                                   arrow
                                 >
                                   <TableCell
+                                    className="text-center"
                                     nowrap="true"
                                     key={indexRow}
                                     align={col.align}
@@ -1048,7 +1248,7 @@ const ImportExcel = ({ title, onRefresh }) => {
                                         !value && col?.status && "#e7cfcf",
                                     }}
                                   >
-                                    {glb_sv.formatValue(value)}
+                                    {glb_sv.formatValue(value, col["type"])}
                                   </TableCell>
                                 </Tooltip>
                               );
@@ -1093,7 +1293,7 @@ const ImportExcel = ({ title, onRefresh }) => {
       </Dialog>
 
       {/* Modal cập nhật dòng dữ liệu */}
-      <Dialog fullWidth={true} maxWidth="md" open={shouldOpenModalEdit}>
+      {/* <Dialog fullWidth={true} maxWidth="md" open={shouldOpenModalEdit}>
         <Card className="product-card">
           <CardHeader title={t("product.titleEdit")} />
           <CardContent>
@@ -1226,7 +1426,7 @@ const ImportExcel = ({ title, onRefresh }) => {
                   fullWidth={true}
                   margin="dense"
                   autoComplete="off"
-                  label={t("product.content")}
+                  label={t("product.contente")}
                   onChange={handleChange}
                   value={editModal.contents}
                   name="contents"
@@ -1234,7 +1434,7 @@ const ImportExcel = ({ title, onRefresh }) => {
                   inputRef={step7Ref}
                   onKeyPress={(event) => {
                     if (event.key === "Enter") {
-                      setIsExpanded(true);
+                      setIsInfoObj({ ...isInfoObj, isExpanded: true });
                       setTimeout(() => {
                         step8Ref.current.focus();
                       }, 10);
@@ -1246,8 +1446,10 @@ const ImportExcel = ({ title, onRefresh }) => {
 
             <Accordion
               className="mt-2"
-              expanded={isExpanded}
-              onChange={handleChangeExpand}
+              expanded={isInfoObj.isExpanded}
+              onChange={() => {
+                handleChangeShowDropdownInfoProduct("infoExpanded");
+              }}
             >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -1403,6 +1605,74 @@ const ImportExcel = ({ title, onRefresh }) => {
                       }}
                     />
                   </Grid>
+
+                  <Grid item xs={12} sm={6} md={6}>
+                    <TextField
+                      fullWidth={true}
+                      margin="dense"
+                      autoComplete="off"
+                      label={t("product.overdose")}
+                      onChange={handleChange}
+                      value={editModal.overdose}
+                      name="overdose"
+                      variant="outlined"
+                      inputRef={step15Ref}
+                      onKeyPress={(event) => {
+                        if (event.key === "Enter") {
+                          handleUpdateRow();
+                        }
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion
+              className="mt-2"
+              expanded={isInfoObj.isInventory}
+              onChange={() => {
+                handleChangeShowDropdownInfoProduct("infoInventory");
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1bh-content"
+                id="panel1bh-header"
+                height="50px"
+              >
+                <Typography className="">{t("Thông tin tồn kho")}</Typography>
+              </AccordionSummary>
+              <AccordionDetails className="pt-0">
+                <Grid container className="" spacing={1}>
+                  <Grid item xs={12} sm={3} md={3}>
+                    <Tooltip
+                      placement="top"
+                      title={t("product.tooltip.minmax_notinput")}
+                      arrow
+                    >
+                      <NumberFormat
+                        className="inputNumber"
+                        style={{ width: "100%" }}
+                        // value={storeLimit.minQuantity}
+                        label={t("config.store_limit.minQuantity")}
+                        customInput={TextField}
+                        autoComplete="off"
+                        margin="dense"
+                        type="text"
+                        variant="outlined"
+                        thousandSeparator={true}
+                        // onValueChange={handleMinQuantityChange}
+                        onFocus={(e) => e.target.select()}
+                        // inputRef={minQtyRef}
+                        onKeyPress={(event) => {
+                          if (event.key === "Enter") {
+                            // maxQtyRef.current.focus();
+                          }
+                        }}
+                      />
+                    </Tooltip>
+                  </Grid>
                 </Grid>
               </AccordionDetails>
             </Accordion>
@@ -1447,7 +1717,54 @@ const ImportExcel = ({ title, onRefresh }) => {
             </Button>
           </CardActions>
         </Card>
-      </Dialog>
+      </Dialog> */}
+
+      <ModalUpdateProduct
+        shouldOpenModalEdit={shouldOpenModalEdit}
+        editModal={editModal}
+        handleChange={handleChange}
+        // handleValueChange={handleValueChange}
+        handleSelectProductGroup={handleSelectProductGroup}
+        step1Ref={step1Ref}
+        step2Ref={step2Ref}
+        step3Ref={step3Ref}
+        step4Ref={step4Ref}
+        step5Ref={step5Ref}
+        step6Ref={step6Ref}
+        step7Ref={step7Ref}
+        step8Ref={step8Ref}
+        step9Ref={step9Ref}
+        step10Ref={step10Ref}
+        step11Ref={step11Ref}
+        step12Ref={step12Ref}
+        step13Ref={step13Ref}
+        step14Ref={step14Ref}
+        step15Ref={step15Ref}
+        step16Ref={step16Ref}
+        step17Ref={step17Ref}
+        step18Ref={step18Ref}
+        step19Ref={step19Ref}
+        step20Ref={step20Ref}
+        step21Ref={step21Ref}
+        step22Ref={step22Ref}
+        step23Ref={step23Ref}
+        step24Ref={step24Ref}
+        step25Ref={step25Ref}
+        step26Ref={step26Ref}
+        step27Ref={step27Ref}
+        step28Ref={step28Ref}
+        handleSelectUnit={handleSelectUnit}
+        isInfoObj={isInfoObj}
+        setIsInfoObj={setIsInfoObj}
+        handleChangeShowDropdownInfoProduct={
+          handleChangeShowDropdownInfoProduct
+        }
+        handleUpdateRow={handleUpdateRow}
+        setShouldOpenModalEdit={setShouldOpenModalEdit}
+        setEditID={setEditID}
+        setEditModal={setEditModal}
+        productDefaulModal
+      />
     </>
   );
 };

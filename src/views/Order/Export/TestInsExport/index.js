@@ -1263,7 +1263,7 @@ console.log(inputParam)
                       id="bar-code-id"
                       style={{ width: "300px" }}
                       size={"small"}
-                      label={t("product.barcode")}
+                      label={t("product.barcodevbb")}
                       variant="outlined"
                       autoFocus={true}
                       // disabled={disableInputBarCode}
@@ -1669,7 +1669,7 @@ console.log(inputParam)
             className="list-product-bottom"
           >
             <CardHeader
-              title={t("product.titleList")}
+              title={t("product.titleListvsvs")}
               action={
                 <div className="flex">
                   <div style={{ minWidth: "270px" }}>

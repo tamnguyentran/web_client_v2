@@ -128,6 +128,7 @@ const ProductAdd = ({ onRefresh }) => {
     )
 
     const handleResultCreate = (reqInfoMap, message) => {
+        console.log(reqInfoMap, message)
         setProcess(false)
         SnackBarService.alert(message['PROC_MESSAGE'], true, message['PROC_STATUS'], 3000)
         if (message['PROC_STATUS'] !== 1) {
@@ -295,7 +296,7 @@ const ProductAdd = ({ onRefresh }) => {
             Price.exportVAT || 0,
 
             unitRate.unit || 0,
-            // Number(unitRate.rate) || 0,
+            Number(unitRate.rate) || 0,
         ]
 
         console.log(inputParam)
@@ -412,6 +413,7 @@ const ProductAdd = ({ onRefresh }) => {
     }
 
     const handleExpDateChange = (date) => {
+        console.log(date)
         const newInvoice = { ...invoiceInventory }
         newInvoice['exp_dt'] = date
         setInvoiceInventory(newInvoice)
