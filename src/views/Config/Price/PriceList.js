@@ -249,7 +249,7 @@ const PriceList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('config.price.titleListss')}
+                            {t('config.price.titleList')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }

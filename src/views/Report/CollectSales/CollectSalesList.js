@@ -198,7 +198,7 @@ const CollectSalesList = () => {
             />
             <Card>
                 <CardHeader
-                    title={<>{t('collecting_sales_listvdvd')}
+                    title={<>{t('collecting_sales_list')}
                     <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                     </>}
                 />

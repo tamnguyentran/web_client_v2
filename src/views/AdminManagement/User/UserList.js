@@ -301,7 +301,7 @@ const UserList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('user.titleListcscs')}
+                            {t('user.titleList')}
                             {/* <IconButton className='ml-2' style={{ padding: 0, backgroundColor: '#fff' }} onClick={onClickColumn}>
                             <MoreVertIcon />
                         </IconButton> */}

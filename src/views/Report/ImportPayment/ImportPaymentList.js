@@ -199,7 +199,7 @@ const ImportPaymentList = () => {
             />
             <Card>
                 <CardHeader
-                    title={<>{t('import_payment_listhg')}
+                    title={<>{t('import_payment_list')}
                         <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                     </>}
                 />

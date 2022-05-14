@@ -288,7 +288,7 @@ const ExportRepayList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('order.exportRepay.titleListssvs')}
+                            {t('order.exportRepay.titleList')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }

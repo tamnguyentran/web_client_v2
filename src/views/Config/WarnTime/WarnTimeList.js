@@ -238,7 +238,7 @@ const WarnTimeList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('config.warnTime.titleListeee')}
+                            {t('config.warnTime.titleList')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }

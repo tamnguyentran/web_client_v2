@@ -27,7 +27,7 @@ import {
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import Unit_Autocomplete from '../../../views/Config/Unit/Control/Unit.Autocomplete'
+import Unit_Autocomplete from "../../../views/Config/Unit/Control/Unit.Autocomplete";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -61,40 +61,12 @@ const ModalUpdateProduct = (props) => {
   const {
     shouldOpenModalEdit,
     editModal,
-    handleChange,
     handleSelectProductGroup,
-    step1Ref,
-    step2Ref,
-    step3Ref,
-    step4Ref,
-    step5Ref,
-    step6Ref,
-    step7Ref,
-    step8Ref,
-    step9Ref,
-    step10Ref,
-    step11Ref,
-    step12Ref,
-    step13Ref,
-    step14Ref,
-    step15Ref,
-    step16Ref,
-    step17Ref,
-    step18Ref,
     step19Ref,
-    step20Ref,
-    step21Ref,
-    step22Ref,
-    step23Ref,
-    step24Ref,
-    step25Ref,
-    step26Ref,
-    step27Ref,
-    step28Ref,
     handleSelectUnit,
     isInfoObj,
     setIsInfoObj,
-    handleChangeShowDropdownInfoProduct,
+    // handleChangeShowDropdownInfoProduct,
     handleUpdateRow,
     setShouldOpenModalEdit,
     setEditID,
@@ -102,6 +74,35 @@ const ModalUpdateProduct = (props) => {
     productDefaulModal,
     // handleValueChange,
   } = props;
+
+  const step1Ref = useRef(null);
+  const step2Ref = useRef(null);
+  const step3Ref = useRef(null);
+  const step4Ref = useRef(null);
+  const step5Ref = useRef(null);
+  const step6Ref = useRef(null);
+  const step7Ref = useRef(null);
+  const step8Ref = useRef(null);
+  const step9Ref = useRef(null);
+  const step10Ref = useRef(null);
+  const step11Ref = useRef(null);
+  const step12Ref = useRef(null);
+  const step13Ref = useRef(null);
+  const step14Ref = useRef(null);
+  const step15Ref = useRef(null);
+  const step16Ref = useRef(null);
+  const step17Ref = useRef(null);
+  const step18Ref = useRef(null);
+  // const step19Ref = useRef(null);
+  const step20Ref = useRef(null);
+  const step21Ref = useRef(null);
+  const step22Ref = useRef(null);
+  const step23Ref = useRef(null);
+  const step24Ref = useRef(null);
+  const step25Ref = useRef(null);
+  const step26Ref = useRef(null);
+  const step27Ref = useRef(null);
+  const step28Ref = useRef(null);
   const { t } = useTranslation();
 
   const handleExpDateChange = (date) => {
@@ -111,43 +112,75 @@ const ModalUpdateProduct = (props) => {
   };
 
   const handleSelectUnitRate = (obj) => {
-    console.log(obj)
+    console.log(obj);
     const newEditModal = JSON.parse(JSON.stringify(editModal));
     // if(obj){
-      newEditModal['unit_other_id'] = !!obj ? obj?.o_1 : null
-      newEditModal['unit_other'] = !!obj ? obj?.o_2 : null
-      if(!obj){
-        console.log("vsvs")
-        newEditModal['convert_rate'] = 0
-      }
+    newEditModal["unit_other_id"] = !!obj ? obj?.o_1 : null;
+    newEditModal["unit_other"] = !!obj ? obj?.o_2 : null;
+    if (!obj) {
+      console.log("vsvs");
+      newEditModal["convert_rate"] = 0;
+    }
     // }else{
     //   newEditModal['convert_rate'] = 0
     // }
-    setEditModal({...newEditModal})
-}
+    setEditModal({ ...newEditModal });
+  };
 
-const handleValueChange = (name,value)=>{
-  const newModal = JSON.parse(JSON.stringify(editModal))
-  if(name === "imp_vat" || name === "exp_vat"){
-    newModal[name] = (value < 0 || value > 100) ? 10 : value
-  }else if(name === "convert_rate"){
-    value = Number(value?.split('')?.filter((item, index) => item !== ',')?.join(''))
-    newModal[name] = value < 2 ? 2 : value
-  }else{
-    newModal[name] = value
-  }
-  setEditModal(newModal);
-};
+  const handleValueChange = (name, value) => {
+    const newModal = JSON.parse(JSON.stringify(editModal));
+    if (name === "imp_vat" || name === "exp_vat") {
+      newModal[name] = value < 0 || value > 100 ? 10 : value;
+    } else if (name === "convert_rate") {
+      value = Number(
+        value
+          ?.split("")
+          ?.filter((item, index) => item !== ",")
+          ?.join("")
+      );
+      newModal[name] = value < 2 ? 2 : value;
+    } else {
+      newModal[name] = value;
+    }
+    setEditModal(newModal);
+  };
 
-const handleValueChangeInven = (name, value) => {
-  const newModal = JSON.parse(JSON.stringify(editModal));
-  if (name === "inven_max") {
+  const handleChange = (e) => {
+    const newModal = { ...editModal };
+    newModal[e.target.name] =
+      e.target.name === "name" || e.target.code === "name"
+        ? e.target.value.toUpperCase()
+        : e.target.value;
+    setEditModal({ ...newModal });
+  };
+
+  const handleValueChangeInven = (name, value) => {
+    const newModal = JSON.parse(JSON.stringify(editModal));
+    if (name === "inven_max") {
       newModal[name] = value > newModal["inven_min"] ? value : 0;
-  } else {
+    } else {
       newModal[name] = value < newModal["inven_max"] ? value : 0;
-  }
-  setEditModal(newModal);
-};
+    }
+    setEditModal(newModal);
+  };
+
+  const handleChangeShowDropdownInfoProduct = (keyShow,value) => {
+    switch (keyShow) {
+      case "infoExpanded":
+        setIsInfoObj({ ...isInfoObj, isExpanded: value });
+        break;
+      case "infoInventory":
+        console.log();
+        setIsInfoObj({ ...isInfoObj, isInventory: value });
+        break;
+      case "infoPrice":
+        setIsInfoObj({ ...isInfoObj, isInfoPrice: value });
+        break;
+      case "infoAddUnit":
+        setIsInfoObj({ ...isInfoObj, isAddUnit: value });
+        break;
+    }
+  };
 
   return (
     <>
@@ -293,8 +326,7 @@ const handleValueChangeInven = (name, value) => {
                   inputRef={step7Ref}
                   onKeyPress={(event) => {
                     if (event.key === "Enter") {
-                      handleChangeShowDropdownInfoProduct("infoExpanded");
-                      // setIsInfoObj({ ...isInfoObj, isExpanded: true });
+                      handleChangeShowDropdownInfoProduct("infoExpanded", true);
                       setTimeout(() => {
                         step8Ref.current.focus();
                       }, 10);
@@ -308,7 +340,7 @@ const handleValueChangeInven = (name, value) => {
               className="mt-2"
               expanded={isInfoObj.isExpanded}
               onChange={() => {
-                handleChangeShowDropdownInfoProduct("infoExpanded");
+                handleChangeShowDropdownInfoProduct("infoExpanded", !isInfoObj.isExpanded);
               }}
             >
               <AccordionSummary
@@ -460,10 +492,10 @@ const handleValueChangeInven = (name, value) => {
                       inputRef={step15Ref}
                       onKeyPress={(event) => {
                         if (event.key === "Enter") {
-                          handleChangeShowDropdownInfoProduct("infoInventory");
-                          setTimeout(()=>{
+                          handleChangeShowDropdownInfoProduct("infoInventory", true);
+                          setTimeout(() => {
                             step16Ref.current.focus();
-                          },500)
+                          }, 500);
                           // handleUpdateRow();
                         }
                       }}
@@ -477,7 +509,7 @@ const handleValueChangeInven = (name, value) => {
               className="mt-2"
               expanded={isInfoObj.isInventory}
               onChange={() => {
-                handleChangeShowDropdownInfoProduct("infoInventory");
+                handleChangeShowDropdownInfoProduct("infoInventory", !isInfoObj.isInventory);
               }}
             >
               <AccordionSummary
@@ -496,7 +528,7 @@ const handleValueChangeInven = (name, value) => {
                       style={{ width: "100%" }}
                       value={editModal.invenqty || 0}
                       name={"invenqty"}
-                      label={t("product.store_currentss")}
+                      label={t("product.store_current")}
                       customInput={TextField}
                       autoComplete="off"
                       margin="dense"
@@ -511,7 +543,6 @@ const handleValueChangeInven = (name, value) => {
                       onKeyPress={(event) => {
                         if (event.key === "Enter") {
                           step17Ref.current.focus();
-                          //   importInvenPrice.current.focus();
                         }
                       }}
                     />
@@ -546,11 +577,9 @@ const handleValueChangeInven = (name, value) => {
                         handleValueChange("inven_price", e.floatValue);
                       }}
                       onFocus={(e) => e.target.select()}
-                      //   inputRef={importInvenPrice}
                       onKeyPress={(event) => {
                         if (event.key === "Enter") {
                           step18Ref.current.focus();
-                          //   LotNoRef.current.focus();
                         }
                       }}
                     />
@@ -562,13 +591,11 @@ const handleValueChangeInven = (name, value) => {
                       //   required={product.store_current > 0}
                       autoComplete="off"
                       label={t("order.import.lot_no")}
-                      //   onChange={handleInvoiceChange}
                       onChange={handleChange}
                       value={editModal.lotno || ""}
                       name="lotno"
                       variant="outlined"
                       inputRef={step18Ref}
-                      //   inputRef={LotNoRef}
                       onKeyPress={(event) => {
                         if (event.key === "Enter") {
                           step19Ref.current.focus();
@@ -597,7 +624,7 @@ const handleValueChangeInven = (name, value) => {
                         inputRef={step19Ref}
                         onKeyPress={(event) => {
                           if (event.key === "Enter") {
-                            handleChangeShowDropdownInfoProduct("infoPrice");
+                            handleChangeShowDropdownInfoProduct("infoPrice", true);
                             setTimeout(() => {
                               step20Ref.current.focus();
                             }, 500);
@@ -614,7 +641,7 @@ const handleValueChangeInven = (name, value) => {
               className="mt-2"
               expanded={isInfoObj.isInfoPrice}
               onChange={() => {
-                handleChangeShowDropdownInfoProduct("infoPrice");
+                handleChangeShowDropdownInfoProduct("infoPrice", !isInfoObj.isInfoPrice);
               }}
             >
               <AccordionSummary
@@ -670,7 +697,11 @@ const handleValueChangeInven = (name, value) => {
                         className="inputNumber"
                         style={{ width: "100%" }}
                         value={editModal.inven_max || 0}
-                        helperText={editModal.inven_max > editModal.inven_min ? "" : "ko nhỏ hơn min"}
+                        helperText={
+                          editModal.inven_max > editModal.inven_min
+                            ? ""
+                            : "giá trị nhỏ hơn min"
+                        }
                         name="inven_max"
                         label={t("config.store_limit.maxQuantity")}
                         customInput={TextField}
@@ -710,7 +741,7 @@ const handleValueChangeInven = (name, value) => {
                       style={{ width: "100%" }}
                       value={editModal.imp_price || 0}
                       name="imp_price"
-                      label={t("config.price.importPricevsvs")}
+                      label={t("config.price.importPrice")}
                       customInput={TextField}
                       autoComplete="off"
                       margin="dense"
@@ -735,7 +766,7 @@ const handleValueChangeInven = (name, value) => {
                       style={{ width: "100%" }}
                       value={editModal.imp_vat || 0}
                       name="imp_vat"
-                      label={t("config.price.importVATd")}
+                      label={t("config.price.importVAT")}
                       customInput={TextField}
                       autoComplete="off"
                       margin="dense"
@@ -760,7 +791,7 @@ const handleValueChangeInven = (name, value) => {
                       style={{ width: "100%" }}
                       value={editModal.exp_price || 0}
                       name="exp_price"
-                      label={t("config.price.pricev")}
+                      label={t("config.price.price")}
                       customInput={TextField}
                       autoComplete="off"
                       margin="dense"
@@ -785,7 +816,7 @@ const handleValueChangeInven = (name, value) => {
                       style={{ width: "100%" }}
                       value={editModal.exp_wprice || 0}
                       name="exp_wprice"
-                      label={t("config.price.wholePricessvs")}
+                      label={t("config.price.wholePrice")}
                       customInput={TextField}
                       autoComplete="off"
                       margin="dense"
@@ -823,15 +854,12 @@ const handleValueChangeInven = (name, value) => {
                         handleValueChange("exp_vat", e.floatValue);
                       }}
                       inputRef={step26Ref}
-                      // inputRef={expVATRef}
                       onFocus={(e) => e.target.select()}
                       onKeyPress={(event) => {
                         if (event.key === "Enter") {
-                          // setIsExpandedInfo3(true);
-                          handleChangeShowDropdownInfoProduct("infoAddUnit");
+                          handleChangeShowDropdownInfoProduct("infoAddUnit", true);
                           setTimeout(() => {
                             step27Ref.current.focus();
-                            // rateParentRef.current.focus();
                           }, 500);
                         }
                       }}
@@ -845,7 +873,7 @@ const handleValueChangeInven = (name, value) => {
               className="mt-2"
               expanded={isInfoObj.isAddUnit}
               onChange={() => {
-                handleChangeShowDropdownInfoProduct("infoAddUnit");
+                handleChangeShowDropdownInfoProduct("infoAddUnit", !isInfoObj.isAddUnit);
               }}
             >
               <AccordionSummary
@@ -876,12 +904,15 @@ const handleValueChangeInven = (name, value) => {
                   </Grid>
                   <Grid item xs={12} sm={4} md={4}>
                     <NumberFormat
-                      disabled = {!editModal.unit_other_id}
+                      disabled={!editModal.unit_other_id}
                       className="inputNumber"
                       style={{ width: "100%" }}
                       required
                       name="convert_rate"
-                      value={editModal.convert_rate || (!editModal.unit_other_id ? 0 : 2)}
+                      value={
+                        editModal.convert_rate ||
+                        (!editModal.unit_other_id ? 0 : 2)
+                      }
                       label={t("config.unitRate.rate")}
                       customInput={TextField}
                       autoComplete="off"
@@ -889,15 +920,14 @@ const handleValueChangeInven = (name, value) => {
                       type="text"
                       variant="outlined"
                       thousandSeparator={true}
-                      // onValueChange={abcd}
-                      onChange={(e)=>{
+                      onChange={(e) => {
                         handleValueChange("convert_rate", e.target.value);
                       }}
                       onFocus={(e) => e.target.select()}
                       inputRef={step28Ref}
                       onKeyPress={(event) => {
                         if (event.key === "Enter") {
-                            handleUpdateRow()
+                          handleUpdateRow();
                         }
                       }}
                       inputProps={{
@@ -945,14 +975,18 @@ const handleValueChangeInven = (name, value) => {
               disabled={
                 !editModal?.name?.trim() ||
                 !editModal?.groupID ||
-                !editModal?.unitID || ((editModal.groupID === 19 || editModal.groupID === 20) && (editModal.expire_date === ""))
+                !editModal?.unitID ||
+                ((editModal.groupID === 19 || editModal.groupID === 20) &&
+                  editModal.expire_date === "")
                   ? true
                   : false
               }
               className={
                 !editModal?.name?.trim() ||
                 !editModal?.groupID ||
-                !editModal?.unitID || ((editModal.groupID === 19 || editModal.groupID === 20) && (editModal.expire_date === ""))
+                !editModal?.unitID ||
+                ((editModal.groupID === 19 || editModal.groupID === 20) &&
+                  editModal.expire_date === "")
                   ? ""
                   : "bg-success text-white"
               }

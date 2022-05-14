@@ -282,7 +282,7 @@ const CustomerList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('partner.customer.titleListkjkj')}
+                            {t('partner.customer.titleList')}
                             {/* <IconButton className='ml-2' style={{ padding: 0, backgroundColor: '#fff' }} onClick={onClickColumn}>
                         <MoreVertIcon />
                     </IconButton> */}

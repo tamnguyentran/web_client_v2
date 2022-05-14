@@ -2,13 +2,6 @@ import React, { useState, useCallback, useRef, useEffect, memo } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Grid,
-  Tooltip,
-  Table,
-  TableBody,
-  TableContainer,
-  TableCell,
-  TableHead,
-  TableRow,
   Button,
   Divider,
   CardActions,
@@ -21,25 +14,11 @@ import {
   Drawer,
   List,
   ListItem,
-  Select,
-  MenuItem,
   Chip,
 } from "@material-ui/core";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import NumberFormat from "react-number-format";
-import IconButton from "@material-ui/core/IconButton";
-import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-import EditIcon from "@material-ui/icons/Edit";
 import LoopIcon from "@material-ui/icons/Loop";
-import SearchIcon from "@material-ui/icons/Search";
 
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SaveIcon from "@material-ui/icons/Save";
-import CheckIcon from "@material-ui/icons/Check";
 import DeleteIcon from "@material-ui/icons/Delete";
 import glb_sv from "../../../../utils/service/global_service";
 import control_sv from "../../../../utils/service/control_services";
@@ -48,8 +27,6 @@ import { requestInfo } from "../../../../utils/models/requestInfo";
 import reqFunction from "../../../../utils/constan/functions";
 import sendRequest from "../../../../utils/service/sendReq";
 import DisplayColumn from "../../../../components/DisplayColumn";
-import BorderColorIcon from "@material-ui/icons/BorderColor";
-import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import {
   tableListAddColumn,
   invoiceImportModal,
@@ -58,21 +35,18 @@ import {
 } from "../Modal/Import.modal";
 import moment from "moment";
 // import AddProduct from '../AddProduct'
-
-import EditProductRows from "../EditImport/EditProductRows";
-import SupplierAdd_Autocomplete from "../../../Partner/Supplier/Control/SupplierAdd.Autocomplete";
 import Dictionary from "../../../../components/Dictionary";
 import AddProduct from "../AddProductClone";
 import { useReactToPrint } from "react-to-print";
 import Import_Bill from "../../../../components/Bill/Import_Bill";
 import ExportExcel from "../../../../components/ExportExcel";
-
-import HistoryIcon from "@material-ui/icons/History";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import CancelIcon from "@material-ui/icons/Cancel";
 import FastForwardIcon from "@material-ui/icons/FastForward";
 import { debounce, sortBy } from "lodash";
+
+import ListProductImport from "./ListProductImport";
+import InfoInvoice from "./InfoInvoice";
 
 const serviceInfo = {
   CREATE_INVOICE: {
@@ -154,7 +128,9 @@ const ProductImport = () => {
   const [deleteProcess, setDeleteProcess] = useState(false);
   const [updateProcess, setUpdateProcess] = useState(false);
   const [saveProcess, setSaveProcess] = useState(false);
-  const [searchModalInvoice, setSearchModalInvoice] = useState({ ...searchDefaultModalInvoice });
+  const [searchModalInvoice, setSearchModalInvoice] = useState({
+    ...searchDefaultModalInvoice,
+  });
   const [openModalShowBill, setOpenModalShowBill] = useState(false);
   const [dataHistoryListInvoice, setDataHistoryListInvoice] = useState([]);
   const [sortColumn, setSortColumn] = useState({
@@ -181,7 +157,7 @@ const ProductImport = () => {
 
   const importRef = useRef({});
 
-  const dataHistoryListInvoiceRef = useRef([])
+  const dataHistoryListInvoiceRef = useRef([]);
 
   // useHotkeys('f6', () => handleCreateInvoice(), { enableOnTags: ['INPUT', 'SELECT', 'TEXTAREA'] })
 
@@ -226,7 +202,7 @@ const ProductImport = () => {
   }, [dataSource]);
 
   useEffect(() => {
-    dataHistoryListInvoiceRef.current = []
+    dataHistoryListInvoiceRef.current = [];
     getListBill(
       searchModalInvoice.start_dt,
       searchModalInvoice.end_dt,
@@ -258,20 +234,25 @@ const ProductImport = () => {
     } else if (message["PROC_DATA"]) {
       let newData = message["PROC_DATA"];
       if (newData.rows.length > 0) {
-        dataHistoryListInvoiceRef.current = dataHistoryListInvoiceRef.current.concat(newData.rows)
+        dataHistoryListInvoiceRef.current =
+          dataHistoryListInvoiceRef.current.concat(newData.rows);
         setDataHistoryListInvoice(dataHistoryListInvoiceRef.current);
-          if (
-              reqInfoMap.inputParam[2] === glb_sv.defaultValueSearch 
-              // reqInfoMap.inputParam[7] === glb_sv.defaultValueSearch
-          ) {
-            setTotalRecordsListInvoice(newData.rowTotal)
-          } else {
-            setTotalRecordsListInvoice(dataHistoryListInvoiceRef.current.length - newData.rows.length + newData.rowTotal)
-          }
+        if (
+          reqInfoMap.inputParam[2] === glb_sv.defaultValueSearch
+          // reqInfoMap.inputParam[7] === glb_sv.defaultValueSearch
+        ) {
+          setTotalRecordsListInvoice(newData.rowTotal);
+        } else {
+          setTotalRecordsListInvoice(
+            dataHistoryListInvoiceRef.current.length -
+              newData.rows.length +
+              newData.rowTotal
+          );
+        }
       } else {
-        dataHistoryListInvoiceRef.current = []
-        setDataHistoryListInvoice([])
-          // setTotalRecords(0)
+        dataHistoryListInvoiceRef.current = [];
+        setDataHistoryListInvoice([]);
+        // setTotalRecords(0)
       }
     }
   };
@@ -548,7 +529,6 @@ const ProductImport = () => {
   const handleUpdateInvoice = () => {
     if (!Import.invoice_id && !invoiceFlag) {
       handleCreateInvoice();
-      // SnackBarService.alert(t('can_not_found_id_invoice_please_try_again'), true, 'error', 3000)
       return;
     } else if (!Import.supplier || !Import.order_dt) {
       SnackBarService.alert(
@@ -1000,7 +980,7 @@ const ProductImport = () => {
     []
   );
 
-  const getNextDataListInvoice = () =>{
+  const getNextDataListInvoice = () => {
     const lastIndex = dataHistoryListInvoiceRef.current.length - 1;
     const last_id = dataHistoryListInvoiceRef.current[lastIndex].o_1;
     getListBill(
@@ -1010,7 +990,7 @@ const ProductImport = () => {
       searchModalInvoice.id_status,
       searchModalInvoice.vender_nm
     );
-  }
+  };
   return (
     <Grid container spacing={1} className="h-100">
       {/* <EditProductRows
@@ -1131,7 +1111,10 @@ const ProductImport = () => {
                 color="primary"
                 label={t("getMoreData")}
                 onClick={getNextDataListInvoice}
-                disabled={dataHistoryListInvoiceRef.current.length >= totalRecordsListInvoice}
+                disabled={
+                  dataHistoryListInvoiceRef.current.length >=
+                  totalRecordsListInvoice
+                }
               />
             </div>
           </ListItem>
@@ -1171,683 +1154,53 @@ const ProductImport = () => {
                 />
               </div>
             </div>
-            <TableContainer className="tableContainer tableOrder">
-              <Table stickyHeader>
-                <caption
-                  className={[
-                    "text-center text-danger border-bottom-0",
-                    dataSource.length > 0 ? "d-none" : "",
-                  ].join(" ")}
-                >
-                  {t("lbl.emptyData")}
-                </caption>
-                <TableHead>
-                  <TableRow>
-                    {column.map((col, index) => {
-                      return (
-                        <Tooltip
-                          placement="top"
-                          disableFocusListener
-                          disableTouchListener
-                          title={t(col.tootip)}
-                        >
-                          <TableCell
-                            colSpan={col.field === "action" ? 2 : 1}
-                            nowrap="true"
-                            align={col.align}
-                            className={[
-                              "p-2 border-0 cursor-pointer",
-                              col.show ? "d-table-cell" : "d-none",
-                            ].join(" ")}
-                            key={col.field}
-                            onClick={() => {
-                              handleClickSortColum(col, index);
-                            }}
-                          >
-                            {t(col.title)}{" "}
-                            {sortColumn?.columIndex === index && showIconSort()}
-                          </TableCell>
-                        </Tooltip>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {dataSource.map((item, index) => {
-                    return (
-                      <TableRow
-                        onDoubleClick={() => {
-                          handleClickEdit(item, index);
-                        }}
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={index}
-                      >
-                        {column.map((col, indexRow) => {
-                          let value = item[col.field];
-                          if (col.show) {
-                            switch (col.field) {
-                              case "action":
-                                return (
-                                  <>
-                                    <TableCell align="center" nowrap="true">
-                                      {isIndexRow === index ? (
-                                        <Tooltip
-                                          placement="top"
-                                          title={t("save")}
-                                        >
-                                          <IconButton
-                                            size="small"
-                                            onClick={() => {
-                                              updateDataListProduct(item);
-                                            }}
-                                          >
-                                            <SaveIcon
-                                              style={{ color: "#066190" }}
-                                              fontSize="midlle"
-                                            />
-                                          </IconButton>
-                                        </Tooltip>
-                                      ) : (
-                                        <Tooltip
-                                          placement="top"
-                                          title={t("delete")}
-                                        >
-                                          <IconButton
-                                            size="small"
-                                            onClick={() => {
-                                              onRemove(item);
-                                              setProductDeleteIndex(index + 1);
-                                            }}
-                                          >
-                                            <DeleteIcon
-                                              style={{ color: "red" }}
-                                              fontSize="middle"
-                                            />
-                                          </IconButton>
-                                        </Tooltip>
-                                      )}
-                                    </TableCell>
-
-                                    <TableCell align="center" nowrap="true">
-                                      {isIndexRow === index ? (
-                                        <Tooltip
-                                          placement="top"
-                                          title={t("cancel")}
-                                        >
-                                          <IconButton
-                                            size="small"
-                                            onClick={() => {
-                                              setIsIndexRow(null);
-                                            }}
-                                          >
-                                            <CancelIcon
-                                              style={{ color: "#732424" }}
-                                              fontSize="midlle"
-                                            />
-                                          </IconButton>
-                                        </Tooltip>
-                                      ) : (
-                                        <>
-                                          <Tooltip
-                                            placement="top"
-                                            title={t("update")}
-                                          >
-                                            <IconButton
-                                              size="small"
-                                              onClick={() => {
-                                                handleClickEdit(item, index);
-                                              }}
-                                            >
-                                              <BorderColorIcon fontSize="midlle" />
-                                            </IconButton>
-                                          </Tooltip>
-                                        </>
-                                      )}
-                                    </TableCell>
-                                  </>
-                                );
-                              case "stt":
-                                return (
-                                  <TableCell
-                                    nowrap="true"
-                                    key={indexRow}
-                                    align={col.align}
-                                  >
-                                    {index + 1}
-                                  </TableCell>
-                                );
-                              case "o_4":
-                                return (
-                                  <TableCell align="center" nowrap="true">
-                                    {isIndexRow === index ? (
-                                      <Select
-                                        id="outlined-margin-dense"
-                                        margin="dense"
-                                        fullWidth={true}
-                                        labelId="export_type"
-                                        name="expType"
-                                        value={productInfo.expType}
-                                        onChange={(event) => {
-                                          handleChangeType(event, item);
-                                        }}
-                                        variant="outlined"
-                                      >
-                                        <MenuItem value="1">
-                                          {t("order.export.export_type_buy")}
-                                        </MenuItem>
-                                        <MenuItem value="2">
-                                          {t(
-                                            "order.export.export_type_selloff"
-                                          )}
-                                        </MenuItem>
-                                      </Select>
-                                    ) : (
-                                      item.o_4
-                                    )}
-                                  </TableCell>
-                                );
-                              case "o_10":
-                                return (
-                                  <TableCell align="center" nowrap="true">
-                                    {isIndexRow === index ? (
-                                      <NumberFormat
-                                        size={"small"}
-                                        className="inputNumber"
-                                        required
-                                        type="teft"
-                                        customInput={TextField}
-                                        autoComplete="off"
-                                        autoFocus={true}
-                                        margin="dense"
-                                        variant="outlined"
-                                        thousandSeparator={true}
-                                        // onFocus={handleFocus}
-                                        onKeyPress={(event) => {
-                                          if (event.key === "Tab") {
-                                            step2Ref.current.focus();
-                                          }
-                                        }}
-                                        onValueChange={(value) => {
-                                          handleChangeUpdate(
-                                            "expQty",
-                                            value.floatValue
-                                          );
-                                        }}
-                                        value={productInfo.expQty}
-                                      />
-                                    ) : (
-                                      glb_sv.formatValue(item.o_10, col["type"])
-                                    )}
-                                  </TableCell>
-                                );
-
-                              case "o_13":
-                                return (
-                                  <TableCell align="center" nowrap="true">
-                                    {isIndexRow === index ? (
-                                      <NumberFormat
-                                        inputRef={step2Ref}
-                                        className="inputNumber"
-                                        required
-                                        customInput={TextField}
-                                        autoComplete="off"
-                                        margin="dense"
-                                        type="text"
-                                        variant="outlined"
-                                        value={productInfo.expPrice}
-                                        thousandSeparator={true}
-                                        disabled={
-                                          productInfo.expType === "1"
-                                            ? false
-                                            : true
-                                        }
-                                        onValueChange={(value) => {
-                                          handleChangeUpdate(
-                                            "expPrice",
-                                            value.floatValue
-                                          );
-                                        }}
-                                        onKeyPress={(event) => {
-                                          if (event.key === "Tab") {
-                                            step3Ref.current.focus();
-                                          }
-                                        }}
-                                      />
-                                    ) : (
-                                      glb_sv.formatValue(item.o_13, col["type"])
-                                    )}
-                                  </TableCell>
-                                );
-
-                              case "o_14":
-                                return (
-                                  <TableCell align="center" nowrap="true">
-                                    {isIndexRow === index ? (
-                                      <NumberFormat
-                                        inputRef={step3Ref}
-                                        className="inputNumber"
-                                        required
-                                        customInput={TextField}
-                                        autoComplete="off"
-                                        margin="dense"
-                                        type="text"
-                                        variant="outlined"
-                                        value={productInfo.expDisCount}
-                                        disabled={
-                                          productInfo.expType === "1"
-                                            ? false
-                                            : true
-                                        }
-                                        onValueChange={(value) => {
-                                          handleChangeUpdate(
-                                            "expDisCount",
-                                            value.floatValue
-                                          );
-                                        }}
-                                        onKeyPress={(event) => {
-                                          if (event.key === "Tab") {
-                                            // step4Ref.current.focus();
-                                          }
-                                        }}
-                                      />
-                                    ) : (
-                                      item.o_14
-                                    )}
-                                  </TableCell>
-                                );
-                              case "o_15":
-                                return (
-                                  <TableCell
-                                    align="center"
-                                    nowrap="true"
-                                    style={{ minWidth: "100px" }}
-                                  >
-                                    {isIndexRow === index ? (
-                                      <NumberFormat
-                                        // inputRef={step4Ref}
-                                        className="inputNumber"
-                                        required
-                                        customInput={TextField}
-                                        autoComplete="off"
-                                        margin="dense"
-                                        type="text"
-                                        value={productInfo.expVAT}
-                                        disabled={
-                                          productInfo.expType === "1"
-                                            ? false
-                                            : true
-                                        }
-                                        variant="outlined"
-                                        onValueChange={(value) => {
-                                          handleChangeUpdate(
-                                            "expVAT",
-                                            value.floatValue
-                                          );
-                                        }}
-                                      />
-                                    ) : (
-                                      item.o_15
-                                    )}
-                                  </TableCell>
-                                );
-
-                              default:
-                                return (
-                                  <TableCell
-                                    nowrap="true"
-                                    key={indexRow}
-                                    align={col.align}
-                                  >
-                                    {glb_sv.formatValue(value, col["type"])}
-                                  </TableCell>
-                                );
-                            }
-                          }
-                        })}
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <ListProductImport
+              column={column}
+              handleClickEdit={handleClickEdit}
+              isIndexRow={isIndexRow}
+              setIsIndexRow={setIsIndexRow}
+              updateDataListProduct={updateDataListProduct}
+              onRemove={onRemove}
+              setProductDeleteIndex={setProductDeleteIndex}
+              handleChangeType={handleChangeType}
+              handleChangeUpdate={handleChangeUpdate}
+              dataSource={dataSource}
+              handleClickSortColum={handleClickSortColum}
+              sortColumn={sortColumn}
+              showIconSort={showIconSort}
+              productInfo={productInfo}
+              step2Ref={step2Ref}
+              step3Ref={step3Ref}
+            />
           </CardContent>
         </Card>
       </Grid>
       <Grid item md={3} xs={12}>
-        <Card className="h-100">
-          <CardHeader
-            title={
-              <div className="flex justify-content-between aligh-item-center">
-                <div>{t("order.import.invoice_info")}</div>
-                <div className="cursor-pointer flex">
-                  <div className="mr-1">
-                    <Tooltip
-                      disableFocusListener
-                      title={t("order.exportRepay.intraday_trans_his")}
-                    >
-                      <HistoryIcon
-                        onClick={() => {
-                          setOpenModalShowBill((pre) => !pre);
-                        }}
-                      />
-                    </Tooltip>
-                  </div>
-                  <div className="mr-1">
-                    <Tooltip
-                      disableFocusListener
-                      title={t("order.exportRepay.new_invoice")}
-                    >
-                      <AddShoppingCartIcon
-                        onClick={() => {
-                          setImport({ ...invoiceImportModal });
-                          setDataSource([]);
-                          setInvoiceFlag(false);
-                          setSupplierSelect("");
-                          setIsIndexRow(null);
-                        }}
-                      />
-                    </Tooltip>
-                  </div>
-                </div>
-              </div>
-            }
-          />
-          <CardContent>
-            <Grid container spacing={1}>
-              <Tooltip placement="top" title={t("auto_invoice")} arrow>
-                <TextField
-                  fullWidth={true}
-                  disabled={invoiceFlag}
-                  margin="dense"
-                  autoComplete="off"
-                  label={t("auto_invoice")}
-                  className="uppercaseInput"
-                  onChange={handleChange}
-                  value={Import.invoice_no || ""}
-                  name="invoice_no"
-                  variant="outlined"
-                />
-              </Tooltip>
-              <div className="d-flex align-items-center w-100">
-                <SupplierAdd_Autocomplete
-                  autoFocus={true}
-                  value={supplierSelect || ""}
-                  size={"small"}
-                  label={t("menu.supplier")}
-                  onSelect={handleSelectSupplier}
-                  onCreate={handleCreateSupplier}
-                  inputRef={step1Ref}
-                  onKeyPress={(event) => {
-                    if (event.key === "Enter") {
-                      step2Ref.current.focus();
-                    }
-                  }}
-                />
-              </div>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  disabled={true}
-                  disableToolbar
-                  margin="dense"
-                  variant="outlined"
-                  style={{ width: "100%" }}
-                  inputVariant="outlined"
-                  format="dd/MM/yyyy"
-                  id="order_dt-picker-inline"
-                  label={t("order.import.order_dt")}
-                  value={Import.order_dt}
-                  onChange={handleDateChange}
-                  KeyboardButtonProps={{
-                    "aria-label": "change date",
-                  }}
-                  inputRef={step2Ref}
-                  onKeyPress={(event) => {
-                    if (event.key === "Enter") {
-                      step3Ref.current.focus();
-                    }
-                  }}
-                />
-              </MuiPickersUtilsProvider>
-              <TextField
-                fullWidth={true}
-                margin="dense"
-                multiline
-                autoComplete="off"
-                rows={1}
-                rowsMax={5}
-                label={t("order.import.note")}
-                onChange={handleChange}
-                value={Import.note || ""}
-                name="note"
-                variant="outlined"
-                inputRef={step3Ref}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    handleUpdateInvoice();
-                  }
-                }}
-              />
-              <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                value={Import.invoice_val || 0}
-                label={t("order.import.invoice_val")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-                disabled={true}
-              />
-              <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                value={Import.invoice_discount || 0}
-                label={t("order.import.invoice_discount")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-                disabled={true}
-              />
-              <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                value={Import.invoice_vat || 0}
-                label={t("order.import.invoice_vat")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-                disabled={true}
-              />
-              <Divider orientation="horizontal" />
-              <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                value={paymentInfo.invoice_needpay}
-                label={t("order.import.invoice_needpay")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-                disabled={true}
-              />
-              <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                required
-                value={Import.payment_amount}
-                label={t("settlement.payment_amount")}
-                onValueChange={handleAmountChange}
-                name="payment_amount"
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-              />
-              <Divider orientation="horizontal" flexItem />
-              <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                value={
-                  Import.payment_amount - paymentInfo.invoice_needpay > 0
-                    ? Import.payment_amount - paymentInfo.invoice_needpay
-                    : 0
-                }
-                label={t("settlement.excess_cash")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-                disabled={true}
-              />
-              {/* <LinkMT href="#" onClick={changePaymentType} variant="body2" color='error'>
-                                {Import.payment_type === '1' ? t('settlement.payment_transfer') : t('settlement.payment_cash')}
-                            </LinkMT> */}
-            </Grid>
-            <Grid container spacing={1} className="mt-2">
-              <Button
-                style={{
-                  width: "calc(60% - 0.25rem)",
-                  marginRight: "0.5rem",
-                }}
-                size="small"
-                onClick={() => {
-                  handleUpdateInvoice();
-                }}
-                variant="contained"
-                disabled={checkValidate()}
-                className={
-                  checkValidate() === false ? "bg-success text-white" : ""
-                }
-              >
-                {t("btn.payment2")}
-              </Button>
-              <Button
-                onClick={handlePrint}
-                disabled={!invoiceFlag}
-                className={invoiceFlag ? "bg-print text-white" : ""}
-                id="buttonPrint"
-                size="smail"
-                variant="contained"
-                style={{ width: "calc(40% - 0.25rem)" }}
-              >
-                {t("print")}
-              </Button>
-            </Grid>
-          </CardContent>
-
-          <Dialog
-            fullWidth={true}
-            maxWidth="md"
-            open={shouldOpenPaymentModal}
-            onClose={(e) => {
-              setShouldOpenPaymentModal(false);
-            }}
-          >
-            <CardHeader title={t("settlement.payment_transfer")} />
-            <CardContent>
-              <Grid container spacing={2}>
-                <Grid item xs>
-                  <TextField
-                    disabled={Import.payment_type === "1"}
-                    required={Import.payment_type === "2"}
-                    fullWidth={true}
-                    margin="dense"
-                    autoComplete="off"
-                    label={t("report.bank_transf_acc_number")}
-                    onChange={handleChange}
-                    value={Import.bank_transf_acc_number || ""}
-                    name="bank_transf_acc_number"
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item xs>
-                  <TextField
-                    disabled={Import.payment_type === "1"}
-                    fullWidth={true}
-                    margin="dense"
-                    required={Import.payment_type === "2"}
-                    autoComplete="off"
-                    label={t("report.bank_transf_acc_name")}
-                    onChange={handleChange}
-                    value={Import.bank_transf_acc_name || ""}
-                    name="bank_transf_acc_name"
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item xs>
-                  <Dictionary
-                    value={Import.bank_transf_name_s || ""}
-                    disabled={Import.payment_type === "1"}
-                    required={Import.payment_type === "2"}
-                    diectionName="bank_cd"
-                    onSelect={handleSelectTransfBank}
-                    label={t("report.bank_transf_name")}
-                    style={{ marginTop: 8, marginBottom: 4, width: "100%" }}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container spacing={2}>
-                <Grid item xs>
-                  <TextField
-                    disabled={Import.payment_type === "1"}
-                    required={Import.payment_type === "2"}
-                    fullWidth={true}
-                    margin="dense"
-                    autoComplete="off"
-                    label={t("report.bank_recei_acc_number")}
-                    onChange={handleChange}
-                    value={Import.bank_recei_acc_number || ""}
-                    name="bank_recei_acc_number"
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item xs>
-                  <TextField
-                    disabled={Import.payment_type === "1"}
-                    required={Import.payment_type === "2"}
-                    fullWidth={true}
-                    margin="dense"
-                    autoComplete="off"
-                    label={t("report.bank_recei_acc_name")}
-                    onChange={handleChange}
-                    value={Import.bank_recei_acc_name || ""}
-                    name="bank_recei_acc_name"
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item xs>
-                  <Dictionary
-                    value={Import.bank_recei_name_s || ""}
-                    disabled={Import.payment_type === "1"}
-                    required={Import.payment_type === "2"}
-                    diectionName="bank_cd"
-                    onSelect={handleSelectReceiBank}
-                    label={t("report.bank_recei_name")}
-                    style={{ marginTop: 8, marginBottom: 4, width: "100%" }}
-                  />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Dialog>
-        </Card>
+        <InfoInvoice
+          setOpenModalShowBill={setOpenModalShowBill}
+          setImport={setImport}
+          invoiceImportModal={invoiceImportModal}
+          setDataSource={setDataSource}
+          setInvoiceFlag={setInvoiceFlag}
+          setSupplierSelect={setSupplierSelect}
+          setIsIndexRow={setIsIndexRow}
+          invoiceFlag={invoiceFlag}
+          handleChange={handleChange}
+          supplierSelect={supplierSelect}
+          handleSelectSupplier={handleSelectSupplier}
+          step1Ref={step1Ref}
+          step2Ref={step2Ref}
+          step3Ref={step3Ref}
+          Import={Import}
+          handleCreateSupplier={handleCreateSupplier}
+          handleDateChange={handleDateChange}
+          handleUpdateInvoice={handleUpdateInvoice}
+          paymentInfo={paymentInfo}
+          handleAmountChange={handleAmountChange}
+          checkValidate={checkValidate()}
+          handlePrint={handlePrint}
+        />
       </Grid>
-
       <div className="" style={{ display: "none" }}>
         <Import_Bill
           headerModal={Import}
@@ -1855,6 +1208,101 @@ const ProductImport = () => {
           componentRef={componentPrint}
         />
       </div>
+
+      <Dialog
+        fullWidth={true}
+        maxWidth="md"
+        open={shouldOpenPaymentModal}
+        onClose={(e) => {
+          setShouldOpenPaymentModal(false);
+        }}
+      >
+        <CardHeader title={t("settlement.payment_transfer")} />
+        <CardContent>
+          <Grid container spacing={2}>
+            <Grid item xs>
+              <TextField
+                disabled={Import.payment_type === "1"}
+                required={Import.payment_type === "2"}
+                fullWidth={true}
+                margin="dense"
+                autoComplete="off"
+                label={t("report.bank_transf_acc_number")}
+                onChange={handleChange}
+                value={Import.bank_transf_acc_number || ""}
+                name="bank_transf_acc_number"
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs>
+              <TextField
+                disabled={Import.payment_type === "1"}
+                fullWidth={true}
+                margin="dense"
+                required={Import.payment_type === "2"}
+                autoComplete="off"
+                label={t("report.bank_transf_acc_name")}
+                onChange={handleChange}
+                value={Import.bank_transf_acc_name || ""}
+                name="bank_transf_acc_name"
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs>
+              <Dictionary
+                value={Import.bank_transf_name_s || ""}
+                disabled={Import.payment_type === "1"}
+                required={Import.payment_type === "2"}
+                diectionName="bank_cd"
+                onSelect={handleSelectTransfBank}
+                label={t("report.bank_transf_name")}
+                style={{ marginTop: 8, marginBottom: 4, width: "100%" }}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs>
+              <TextField
+                disabled={Import.payment_type === "1"}
+                required={Import.payment_type === "2"}
+                fullWidth={true}
+                margin="dense"
+                autoComplete="off"
+                label={t("report.bank_recei_acc_number")}
+                onChange={handleChange}
+                value={Import.bank_recei_acc_number || ""}
+                name="bank_recei_acc_number"
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs>
+              <TextField
+                disabled={Import.payment_type === "1"}
+                required={Import.payment_type === "2"}
+                fullWidth={true}
+                margin="dense"
+                autoComplete="off"
+                label={t("report.bank_recei_acc_name")}
+                onChange={handleChange}
+                value={Import.bank_recei_acc_name || ""}
+                name="bank_recei_acc_name"
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs>
+              <Dictionary
+                value={Import.bank_recei_name_s || ""}
+                disabled={Import.payment_type === "1"}
+                required={Import.payment_type === "2"}
+                diectionName="bank_cd"
+                onSelect={handleSelectReceiBank}
+                label={t("report.bank_recei_name")}
+                style={{ marginTop: 8, marginBottom: 4, width: "100%" }}
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Dialog>
 
       {/* modal delete */}
       <Dialog

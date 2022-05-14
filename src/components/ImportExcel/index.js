@@ -221,34 +221,34 @@ const ImportExcel = ({ title, onRefresh }) => {
   const unitListRef = useRef([]);
   const groupListRef = useRef([]);
 
-  const step1Ref = useRef(null);
-  const step2Ref = useRef(null);
-  const step3Ref = useRef(null);
-  const step4Ref = useRef(null);
-  const step5Ref = useRef(null);
-  const step6Ref = useRef(null);
-  const step7Ref = useRef(null);
-  const step8Ref = useRef(null);
-  const step9Ref = useRef(null);
-  const step10Ref = useRef(null);
-  const step11Ref = useRef(null);
-  const step12Ref = useRef(null);
-  const step13Ref = useRef(null);
-  const step14Ref = useRef(null);
-  const step15Ref = useRef(null);
-  const step16Ref = useRef(null);
-  const step17Ref = useRef(null);
-  const step18Ref = useRef(null);
-  const step19Ref = useRef(null);
-  const step20Ref = useRef(null);
-  const step21Ref = useRef(null);
-  const step22Ref = useRef(null);
-  const step23Ref = useRef(null);
-  const step24Ref = useRef(null);
-  const step25Ref = useRef(null);
-  const step26Ref = useRef(null);
-  const step27Ref = useRef(null);
-  const step28Ref = useRef(null);
+  // const step1Ref = useRef(null);
+  // const step2Ref = useRef(null);
+  // const step3Ref = useRef(null);
+  // const step4Ref = useRef(null);
+  // const step5Ref = useRef(null);
+  // const step6Ref = useRef(null);
+  // const step7Ref = useRef(null);
+  // const step8Ref = useRef(null);
+  // const step9Ref = useRef(null);
+  // const step10Ref = useRef(null);
+  // const step11Ref = useRef(null);
+  // const step12Ref = useRef(null);
+  // const step13Ref = useRef(null);
+  // const step14Ref = useRef(null);
+  // const step15Ref = useRef(null);
+  // const step16Ref = useRef(null);
+  // const step17Ref = useRef(null);
+  // const step18Ref = useRef(null);
+     const step19Ref = useRef(null);
+  // const step20Ref = useRef(null);
+  // const step21Ref = useRef(null);
+  // const step22Ref = useRef(null);
+  // const step23Ref = useRef(null);
+  // const step24Ref = useRef(null);
+  // const step25Ref = useRef(null);
+  // const step26Ref = useRef(null);
+  // const step27Ref = useRef(null);
+  // const step28Ref = useRef(null);
 
   const allowFileTypes = useRef([
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -627,93 +627,6 @@ const ImportExcel = ({ title, onRefresh }) => {
 
   const getDataBeginRow = (file, beginRow) => {
     setIsEnableSave(false);
-    // let data = [];
-    // const fileReader = new FileReader();
-    // fileReader.readAsBinaryString(file);
-
-    // fileReader.onload = (event) => {
-    //   try {
-    //     const { result } = event.target;
-    //     console.log(result);
-    //     const workbook = XLSX.read(result, { type: "binary" });
-    //     const sheetNameList = workbook.SheetNames;
-    //     console.log(sheetNameList);
-    //     sheetNameList.forEach(function (y) {
-    //       const workSheet = workbook.Sheets[y];
-    //       console.log(workSheet);
-    //       const headers = {};
-    //       for (const w in workSheet) {
-    //         console.log(w);
-    //         if (w[0] === "!") continue;
-    //         //parse out the column, row, and value
-    //         const row = parseInt(w.substring(1));
-    //         console.log(row);
-    //         if (row == beginRow - 1) {
-    //           continue;
-    //         }
-    //         const col = w.substring(0, 1);
-    //         const value = workSheet[w].v;
-    //         //store header names
-    //         if (row === beginRow) {
-    //           headers[col] = value;
-    //           continue;
-    //         }
-    //         if (!data[row - 1]) {
-    //           data[row - 1] = {
-    //             groupID: null,
-    //             unitID: null,
-    //           };
-    //         }
-    //         //-- set default process status
-    //         // data[row - 1]['proctatus'] = 0
-    //         data[row - 1][headers[col]] = value;
-    //         // Thêm unitID và groupID cho data
-    //         const unitObject = unitList.find(
-    //           (x) => x.o_2 === data[row - 1]?.unit
-    //         );
-    //         const groupObject = groupList.find(
-    //           (x) => x.o_2 === data[row - 1]?.group
-    //         );
-    //         data[row - 1]["unitID"] = !!unitObject?.o_1
-    //           ? unitObject?.o_1
-    //           : null;
-    //         data[row - 1]["groupID"] = !!groupObject?.o_1
-    //           ? groupObject?.o_1
-    //           : null;
-    //         // console.log('read file, col, value, row', col, value, row)
-    //         // console.log('read file, data', JSON.stringify(data))
-    //         console.log(data[row - 1]);
-    //       }
-    //       //drop those first two rows which are empty
-    //       data.shift();
-    //       data.shift();
-
-    //       // Check những đơn vị tính và nhóm sp chưa có
-    //       const unitSysNameList = unitList.map((x) => x.o_2);
-    //       const groupSysNameList = groupList.map((x) => x.o_2);
-    //       const unitDataNameList = data.map((x) => x.unit);
-    //       const groupDataNameList = data.map((x) => x.group);
-    //       // Lưu các đơn vị/nhóm sp chưa có trên system => gửi event tạo các đơn vị/nhóm sp mới
-    //       setUnitNotAvailable([
-    //         ...new Set(
-    //           unitDataNameList.filter((item) => !unitSysNameList.includes(item))
-    //         ),
-    //       ]);
-    //       setGroupNotAvailable([
-    //         ...new Set(
-    //           groupDataNameList.filter(
-    //             (item) => !groupSysNameList.includes(item)
-    //           )
-    //         ),
-    //       ]);
-
-    //       console.log(data);
-    //       setDataSource([...data]);
-    //       console.log("read file, data", JSON.stringify([...data]));
-    //     });
-    //   } catch (e) {}
-    // };
-
     ExcelRenderer(file, (err, resp) => {
       if (err) {
         console.log(err);
@@ -1011,23 +924,23 @@ const ImportExcel = ({ title, onRefresh }) => {
   // };
   
 
-  const handleChangeShowDropdownInfoProduct = (keyShow) => {
-    switch (keyShow) {
-      case "infoExpanded":
-        setIsInfoObj({ ...isInfoObj, isExpanded: !isInfoObj.isExpanded });
-        break;
-      case "infoInventory":
-        console.log();
-        setIsInfoObj({ ...isInfoObj, isInventory: !isInfoObj.isInventory });
-        break;
-      case "infoPrice":
-        setIsInfoObj({ ...isInfoObj, isInfoPrice: !isInfoObj.isInfoPrice });
-        break;
-      case "infoAddUnit":
-        setIsInfoObj({ ...isInfoObj, isAddUnit: !isInfoObj.isAddUnit });
-        break;
-    }
-  };
+  // const handleChangeShowDropdownInfoProduct = (keyShow) => {
+  //   switch (keyShow) {
+  //     case "infoExpanded":
+  //       setIsInfoObj({ ...isInfoObj, isExpanded: !isInfoObj.isExpanded });
+  //       break;
+  //     case "infoInventory":
+  //       console.log();
+  //       setIsInfoObj({ ...isInfoObj, isInventory: !isInfoObj.isInventory });
+  //       break;
+  //     case "infoPrice":
+  //       setIsInfoObj({ ...isInfoObj, isInfoPrice: !isInfoObj.isInfoPrice });
+  //       break;
+  //     case "infoAddUnit":
+  //       setIsInfoObj({ ...isInfoObj, isAddUnit: !isInfoObj.isAddUnit });
+  //       break;
+  //   }
+  // };
 
   const handleSelectProductGroup = (obj) => {
     console.log(obj)
@@ -1293,472 +1206,14 @@ const ImportExcel = ({ title, onRefresh }) => {
       </Dialog>
 
       {/* Modal cập nhật dòng dữ liệu */}
-      {/* <Dialog fullWidth={true} maxWidth="md" open={shouldOpenModalEdit}>
-        <Card className="product-card">
-          <CardHeader title={t("product.titleEdit")} />
-          <CardContent>
-            <Grid container spacing={1}>
-              <Grid item xs={6} sm={3}>
-                <Tooltip
-                  placement="top"
-                  title={t("product.tooltip.productCode")}
-                  arrow
-                >
-                  <TextField
-                    fullWidth={true}
-                    autoComplete="off"
-                    margin="dense"
-                    label={t("product.code")}
-                    value={editModal.code}
-                    name="code"
-                    handleChange={handleChange}
-                    variant="outlined"
-                    className="uppercaseInput"
-                    inputRef={step1Ref}
-                    onKeyPress={(event) => {
-                      if (event.key === "Enter") {
-                        step2Ref.current.focus();
-                      }
-                    }}
-                  />
-                </Tooltip>
-              </Grid>
-
-              <Grid item xs={6} sm={3}>
-                <TextField
-                  fullWidth={true}
-                  required={true}
-                  autoComplete="off"
-                  margin="dense"
-                  label={t("product.name")}
-                  onChange={handleChange}
-                  value={editModal.name}
-                  name="name"
-                  variant="outlined"
-                  className="uppercaseInput"
-                  inputRef={step2Ref}
-                  onKeyPress={(event) => {
-                    if (event.key === "Enter") {
-                      step3Ref.current.focus();
-                    }
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={6} sm={3}>
-                <ProductGroup_Autocomplete
-                  productGroupID={editModal.groupID || null}
-                  style={{ marginTop: 8, marginBottom: 4 }}
-                  size={"small"}
-                  label={t("menu.productGroup")}
-                  onSelect={handleSelectProductGroup}
-                  inputRef={step3Ref}
-                  onKeyPress={(event) => {
-                    if (event.key === "Enter") {
-                      step4Ref.current.focus();
-                    }
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={6} sm={3} className="d-flex align-items-center">
-                <UnitAdd_Autocomplete
-                  unitID={editModal.unitID}
-                  style={{ marginTop: 8, marginBottom: 4 }}
-                  size={"small"}
-                  label={t("menu.configUnit")}
-                  onSelect={handleSelectUnit}
-                  inputRef={step4Ref}
-                  onKeyPress={(event) => {
-                    if (event.key === "Enter") {
-                      step5Ref.current.focus();
-                    }
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={6} sm={3}>
-                <Tooltip
-                  placement="top"
-                  title={t("product.tooltip.barcode")}
-                  arrow
-                >
-                  <TextField
-                    fullWidth={true}
-                    autoComplete="off"
-                    margin="dense"
-                    label={t("product.barcode")}
-                    onChange={handleChange}
-                    value={editModal.barcode}
-                    name="barcode"
-                    variant="outlined"
-                    inputRef={step5Ref}
-                    onKeyPress={(event) => {
-                      if (event.key === "Enter") {
-                        step6Ref.current.focus();
-                      }
-                    }}
-                  />
-                </Tooltip>
-              </Grid>
-
-              <Grid item xs={6} sm={3}>
-                <TextField
-                  fullWidth={true}
-                  margin="dense"
-                  autoComplete="off"
-                  label={t("product.packing")}
-                  onChange={handleChange}
-                  value={editModal.packing}
-                  name="packing"
-                  variant="outlined"
-                  inputRef={step6Ref}
-                  onKeyPress={(event) => {
-                    if (event.key === "Enter") {
-                      step7Ref.current.focus();
-                    }
-                  }}
-                />
-              </Grid>
-
-              <Grid item xs={6} sm={6}>
-                <TextField
-                  fullWidth={true}
-                  margin="dense"
-                  autoComplete="off"
-                  label={t("product.contente")}
-                  onChange={handleChange}
-                  value={editModal.contents}
-                  name="contents"
-                  variant="outlined"
-                  inputRef={step7Ref}
-                  onKeyPress={(event) => {
-                    if (event.key === "Enter") {
-                      setIsInfoObj({ ...isInfoObj, isExpanded: true });
-                      setTimeout(() => {
-                        step8Ref.current.focus();
-                      }, 10);
-                    }
-                  }}
-                />
-              </Grid>
-            </Grid>
-
-            <Accordion
-              className="mt-2"
-              expanded={isInfoObj.isExpanded}
-              onChange={() => {
-                handleChangeShowDropdownInfoProduct("infoExpanded");
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1bh-content"
-                id="panel1bh-header"
-                height="50px"
-              >
-                <Typography className="">{t("product.infoExpand")}</Typography>
-              </AccordionSummary>
-              <AccordionDetails className="pt-0">
-                <Grid container className="" spacing={1}>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                      fullWidth={true}
-                      margin="dense"
-                      autoComplete="off"
-                      label={t("product.designate")}
-                      onChange={handleChange}
-                      value={editModal.designate}
-                      name="designate"
-                      variant="outlined"
-                      inputRef={step8Ref}
-                      onKeyPress={(event) => {
-                        if (event.key === "Enter") {
-                          step9Ref.current.focus();
-                        }
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                      fullWidth={true}
-                      margin="dense"
-                      autoComplete="off"
-                      label={t("product.contraind")}
-                      onChange={handleChange}
-                      value={editModal.contraind}
-                      name="contraind"
-                      variant="outlined"
-                      inputRef={step9Ref}
-                      onKeyPress={(event) => {
-                        if (event.key === "Enter") {
-                          step10Ref.current.focus();
-                        }
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                      fullWidth={true}
-                      margin="dense"
-                      autoComplete="off"
-                      label={t("product.dosage")}
-                      onChange={handleChange}
-                      value={editModal.dosage}
-                      name="dosage"
-                      variant="outlined"
-                      inputRef={step10Ref}
-                      onKeyPress={(event) => {
-                        if (event.key === "Enter") {
-                          step11Ref.current.focus();
-                        }
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                      fullWidth={true}
-                      margin="dense"
-                      autoComplete="off"
-                      label={t("product.manufact")}
-                      onChange={handleChange}
-                      value={editModal.manufact}
-                      name="manufact"
-                      variant="outlined"
-                      inputRef={step11Ref}
-                      onKeyPress={(event) => {
-                        if (event.key === "Enter") {
-                          step12Ref.current.focus();
-                        }
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                      fullWidth={true}
-                      margin="dense"
-                      autoComplete="off"
-                      label={t("product.interact")}
-                      onChange={handleChange}
-                      value={editModal.interact}
-                      name="interact"
-                      variant="outlined"
-                      inputRef={step12Ref}
-                      onKeyPress={(event) => {
-                        if (event.key === "Enter") {
-                          step13Ref.current.focus();
-                        }
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                      fullWidth={true}
-                      margin="dense"
-                      autoComplete="off"
-                      label={t("product.storages")}
-                      onChange={handleChange}
-                      value={editModal.storages}
-                      name="storages"
-                      variant="outlined"
-                      inputRef={step13Ref}
-                      onKeyPress={(event) => {
-                        if (event.key === "Enter") {
-                          step14Ref.current.focus();
-                        }
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                      fullWidth={true}
-                      margin="dense"
-                      autoComplete="off"
-                      label={t("product.effect")}
-                      onChange={handleChange}
-                      value={editModal.effect}
-                      name="effect"
-                      variant="outlined"
-                      inputRef={step14Ref}
-                      onKeyPress={(event) => {
-                        if (event.key === "Enter") {
-                          step15Ref.current.focus();
-                        }
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                      fullWidth={true}
-                      margin="dense"
-                      autoComplete="off"
-                      label={t("product.overdose")}
-                      onChange={handleChange}
-                      value={editModal.overdose}
-                      name="overdose"
-                      variant="outlined"
-                      inputRef={step15Ref}
-                      onKeyPress={(event) => {
-                        if (event.key === "Enter") {
-                          handleUpdateRow();
-                        }
-                      }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                      fullWidth={true}
-                      margin="dense"
-                      autoComplete="off"
-                      label={t("product.overdose")}
-                      onChange={handleChange}
-                      value={editModal.overdose}
-                      name="overdose"
-                      variant="outlined"
-                      inputRef={step15Ref}
-                      onKeyPress={(event) => {
-                        if (event.key === "Enter") {
-                          handleUpdateRow();
-                        }
-                      }}
-                    />
-                  </Grid>
-                </Grid>
-              </AccordionDetails>
-            </Accordion>
-
-            <Accordion
-              className="mt-2"
-              expanded={isInfoObj.isInventory}
-              onChange={() => {
-                handleChangeShowDropdownInfoProduct("infoInventory");
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1bh-content"
-                id="panel1bh-header"
-                height="50px"
-              >
-                <Typography className="">{t("Thông tin tồn kho")}</Typography>
-              </AccordionSummary>
-              <AccordionDetails className="pt-0">
-                <Grid container className="" spacing={1}>
-                  <Grid item xs={12} sm={3} md={3}>
-                    <Tooltip
-                      placement="top"
-                      title={t("product.tooltip.minmax_notinput")}
-                      arrow
-                    >
-                      <NumberFormat
-                        className="inputNumber"
-                        style={{ width: "100%" }}
-                        // value={storeLimit.minQuantity}
-                        label={t("config.store_limit.minQuantity")}
-                        customInput={TextField}
-                        autoComplete="off"
-                        margin="dense"
-                        type="text"
-                        variant="outlined"
-                        thousandSeparator={true}
-                        // onValueChange={handleMinQuantityChange}
-                        onFocus={(e) => e.target.select()}
-                        // inputRef={minQtyRef}
-                        onKeyPress={(event) => {
-                          if (event.key === "Enter") {
-                            // maxQtyRef.current.focus();
-                          }
-                        }}
-                      />
-                    </Tooltip>
-                  </Grid>
-                </Grid>
-              </AccordionDetails>
-            </Accordion>
-          </CardContent>
-          <CardActions
-            className="align-items-end"
-            style={{ justifyContent: "flex-end" }}
-          >
-            <Button
-              size="small"
-              onClick={(e) => {
-                setShouldOpenModalEdit(false);
-                setEditID(null);
-                setEditModal({ ...productDefaulModal });
-              }}
-              startIcon={<ExitToAppIcon />}
-              variant="contained"
-              disableElevation
-            >
-              {t("btn.close")} (Esc)
-            </Button>
-            <Button
-              size="small"
-              onClick={() => handleUpdateRow()}
-              variant="contained"
-              disabled={
-                !editModal?.name?.trim() ||
-                !editModal?.groupID ||
-                !editModal?.unitID
-                  ? true
-                  : false
-              }
-              className={
-                !editModal?.name?.trim() ||
-                !editModal?.groupID ||
-                !editModal?.unitID
-                  ? ""
-                  : "bg-success text-white"
-              }
-            >
-              {t("btn.update")} (F3)
-            </Button>
-          </CardActions>
-        </Card>
-      </Dialog> */}
-
       <ModalUpdateProduct
         shouldOpenModalEdit={shouldOpenModalEdit}
         editModal={editModal}
-        handleChange={handleChange}
-        // handleValueChange={handleValueChange}
         handleSelectProductGroup={handleSelectProductGroup}
-        step1Ref={step1Ref}
-        step2Ref={step2Ref}
-        step3Ref={step3Ref}
-        step4Ref={step4Ref}
-        step5Ref={step5Ref}
-        step6Ref={step6Ref}
-        step7Ref={step7Ref}
-        step8Ref={step8Ref}
-        step9Ref={step9Ref}
-        step10Ref={step10Ref}
-        step11Ref={step11Ref}
-        step12Ref={step12Ref}
-        step13Ref={step13Ref}
-        step14Ref={step14Ref}
-        step15Ref={step15Ref}
-        step16Ref={step16Ref}
-        step17Ref={step17Ref}
-        step18Ref={step18Ref}
         step19Ref={step19Ref}
-        step20Ref={step20Ref}
-        step21Ref={step21Ref}
-        step22Ref={step22Ref}
-        step23Ref={step23Ref}
-        step24Ref={step24Ref}
-        step25Ref={step25Ref}
-        step26Ref={step26Ref}
-        step27Ref={step27Ref}
-        step28Ref={step28Ref}
         handleSelectUnit={handleSelectUnit}
         isInfoObj={isInfoObj}
         setIsInfoObj={setIsInfoObj}
-        handleChangeShowDropdownInfoProduct={
-          handleChangeShowDropdownInfoProduct
-        }
         handleUpdateRow={handleUpdateRow}
         setShouldOpenModalEdit={setShouldOpenModalEdit}
         setEditID={setEditID}

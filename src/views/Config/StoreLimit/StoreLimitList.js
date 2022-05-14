@@ -238,7 +238,7 @@ const StoreLimitList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('config.store_limit.titleListsvs')}
+                            {t('config.store_limit.titleList')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }

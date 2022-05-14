@@ -230,7 +230,7 @@ const ExportList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('order.export.titleListyyy')}
+                            {t('order.export.titleList')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }

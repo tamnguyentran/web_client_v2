@@ -262,7 +262,7 @@ const ImportList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('settlement.importffdfd')}
+                            {t('settlement.import')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }

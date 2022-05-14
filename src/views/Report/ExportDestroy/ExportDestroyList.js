@@ -222,7 +222,7 @@ const ExportDestroyList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('order.exportDestroy.titleListwfw')}
+                            {t('order.exportDestroy.titleList')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }

@@ -293,7 +293,7 @@ const PharmacyList = () => {
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={8}>
                     <Card className="mb-2">
-                        <CardHeader title={t('menu.setting-pharmacyeee')} />
+                        <CardHeader title={t('menu.setting-pharmacy')} />
                         <CardContent>
                             <Grid container spacing={1}>
                                 <Grid item xs={12} className="d-flex" justify="center" alignItems="center">
@@ -319,7 +319,7 @@ const PharmacyList = () => {
                                                         title={t('update_pharmacy_logođ')}
                                                         style={{ margin: 0 }}
                                                     >
-                                                        <IC_CAMERA />dd
+                                                        <IC_CAMERA />
                                                     </label>
                                                 </>
                                                 // <SmallAvatar alt="Camera" src="/static/images/avatar/1.jpg" />

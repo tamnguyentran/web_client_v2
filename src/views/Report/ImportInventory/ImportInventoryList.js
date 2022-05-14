@@ -219,7 +219,7 @@ const ImportInventoryList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('order.importInventory.titleListvdvd')}
+                            {t('order.importInventory.titleList')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }

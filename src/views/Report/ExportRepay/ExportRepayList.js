@@ -226,7 +226,7 @@ const ExportRepayList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('order.exportRepay.titleListvdvd')}
+                            {t('order.exportRepay.titleList')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }

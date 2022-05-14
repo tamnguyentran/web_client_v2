@@ -262,7 +262,7 @@ const ExportList = () => {
                 <CardHeader
                     title={
                         <>
-                            {t('settlement.exportdvddb')}
+                            {t('settlement.export')}
                             <DisplayColumn columns={tableColumn} handleCheckChange={onChangeColumnView} />
                         </>
                     }
