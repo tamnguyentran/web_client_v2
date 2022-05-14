@@ -220,35 +220,7 @@ const ImportExcel = ({ title, onRefresh }) => {
 
   const unitListRef = useRef([]);
   const groupListRef = useRef([]);
-
-  // const step1Ref = useRef(null);
-  // const step2Ref = useRef(null);
-  // const step3Ref = useRef(null);
-  // const step4Ref = useRef(null);
-  // const step5Ref = useRef(null);
-  // const step6Ref = useRef(null);
-  // const step7Ref = useRef(null);
-  // const step8Ref = useRef(null);
-  // const step9Ref = useRef(null);
-  // const step10Ref = useRef(null);
-  // const step11Ref = useRef(null);
-  // const step12Ref = useRef(null);
-  // const step13Ref = useRef(null);
-  // const step14Ref = useRef(null);
-  // const step15Ref = useRef(null);
-  // const step16Ref = useRef(null);
-  // const step17Ref = useRef(null);
-  // const step18Ref = useRef(null);
-     const step19Ref = useRef(null);
-  // const step20Ref = useRef(null);
-  // const step21Ref = useRef(null);
-  // const step22Ref = useRef(null);
-  // const step23Ref = useRef(null);
-  // const step24Ref = useRef(null);
-  // const step25Ref = useRef(null);
-  // const step26Ref = useRef(null);
-  // const step27Ref = useRef(null);
-  // const step28Ref = useRef(null);
+  const step19Ref = useRef(null);
 
   const allowFileTypes = useRef([
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
