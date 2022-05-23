@@ -1,4 +1,5 @@
 const tableColumn = [
+    { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
     { field: 'o_2', title: 'lockOrder.invoice_tp_nm', show: true, disabled: false, minWidth: 100 },
     { field: 'o_4', title: 'lockOrder.lock_tp_nm', show: true, disabled: false, minWidth: 200 },
     { field: 'o_5', title: 'lockOrder.inv_auto', show: true, disabled: false, minWidth: 100 },

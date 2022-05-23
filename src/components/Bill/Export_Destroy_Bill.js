@@ -83,7 +83,7 @@ const Export_Destroy_Bill = ({ headerModal, detailModal, className, componentRef
                     </style>
                     <div style={{ width: '100%', display: 'flex', flexDirection: 'row', marginTop: '20px' }}>
                         <div style={{ textAlign: 'center', margin: 'auto' }} >
-                            <Avatar alt='Logo' src={'http://171.244.133.198:5555/upload/comp_logo/' + pharmacyInfo.logo_name} className={classes.large} />
+                            <Avatar alt='Logo' src={'http://171.244.133.198/upload/comp_logo/' + pharmacyInfo.logo_name} className={classes.large} />
                             <h2 style={{ fontSize: '15pt', marginTop: '1rem' }} >
                                 <b>
                                     {t('pharma')} : {pharmacyInfo.name}

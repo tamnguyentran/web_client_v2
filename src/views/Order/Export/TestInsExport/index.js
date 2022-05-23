@@ -1309,7 +1309,7 @@ console.log(inputParam)
                   />
                 </div>
               </div>
-              <TableContainer className="export tableContainer tableOrder">
+              <TableContainer className="height-table-260 export tableContainer tableOrder">
                 <Table stickyHeader>
                   <caption
                     className={[
@@ -1365,6 +1365,16 @@ console.log(inputParam)
                             let value = item[col.field];
                             if (col.show) {
                               switch (col.field) {
+                                case "stt":
+                              return (
+                                <TableCell
+                                  nowrap="true"
+                                  key={indexRow}
+                                  align={col.align}
+                                >
+                                  {index + 1}
+                                </TableCell>
+                              );
                                 case "action":
                                   return (
                                     <>

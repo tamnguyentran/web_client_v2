@@ -5,7 +5,12 @@ body {
     height: 100%;
     background: #f6f5f7;
     font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    scroll-behavior: smooth;
 }
+
+/* html {
+    scroll-behavior: smooth;
+} */
 
 button:focus {
     box-shadow: 0px 0px 2px 1px #00000059 !important;
@@ -289,6 +294,10 @@ div.MuiCardHeader-action span.MuiTypography-root.MuiFormControlLabel-label.MuiTy
 .tableOrder.tableContainer,
 .tableContainer.tableReport {
     max-height: calc(100vh - 330px);
+}
+
+.height-table-260{
+    max-height: calc(100vh - 270px) !important;
 }
 
 .MuiGrid-spacing-xs-1>.MuiGrid-item {

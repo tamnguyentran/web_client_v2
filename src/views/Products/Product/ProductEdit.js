@@ -293,46 +293,17 @@ const ProductEdit = ({
     if (ImageObjRef.current.image_data) {
       console.log("Có data");
     }
-
-    // setTimeout(async () => {
-    //     console.log('body', JSON.stringify(ImageObjRef.current))
-    //     const requestOptions = {
-    //         host: 'http://171.244.133.198:5555/prod/upload_img',
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify(ImageObjRef.current),
-    //     }
-    //     await fetch(`${'http://171.244.133.198:5555'}/file/storeavatar`, requestOptions)
-    //         .then((res) => {
-    //             console.log('Res', res)
-    //             return res.json()
-    //         })
-    //         .then((data) => {
-    //             setLoadingUpload(false)
-    //             console.log('Data', data)
-    //             if (data['success']) {
-    //                 const imageData = data['data']?.path
-    //                 glb_sv.imageUrl = `${glb_sv.configInfo.domain}/assets/upload_avatar/${imageData.split("/")[imageData.split("/").length - 1]}`
-    //                 console.log(glb_sv.imageUrl)
-    //                 glb_sv.commonEvent.next({ type: 'CHANGE_AVATAR' })
-    //             }
-    //         })
-    //         .catch((err) => {
-    //             console.log(err)
-    //             setLoadingUpload(false)
-    //         })
-    // }, 1000)
   };
 
   const saveImageIntoServer = async () => {
     const requestOptions = {
-      host: "http://171.244.133.198:5555/prod/upload_img",
+      host: "http://171.244.133.198/prod/upload_img",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(ImageObjRef.current),
     };
       let result = await fetch(
-        `${"http://171.244.133.198:5555/prod/upload_img"}`,
+        `${"http://171.244.133.198/prod/upload_img"}`,
         requestOptions
       )
       return result.json();

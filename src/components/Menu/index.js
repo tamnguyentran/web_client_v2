@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import style from "./Menu.module.css";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { scroller } from "react-scroll";
 
 import {
   Tooltip,
@@ -57,6 +58,8 @@ import { ReactComponent as IC_SETTING_USER } from "../../asset/images/setting-us
 import { ReactComponent as IC_SETTING_PERMISSION } from "../../asset/images/setting-permission.svg";
 import { ReactComponent as IC_SETTING_LOCK_ORDER } from "../../asset/images/setting-lock-order.svg";
 import LocalShippingIcon from '@material-ui/icons/LocalShipping'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 
 const menuList = [
   {
@@ -417,13 +420,26 @@ const MenuView = ({ baseLink }) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
+  const [positionIcon, setPositionIcon] = useState(true)
+
   useEffect(() => {
+    function handleResize(){
+      setWindowHeight(window.innerHeight)
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  },[])
+console.log(windowHeight)
+  useEffect(() => {
+    console.log(window.innerHeight)
     glb_sv.commonEvent.subscribe((msg) => {
       if (msg.msgTp === glb_sv.setExpand) {
         // setExpand(msg.data)
       }
     });
-  });
+  },[]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -437,6 +453,9 @@ const MenuView = ({ baseLink }) => {
     setItemActive(item);
   };
 
+  const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop) 
+  const myRef = useRef(null)
+   const executeScroll = () => scrollToRef(myRef)
   return (
     <div
       className={["d-flex", style.iconExpand].join(" ")}
@@ -632,7 +651,7 @@ const MenuView = ({ baseLink }) => {
               </div>
             </Link>
             <Link className={"text-decoration-none text-dark"} to="/page/order/ins-exportt">
-              <div className={style.navbar__item}>
+              <div id="google" className={style.navbar__item}>
                 <div className={style.active} style={{color:'#ff9800'}}>
                 <div>{<LocalShippingIcon />}</div>
                   <div style={{color:'#ff9800'}} className={style.navbar_item_text}>XUẤT HÀNG</div>
@@ -640,6 +659,11 @@ const MenuView = ({ baseLink }) => {
               </div>
             </Link>
           </React.Fragment>
+        </div>
+        <div style={{textAlign: "center", height: "40px", cursor:"pointer"}}>
+          <a href="#google">
+          {(windowHeight < 800) && (<ArrowDropDownIcon style={{color:'#fff'}} fontSize="large"/>)}
+          </a>
         </div>
         <div className={[style.navbar_item_avatar].join(" ")}>
           <div onClick={handleClick}>

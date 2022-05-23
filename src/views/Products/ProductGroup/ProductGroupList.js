@@ -37,6 +37,7 @@ import SearchOne from "../../../components/SearchOne";
 import LoopIcon from "@material-ui/icons/Loop";
 import ExportExcel from "../../../components/ExportExcel";
 import DisplayColumn from "../../../components/DisplayColumn";
+import Breadcrumb from "../../../components/Breadcrumb/View";
 
 const serviceInfo = {
   GET_ALL: {
@@ -105,6 +106,8 @@ const ProductGroupList = () => {
     } else if (message["PROC_DATA"]) {
       let newData = message["PROC_DATA"];
       if (newData.rows.length > 0) {
+        dataSourceRef.current = dataSourceRef.current.concat(newData.rows);
+        setDataSource(dataSourceRef.current);
         if (reqInfoMap.inputParam[0] === glb_sv.defaultValueSearch) {
           setTotalRecords(newData.rowTotal);
         } else {
@@ -114,8 +117,6 @@ const ProductGroupList = () => {
               newData.rowTotal
           );
         }
-        dataSourceRef.current = dataSourceRef.current.concat(newData.rows);
-        setDataSource(dataSourceRef.current);
       } else {
         dataSourceRef.current = [];
         setDataSource([]);
@@ -239,7 +240,9 @@ const ProductGroupList = () => {
   return (
     <>
       <Card className="mb-2">
-        <CardHeader title={t("lbl.search")} />
+      <CardHeader
+          title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
+        />
         <CardContent>
           <SearchOne
             process={searchProcess}
@@ -259,7 +262,7 @@ const ProductGroupList = () => {
         <CardHeader
           title={
             <>
-              {t("productGroup.titleListvs")}
+              {t("productGroup.titleList")}
               {/* < IconButton className='ml-2' style={{ padding: 0, backgroundColor: '#fff' }} onClick={onClickColumn}>
                                 <MoreVertIcon />
                             </IconButton> */}
@@ -276,7 +279,7 @@ const ProductGroupList = () => {
           }
         />
         <CardContent>
-          <TableContainer className="tableContainer">
+          <TableContainer className="height-table-260 tableContainer">
             <Table stickyHeader>
               <caption
                 className={[
@@ -316,6 +319,16 @@ const ProductGroupList = () => {
                             let value = item[col.field];
                             if (col.show) {
                               switch (col.field) {
+                                case "stt":
+                              return (
+                                <TableCell
+                                  nowrap="true"
+                                  key={indexRow}
+                                  align={col.align}
+                                >
+                                  {index + 1}
+                                </TableCell>
+                              );
                                 case "action":
                                   return (
                                     <TableCell

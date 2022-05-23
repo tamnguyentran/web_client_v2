@@ -43,7 +43,7 @@ const ListProductImport = (props) => {
     } = props
 
     return (
-        <TableContainer className="tableContainer tableOrder">
+        <TableContainer className="height-table-260 tableContainer tableOrder">
         <Table stickyHeader>
         <caption
             className={[
@@ -100,6 +100,16 @@ const ListProductImport = (props) => {
                     let value = item[col.field];
                     if (col.show) {
                       switch (col.field) {
+                        case "stt":
+                              return (
+                                <TableCell
+                                  nowrap="true"
+                                  key={indexRow}
+                                  align={col.align}
+                                >
+                                  {index + 1}
+                                </TableCell>
+                              );
                         case "action":
                           return (
                             <>

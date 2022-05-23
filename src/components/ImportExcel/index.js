@@ -16,12 +16,6 @@ import {
   TableRow,
   TableContainer,
   TableHead,
-  Grid,
-  TextField,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Typography,
   Tooltip,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -29,26 +23,26 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
+// import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
+// import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+// import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import Alert from "@material-ui/lab/Alert";
 import PublishIcon from "@material-ui/icons/Publish";
 import sendRequest from "../../utils/service/sendReq";
 import reqFunction from "../../utils/constan/functions";
 import glb_sv from "../../utils/service/global_service";
 import control_sv from "../../utils/service/control_services";
-import ProductGroup_Autocomplete from "../../views/Products/ProductGroup/Control/ProductGroup.Autocomplete";
-import UnitAdd_Autocomplete from "../../views/Config/Unit/Control/UnitAdd.Autocomplete";
+// import ProductGroup_Autocomplete from "../../views/Products/ProductGroup/Control/ProductGroup.Autocomplete";
+// import UnitAdd_Autocomplete from "../../views/Config/Unit/Control/UnitAdd.Autocomplete";
 
 import { ReactComponent as IC_DOCUMENT_FOLDER } from "../../asset/images/document-folder.svg";
 import { ReactComponent as IC_DOCUMENT_DOWNLOAD_EXAMPLE } from "../../asset/images/document-download-example.svg";
 import info_dec from "./info_dec.json";
 
 import { ExcelRenderer } from "react-excel-renderer";
-import { defaultModalAdd } from "../../views/Partner/Supplier/Modal/Supplier.modal";
-import { Delete } from "@material-ui/icons";
-import NumberFormat from "react-number-format";
+// import { defaultModalAdd } from "../../views/Partner/Supplier/Modal/Supplier.modal";
+// import { Delete } from "@material-ui/icons";
+// import NumberFormat from "react-number-format";
 
 import ModalUpdateProduct from "./ModalUpdateProduct";
 
@@ -221,6 +215,7 @@ const ImportExcel = ({ title, onRefresh }) => {
   const unitListRef = useRef([]);
   const groupListRef = useRef([]);
   const step19Ref = useRef(null);
+  const lengthList = useRef(0)
 
   const allowFileTypes = useRef([
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -640,7 +635,8 @@ const ImportExcel = ({ title, onRefresh }) => {
           });
           arrTam.push(objTam);
         });
-        setDataSource(arrTam);
+        lengthList.current = arrTam.length || 0
+        setDataSource(arrTam || []);
       }
     });
   };
@@ -852,6 +848,7 @@ const ImportExcel = ({ title, onRefresh }) => {
   };
 
   const handleImportChange = (e) => {
+    console.log("vsvsvsvs")
     setDataSource([]);
     setFileSelected("");
     const { files } = e.target;
@@ -874,12 +871,12 @@ const ImportExcel = ({ title, onRefresh }) => {
     setShouldOpenModalEdit(true);
   };
 
-  const handleChange = (e) => {
-    const newModal = { ...editModal };
-    newModal[e.target.name] =
-      (e.target.name === "name" || e.target.code === "name") ? e.target.value.toUpperCase() : e.target.value;
-    setEditModal({...newModal});
-  };
+  // const handleChange = (e) => {
+  //   const newModal = { ...editModal };
+  //   newModal[e.target.name] =
+  //     (e.target.name === "name" || e.target.code === "name") ? e.target.value.toUpperCase() : e.target.value;
+  //   setEditModal({...newModal});
+  // };
 
   // const handleValueChange = (name,value)=>{
   //   const newModal = { ...editModal };
@@ -932,7 +929,7 @@ const ImportExcel = ({ title, onRefresh }) => {
   const handleUpdateRow = () => {
     if (
       (editModal.groupID === 19 || editModal.groupID === 20) &&
-      editModal.expire_date === ""
+      editModal.expire_date === "" || (editModal.inven_max < editModal.inven_min) || editModal.convert_rate < 1
     ) {
       step19Ref.current.focus();
     } else {
@@ -994,14 +991,21 @@ const ImportExcel = ({ title, onRefresh }) => {
           />
           <CardContent>
             <input
+              title="Chọn file excel"
               style={{ display: "none" }}
               id="container-upload-file"
               type="file"
               accept=".xlsx, .xls, .csv"
-              onChange={handleImportChange}
+              onChange={(e) => {
+                handleImportChange(e);
+              }}
             />
-            <label htmlFor="container-upload-file" style={{ width: "100%" }}>
-              <div
+            <label for="container-upload-file" style={{width:'100%'}}>
+              <Button variant="contained" component="span" style={{width:'100%'}}>
+              <IC_DOCUMENT_FOLDER />{" "}
+                {fileSelected !== "" ? `(${fileSelected})` : t("choose_file")}
+              </Button>
+              {/* <div
                 title={t("choose_file")}
                 style={{
                   borderRadius: 5,
@@ -1011,7 +1015,7 @@ const ImportExcel = ({ title, onRefresh }) => {
               >
                 <IC_DOCUMENT_FOLDER />{" "}
                 {fileSelected !== "" ? `(${fileSelected})` : t("choose_file")}
-              </div>
+              </div> */}
             </label>
             {isError && (
               <Alert severity="error">{t("message.error_file")}</Alert>
@@ -1148,8 +1152,10 @@ const ImportExcel = ({ title, onRefresh }) => {
           </CardContent>
           <CardActions
             className="align-items-end"
-            style={{ justifyContent: "flex-end" }}
+            style={{ justifyContent: "space-between" }}
           >
+            <div>{lengthList.current - dataSource.length}/{lengthList.current}{" "}được thêm thành công</div>
+            <div>
             <Button
               size="small"
               onClick={handleCloseModal}
@@ -1159,6 +1165,7 @@ const ImportExcel = ({ title, onRefresh }) => {
             >
               {t("btn.close")} (Esc)
             </Button>
+            {" "}
             <Button
               disabled={isEnableSave || !dataSource || dataSource.length === 0}
               variant="contained"
@@ -1173,6 +1180,7 @@ const ImportExcel = ({ title, onRefresh }) => {
             >
               {t("btn.save")} (F3)
             </Button>
+            </div>
           </CardActions>
         </Card>
       </Dialog>

@@ -1,6 +1,7 @@
 import moment from 'moment'
 
 const tableColumn = [
+    { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 200 },
     { field: 'o_3', title: 'invoice_no', show: true, disabled: true, minWidth: 200 },
     { field: 'o_4', title: 'partner.supplier.vender_nm_v', show: true, disabled: false, minWidth: 200},
     { field: 'o_6', title: 'report.payment_amount', show: true, disabled: false, minWidth: 100, type: 'currency', align: 'right' },

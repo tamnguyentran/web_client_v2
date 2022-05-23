@@ -1,6 +1,7 @@
 import reqFunction from '../../../../utils/constan/functions';
 
 const tableColumn = [
+    { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
     { field: 'action', title: 'lbl.action', show: true, disabled: false, minWidth: 100 },
     { field: 'o_2', title: 'pharmacy.pharmacyName', show: true, disabled: false, minWidth: 200 },
     { field: 'o_4', title: 'pharmacy.approve_status', show: true, disabled: false, minWidth: 100 },

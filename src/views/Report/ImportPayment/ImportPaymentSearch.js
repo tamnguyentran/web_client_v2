@@ -52,7 +52,7 @@ const ImportPaymentSearch = ({ handleSearch, process = false }) => {
     return (
         <>
             <Grid container spacing={2}>
-                <Grid item xs>
+                <Grid item xs={3}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                             disableToolbar
@@ -74,7 +74,7 @@ const ImportPaymentSearch = ({ handleSearch, process = false }) => {
                         />
                     </MuiPickersUtilsProvider>
                 </Grid>
-                <Grid item xs>
+                <Grid item xs={3}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                             disableToolbar
@@ -96,7 +96,7 @@ const ImportPaymentSearch = ({ handleSearch, process = false }) => {
                         />
                     </MuiPickersUtilsProvider>
                 </Grid>
-                <Grid item xs>
+                <Grid item xs={3}>
                     <Supplier_Autocomplete
                         value={searchModal.supplier_nm || ''}
                         style={{ marginTop: 8, marginBottom: 4, width: '100%' }}
@@ -108,7 +108,7 @@ const ImportPaymentSearch = ({ handleSearch, process = false }) => {
                         }}
                     />
                 </Grid>
-                <Grid item xs>
+                <Grid item xs={3}>
                     <TextField
                         fullWidth={true}
                         margin="dense"
@@ -123,9 +123,7 @@ const ImportPaymentSearch = ({ handleSearch, process = false }) => {
                         variant="outlined"
                     />
                 </Grid>
-            </Grid>
-            <Grid container spacing={2}>
-                <Grid item className="d-flex align-items-center">
+                <Grid item xs={2} className="d-flex align-items-center">
                     <Button
                         className={process ? 'button-loading' : ''}
                         endIcon={process ? <LoopIcon /> : <SearchIcon />}
@@ -136,6 +134,18 @@ const ImportPaymentSearch = ({ handleSearch, process = false }) => {
                     </Button>
                 </Grid>
             </Grid>
+            {/* <Grid container spacing={2}>
+                <Grid item className="d-flex align-items-center">
+                    <Button
+                        className={process ? 'button-loading' : ''}
+                        endIcon={process ? <LoopIcon /> : <SearchIcon />}
+                        onClick={() => handleSearch(searchModal)}
+                        variant="contained"
+                    >
+                        {t('search_btn')}
+                    </Button>
+                </Grid>
+            </Grid> */}
         </>
     )
 }

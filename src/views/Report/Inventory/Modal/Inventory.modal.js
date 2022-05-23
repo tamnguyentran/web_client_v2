@@ -1,4 +1,5 @@
 const tableColumn = [
+    { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
     { field: 'o_2', title: 'product.name', show: true, disabled: true, minWidth: 200 },
     { field: 'o_3', title: 'report.lot_no', show: true, disabled: false, minWidth: 100 },
     { field: 'o_5', title: 'report.inven_qty', show: true, disabled: false, minWidth: 100 },

@@ -2,6 +2,7 @@ import moment from 'moment';
 import reqFunction from '../../../../utils/constan/functions';
 
 const tableColumn = [
+    { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
     { field: 'action', title: 'lbl.action', show: true, disabled: true, minWidth: 100 },
     // { field: 'o_3', title: 'settlement.invoice_type', show: true, disabled: false, minWidth: 200, type: 'status' },
     { field: 'o_4', title: 'settlement.invoice_no', show: true, disabled: true, minWidth: 200 },

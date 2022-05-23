@@ -276,7 +276,6 @@ const AddProduct = ({ onAddProduct, resetFlag, style, saveProcess }) => {
 
     return (
         <Card className="mb-2" style={style}>
-            {/* <CardHeader title={t('order.import.productAddeee')} /> */}
             <CardHeader  title={
                 <div className="flex aligh-item-center">{<Breadcrumb />}</div>
               }/>

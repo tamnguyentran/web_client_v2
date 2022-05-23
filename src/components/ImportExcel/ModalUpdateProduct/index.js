@@ -130,7 +130,9 @@ const ModalUpdateProduct = (props) => {
   const handleValueChange = (name, value) => {
     const newModal = JSON.parse(JSON.stringify(editModal));
     if (name === "imp_vat" || name === "exp_vat") {
-      newModal[name] = value < 0 || value > 100 ? 10 : value;
+      if(!(value < 0 || value > 100)){
+        newModal[name] = value;
+      }
     } else if (name === "convert_rate") {
       value = Number(
         value
@@ -138,7 +140,7 @@ const ModalUpdateProduct = (props) => {
           ?.filter((item, index) => item !== ",")
           ?.join("")
       );
-      newModal[name] = value < 2 ? 2 : value;
+      newModal[name] = value < 0 ? 0 : value;
     } else {
       newModal[name] = value;
     }
@@ -156,11 +158,12 @@ const ModalUpdateProduct = (props) => {
 
   const handleValueChangeInven = (name, value) => {
     const newModal = JSON.parse(JSON.stringify(editModal));
-    if (name === "inven_max") {
-      newModal[name] = value > newModal["inven_min"] ? value : 0;
-    } else {
-      newModal[name] = value < newModal["inven_max"] ? value : 0;
-    }
+    newModal[name] = value
+    // if (name === "inven_max") {
+    //   newModal[name] = value > newModal["inven_min"] ? value : 0;
+    // } else {
+    //   newModal[name] = value < newModal["inven_max"] ? value : 0;
+    // }
     setEditModal(newModal);
   };
 
@@ -239,6 +242,7 @@ const ModalUpdateProduct = (props) => {
 
               <Grid item xs={6} sm={3}>
                 <ProductGroup_Autocomplete
+                  required={true}
                   productGroupID={editModal.groupID || null}
                   style={{ marginTop: 8, marginBottom: 4 }}
                   size={"small"}
@@ -255,7 +259,8 @@ const ModalUpdateProduct = (props) => {
 
               <Grid item xs={6} sm={3} className="d-flex align-items-center">
                 <UnitAdd_Autocomplete
-                  unitID={editModal.unitID}
+                  required={true}
+                  unitID={editModal.unitID || null}
                   style={{ marginTop: 8, marginBottom: 4 }}
                   size={"small"}
                   label={t("menu.configUnit")}
@@ -676,7 +681,7 @@ const ModalUpdateProduct = (props) => {
                         thousandSeparator={true}
                         inputRef={step20Ref}
                         onValueChange={(e) => {
-                          handleValueChangeInven("inven_min", e.floatValue);
+                          handleValueChange("inven_min", e.floatValue);
                         }}
                         onFocus={(e) => e.target.select()}
                         onKeyPress={(event) => {
@@ -700,7 +705,7 @@ const ModalUpdateProduct = (props) => {
                         helperText={
                           editModal.inven_max > editModal.inven_min
                             ? ""
-                            : "giá trị nhỏ hơn min"
+                            : <div style={{color: 'red'}}>{"phải lớn hơn hạn mức tối thiểu"}</div>
                         }
                         name="inven_max"
                         label={t("config.store_limit.maxQuantity")}
@@ -711,7 +716,7 @@ const ModalUpdateProduct = (props) => {
                         variant="outlined"
                         thousandSeparator={true}
                         onValueChange={(e) => {
-                          handleValueChangeInven("inven_max", e.floatValue);
+                          handleValueChange("inven_max", e.floatValue);
                         }}
                         onFocus={(e) => e.target.select()}
                         inputRef={step21Ref}
@@ -909,9 +914,13 @@ const ModalUpdateProduct = (props) => {
                       style={{ width: "100%" }}
                       required
                       name="convert_rate"
+                      helperText={
+                        editModal.convert_rate > 1
+                          ? ""
+                          : <div style={{color: "red"}}>{"Giá trị phải lớn hơn 1"}</div>
+                      }
                       value={
-                        editModal.convert_rate ||
-                        (!editModal.unit_other_id ? 0 : 2)
+                        editModal.convert_rate || 0
                       }
                       label={t("config.unitRate.rate")}
                       customInput={TextField}

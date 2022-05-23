@@ -327,7 +327,7 @@ const PharmacyList = () => {
                                         >
                                             <Avatar
                                                 alt="Logo"
-                                                src={`http://171.244.133.198:5555/upload/comp_logo/${pharmacyInfo.o_12}`}
+                                                src={`http://171.244.133.198/upload/comp_logo/${pharmacyInfo.o_12}`}
                                                 className={classes.large}
                                             />
                                         </Badge>

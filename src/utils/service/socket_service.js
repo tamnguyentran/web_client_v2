@@ -6,7 +6,7 @@ import { Subject } from 'rxjs'
 class socketService {
     constructor() {
         // -- event to receive respone after client request a service --
-        this.url = 'http://171.244.133.198:5555' // -- dev
+        this.url = 'http://171.244.133.198' // -- dev
         this.socket = {}
         this.connectFlag = false
         this.clientSeq = 1

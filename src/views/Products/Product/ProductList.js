@@ -44,6 +44,7 @@ import SearchOne from "../../../components/SearchOne";
 import ExportExcel from "../../../components/ExportExcel";
 import DisplayColumn from "../../../components/DisplayColumn";
 import ImportExcel from '../../../components/ImportExcel'
+import Breadcrumb from "../../../components/Breadcrumb/View";
 import { useHotkeys } from "react-hotkeys-hook";
 
 const serviceInfo = {
@@ -128,6 +129,8 @@ const ProductList = () => {
     } else if (message["PROC_DATA"]) {
       let newData = message["PROC_DATA"];
       if (newData.rows.length > 0) {
+        dataSourceRef.current = dataSourceRef.current.concat(newData.rows);
+        setDataSource(dataSourceRef.current);
         if (reqInfoMap.inputParam[0] === glb_sv.defaultValueSearch) {
           setTotalRecords(newData.rowTotal);
         } else {
@@ -137,9 +140,6 @@ const ProductList = () => {
               newData.rowTotal
           );
         }
-        dataSourceRef.current = dataSourceRef.current.concat(newData.rows);
-        console.log(dataSourceRef.current);
-        setDataSource(dataSourceRef.current);
       } else {
         dataSourceRef.current = [];
         setDataSource([]);
@@ -332,7 +332,9 @@ const ProductList = () => {
   return (
     <>
       <Card className="mb-2">
-        <CardHeader title={t("lbl.search")} />
+        <CardHeader
+          title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
+        />
         <CardContent>
           <SearchOne
             itemGrd={3}
@@ -362,14 +364,14 @@ const ProductList = () => {
           }
           action={
             <div className="d-flex align-items-center">
-              <ImportExcel onRefresh={handleRefresh}/>
+              <ImportExcel onRefresh={handleRefresh} />
               &ensp;
               <ProductAdd onRefresh={handleRefresh} />
             </div>
           }
         />
         <CardContent>
-          <TableContainer className="tableContainer">
+          <TableContainer className="height-table-260 tableContainer tableReport">
             <Table stickyHeader>
               <caption
                 className={[
@@ -404,6 +406,16 @@ const ProductList = () => {
                           let value = item[col.field];
                           if (col.show) {
                             switch (col.field) {
+                              case "stt":
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
+                                  >
+                                    {index + 1}
+                                  </TableCell>
+                                );
                               case "action":
                                 return (
                                   <TableCell
@@ -462,22 +474,22 @@ const ProductList = () => {
                                 );
                               case "o_19":
                                 return (
-                                    <TableCell
-                                    style={{padding:'30px'}}
+                                  <TableCell
+                                    style={{ padding: "30px" }}
                                     nowrap="true"
                                     key={indexRow}
                                     align={col.align}
                                   >
                                     <Avatar
-                                    variant="square"
-                                    style={{
-                                      height: "60px",
-                                      width: "60px",
-                                      margin:'10px'
-                                    }}
-                                    src={`http://171.244.133.198:5555/upload/product/${item.o_19}`}
-                                  >
-                                    <TextImage className="fz14"/>
+                                      variant="square"
+                                      style={{
+                                        height: "60px",
+                                        width: "60px",
+                                        margin: "10px",
+                                      }}
+                                      src={`http://171.244.133.198/upload/product/${item.o_19}`}
+                                    >
+                                      <TextImage className="fz14" />
                                     </Avatar>
                                   </TableCell>
                                 );

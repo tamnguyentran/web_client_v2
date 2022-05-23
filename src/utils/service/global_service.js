@@ -51,7 +51,7 @@ class globalService {
         // this.configInfo["0101X10"] = "2ewr22sd2sadf23Dds"; // -- prod
         this.configInfo['0101X10'] = '2342ds3d3Dss' // -- dev
 
-        this.configInfo['domain'] = 'http://171.244.133.198:5555' // -- dev
+        this.configInfo['domain'] = 'http://171.244.133.198' // -- dev
 
         this.oldVersion = 'v1.0'
         this.newVersion = 'v1.3'

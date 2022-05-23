@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import SearchIcon from '@material-ui/icons/Search'
 import LoopIcon from '@material-ui/icons/Loop'
 
-const SearchOne = ({ label, name, searchSubmit, process = false, itemGrd = 0 }) => {
+const SearchOne = ({ label, name, searchSubmit, process = false, itemGrd = 3 }) => {
     const { t } = useTranslation()
     const [searchValue, setSearchValue] = useState('')
 
