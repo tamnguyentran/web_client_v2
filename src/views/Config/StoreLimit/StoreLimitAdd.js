@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardContent,
   CardActions,
-  Chip,
   Grid,
   Button,
   TextField,
@@ -18,8 +17,8 @@ import Product_Autocomplete from "../../Products/Product/Control/Product.Autocom
 import Unit_Autocomplete from "../Unit/Control/Unit.Autocomplete";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SaveIcon from "@material-ui/icons/Save";
-import CheckIcon from "@material-ui/icons/Check";
-import DeleteIcon from "@material-ui/icons/Delete";
+// import CheckIcon from "@material-ui/icons/Check";
+// import DeleteIcon from "@material-ui/icons/Delete";
 import { modalDefaultAdd } from "./Modal/StoreLimit.modal";
 
 import glb_sv from "../../../utils/service/global_service";

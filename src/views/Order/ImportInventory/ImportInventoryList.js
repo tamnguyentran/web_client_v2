@@ -303,8 +303,8 @@ const ImportInventoryList = () => {
       item["invoice_stat"] = data.o_3 === "1" ? t("normal") : t("cancelled");
       item["total_prod"] = data.o_4;
       item["invoice_val"] = data.o_5;
-      item["note"] = data.o_6;
-      item["cancel_reason"] = data.o_7;
+      item["note"] = data.o_7;
+      item["cancel_reason"] = data.o_6;
       item["input_dt"] = glb_sv.formatValue(data.o_8, "dated");
       item["createdUser"] = data.o_9;
       item["createdDate"] = glb_sv.formatValue(data.o_10, "date");
@@ -451,16 +451,6 @@ const ImportInventoryList = () => {
                                   align={col.align}
                                 >
                                   {value === "1" ? t("normal") : t("cancelled")}
-                                </TableCell>
-                              );
-                            case "o_6":
-                              return (
-                                <TableCell
-                                  nowrap="true"
-                                  key={indexRow}
-                                  align={col.align}
-                                >
-                                  {item["o_3"] === "2" ? value : ""}
                                 </TableCell>
                               );
                             default:

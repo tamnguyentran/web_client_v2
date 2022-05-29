@@ -112,9 +112,8 @@ const ExportList = () => {
       endDate,
       index || glb_sv.defaultValueSearch,
       status,
-      "%" + name.trim() + "%",
+      name?.trim() ? "%" + name?.trim() + "%" : "%%"
     ];
-    console.log(inputParam);
     setSearchProcess(true);
     sendRequest(
       serviceInfo.GET_ALL,
@@ -260,7 +259,7 @@ const ExportList = () => {
         moment(searchModal.end_dt).format("YYYYMMDD"),
         lastID,
         searchModal.id_status,
-        searchModal.vender_nm.trim()
+        searchModal.cust_nm_v
       );
     }
   };
@@ -548,7 +547,7 @@ const ExportList = () => {
         }}
       >
         <Card>
-          <CardHeader title={t("order.export.titleCancel", { name: name })} />
+          <CardHeader title={t("order.Cancel", { name: name })} />
           <CardContent>
             <Grid container spacing={2}>
               {t("order.export.invoice_no")}: {name}

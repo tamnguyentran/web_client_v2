@@ -848,7 +848,6 @@ const ImportExcel = ({ title, onRefresh }) => {
   };
 
   const handleImportChange = (e) => {
-    console.log("vsvsvsvs")
     setDataSource([]);
     setFileSelected("");
     const { files } = e.target;

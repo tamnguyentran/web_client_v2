@@ -145,6 +145,8 @@ const ImportList = () => {
       // xử lý thành công
       let newData = message["PROC_DATA"];
       if (newData.rows.length > 0) {
+        dataSourceRef.current = dataSourceRef.current.concat(newData.rows);
+        setDataSource(dataSourceRef.current);
         if (reqInfoMap.inputParam[2] === glb_sv.defaultValueSearch) {
           setTotalRecords(newData.rowTotal);
         } else {
@@ -154,8 +156,6 @@ const ImportList = () => {
               newData.rowTotal
           );
         }
-        dataSourceRef.current = dataSourceRef.current.concat(newData.rows);
-        setDataSource(dataSourceRef.current);
       } else {
         dataSourceRef.current = [];
         setDataSource([]);
@@ -301,6 +301,8 @@ const ImportList = () => {
     // { label: t('titleBranch'), key: 'titleBranch' }
   ];
 
+  console.log(dataSource)
+
   const dataCSV = () => {
     const result = dataSource.map((item, index) => {
       const data = item;
@@ -327,6 +329,8 @@ const ImportList = () => {
     });
     return result;
   };
+
+  console.log()
 
   return (
     <>
@@ -463,16 +467,16 @@ const ImportList = () => {
                                   {value === "1" ? t("normal") : t("cancelled")}
                                 </TableCell>
                               );
-                            case "o_10":
-                              return (
-                                <TableCell
-                                  nowrap="true"
-                                  key={indexRow}
-                                  align={col.align}
-                                >
-                                  {item["o_3"] === "2" ? value : ""}
-                                </TableCell>
-                              );
+                            // case "o_10":
+                            //   return (
+                            //     <TableCell
+                            //       nowrap="true"
+                            //       key={indexRow}
+                            //       align={col.align}
+                            //     >
+                            //       {item["o_3"] === "2" ? value : ""}
+                            //     </TableCell>
+                            //   );
                             default:
                               return (
                                 <TableCell

@@ -270,11 +270,12 @@ const ProductList = () => {
       item["packing"] = data.o_15;
       item["storages"] = data.o_16;
       item["unit"] = data.o_18;
-      item["createdUser"] = data.o_19;
-      item["createdDate"] = glb_sv.formatValue(data.o_20, "date");
-      item["titleBranch"] = data.o_21;
+      item["createdUser"] = data.o_20;
+      item["createdDate"] = glb_sv.formatValue(data.o_21, "date");
+      item["titleBranch"] = data.o_22;
       return item;
     });
+    
     return result;
   };
 

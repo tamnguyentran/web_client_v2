@@ -23,7 +23,6 @@ import {
   } from "@material-ui/pickers";
   import DateFnsUtils from "@date-io/date-fns";
 const InfoInvoice = (props) => {
-console.log("vsvsvsvs")
     const {
         setOpenModalShowBill,
         setImport,

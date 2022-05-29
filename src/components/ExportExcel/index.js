@@ -2,13 +2,22 @@ import React from 'react'
 import { CSVLink } from 'react-csv'
 import { useTranslation } from 'react-i18next'
 import { Tooltip, Chip } from '@material-ui/core'
+import * as XLSX from "xlsx"
 // import { ReactComponent as IC_EXCEL } from '../../asset/images/excel.svg'
 import GetAppIcon from '@material-ui/icons/GetApp'
+import { ExportSheet } from 'react-xlsx-sheet'
 
 const ExportExcel = ({ filename = '', data = [], headers = [], styleSvg = {}, ...props }) => {
+    headers.forEach((item)=>{
+        item['title'] = item['label']
+        item['dataIndex'] = item['key']
+        delete item['label']
+        delete item['key']
+    })
     const { t } = useTranslation()
+
     return (
-        <CSVLink filename={filename + '.csv'} data={data} headers={headers} target="_blank">
+        <ExportSheet fileName={filename} dataSource={data} header={headers} xlsx={XLSX} isRequiredNameDate={false}>
             <Tooltip title={t('exportExcel')} className="tooltip-override">
                 <Chip
                     {...props}
@@ -20,7 +29,7 @@ const ExportExcel = ({ filename = '', data = [], headers = [], styleSvg = {}, ..
                     variant="outlined"
                 />
             </Tooltip>
-        </CSVLink>
+        </ExportSheet>
     )
 }
 
