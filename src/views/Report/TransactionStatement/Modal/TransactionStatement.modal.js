@@ -10,7 +10,7 @@ const tableColumn = [
     { field: 'o_7', title: 'menu.configUnit', show: true, disabled: false, minWidth: 100 },
     { field: 'o_8', title: 'report.e_inven_qty', show: true, disabled: false, minWidth: 100 },
     { field: 'o_9', title: 'updateUser', show: true, disabled: false, minWidth: 200 },
-    { field: 'o_10', title: 'updateDate', show: true, disabled: false, minWidth: 100, type: 'date', align: 'center' }
+    { field: 'o_10', title: 'updateDate', show: true, disabled: false, minWidth: 100, type: 'date', align: 'centere' }
 ]
 
 const searchDefaultModal = {
