@@ -12,8 +12,7 @@ import {
   Dialog,
   Divider,
   Avatar,
-  makeStyles,
-  ImageListItem,
+  makeStyles
 } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SaveIcon from "@material-ui/icons/Save";
@@ -42,7 +41,6 @@ const serviceInfo = {
     object: config.object,
   },
 };
-console.log(serviceInfo.UPDATE);
 const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -158,7 +156,6 @@ const ProductEdit = ({
         o_16: newData.rows[0].o_4, // code
         o_17: newData.rows[0].o_18, // unit name
       };
-      console.log(newData);
       setProduct(newConvertData);
       setTimeout(() => {
         if (step1Ref.current) step1Ref.current.focus();
@@ -183,7 +180,6 @@ const ProductEdit = ({
         if (step1Ref.current) step1Ref.current.focus();
       }, 100);
     } else if (message["PROC_DATA"]) {
-      console.log(productDefaulModal);
       setProduct(productDefaulModal);
       setShouldOpenModal(false);
       onRefresh();
@@ -196,9 +192,7 @@ const ProductEdit = ({
     try {
       result =  await saveImageIntoServer()   
       result['success'] = true
-     console.log(result)
     } catch (error) {
-      console.log(error)
       result['success'] = false
     }
     console.log(result)
@@ -208,7 +202,6 @@ const ProductEdit = ({
     let inputParam = Object.keys(product).map((key) => product[key]);
     inputParam.splice(-2); // xóa mã sp + tên units
     inputParam = result.success ?  inputParam.concat(`${result.data.image_nm}`) : inputParam.concat(" ");
-    console.log(inputParam);
     sendRequest(
       serviceInfo.UPDATE,
       inputParam,
@@ -249,7 +242,6 @@ const ProductEdit = ({
   };
 
   const handleChangeImage = (e) => {
-    console.log(e.target.files[0]);
     setLoadingUpload(true);
     let url;
     try {
@@ -287,9 +279,6 @@ const ProductEdit = ({
       size: file.size,
       imgType: file.type.slice(6),
     };
-
-    console.log(ImageObjRef.current);
-
     if (ImageObjRef.current.image_data) {
       console.log("Có data");
     }
@@ -307,67 +296,18 @@ const ProductEdit = ({
         requestOptions
       )
       return result.json();
-    // } catch (error) {
-    //   console.log(error)
-    // }
-    // .then((res) => {
-    //   console.log("Res", res.json());
-    //   return res.json();
-    // })
-    // .then((data) => {
-    //   //setLoadingUpload(false);
-    //   console.log("Data", data);
-    //   return data;
-
-    //   // if (process) return;
-    //   // if (checkValidate()) return;
-    //   // setProcess(true);
-    //   // let inputParam = Object.keys(product).map((key) => product[key]);
-    //   // inputParam.splice(-2); // xóa mã sp + tên units
-    //   // inputParam = inputParam.concat(`http://171.244.133.198:5555/upload/product/${}`);
-    //   // console.log(inputParam.length);
-    //   // sendRequest(
-    //   //   serviceInfo.UPDATE,
-    //   //   inputParam,
-    //   //   handleResultUpdate,
-    //   //   true,
-    //   //   handleTimeOut
-    //   // );
-    // })
-    // .catch((err) => setLoadingUpload(false));
   };
 
-  console.log(imageUrl);
   return (
     <Dialog
       fullWidth={true}
       maxWidth="md"
       open={shouldOpenModal}
-      // onClose={(e) => {
-      //     setShouldOpenModal(false)
-      //     setProduct(productDefaulModal)
-      // }}
     >
       <Card>
-        <CardHeader title={t("product.titleEdit", { name: product.o_3 })} />
+        <CardHeader title={t("product.titleEditvsvs", { name: product.o_3 })} />
         <CardContent>
           <Grid container spacing={1}>
-            {/* <Grid item xs={6} sm={3}>
-                            <Tooltip placement="top" title={t('product.tooltip.productCode')} arrow>
-                                <TextField
-                                    fullWidth={true}
-                                    autoComplete="off"
-                                    margin="dense"
-                                    label={t('product.code')}
-                                    value={product.o_16}
-                                    name="o_16"
-                                    disabled={true}
-                                    variant="outlined"
-                                    className="uppercaseInput"
-                                />
-                            </Tooltip>
-                        </Grid> */}
-
             <Grid item xs={6} sm={3} md={3}>
               <TextField
                 fullWidth={true}
@@ -443,13 +383,9 @@ const ProductEdit = ({
                   value={product.o_4}
                   name="o_4"
                   variant="outlined"
-                  onKeyPress={(event) => {
-                    if (event.key === "Enter") {
-                      handleUpdate();
-                    }
-                  }}
                   inputRef={step4Ref}
                   onKeyPress={(event) => {
+                    handleUpdate();
                     if (event.key === "Enter") {
                       step6Ref.current.focus();
                     }
@@ -470,14 +406,10 @@ const ProductEdit = ({
                 value={product.o_6}
                 name="o_6"
                 variant="outlined"
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    handleUpdate();
-                  }
-                }}
                 inputRef={step6Ref}
                 onKeyPress={(event) => {
                   if (event.key === "Enter") {
+                    handleUpdate();
                     setTimeout(() => {
                       step7Ref.current.focus();
                     }, 10);
@@ -533,13 +465,9 @@ const ProductEdit = ({
                 value={product.o_15}
                 name="o_15"
                 variant="outlined"
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    handleUpdate();
-                  }
-                }}
                 inputRef={step5Ref}
                 onKeyPress={(event) => {
+                  handleUpdate();
                   if (event.key === "Enter") {
                     step10Ref.current.focus();
                   }
@@ -659,8 +587,8 @@ const ProductEdit = ({
             <Grid item xs={6} sm={3} md={3}>
               <div className="flex aligh-item-center mt-1">
                 <div>
-                  <div>Hình Ảnh</div>
                   <input
+                    hidden
                     id="profilePic"
                     type="file"
                     onChange={(e) => {
@@ -668,48 +596,15 @@ const ProductEdit = ({
                     }}
                   />
                 </div>
+                <label htmlFor='profilePic'>
                 <Avatar
                   variant="square"
-                  style={{ height: "130px", width: "130px" }}
+                  style={{ height: "110px", width: "110px" }}
                   src={imageUrl}
                 />
+                <div>Hình Sản phẩm</div>
+                </label>
               </div>
-              {/* </ImageListItem> */}
-              {/* <TextField
-                type="file"
-                fullWidth={true}
-                margin="dense"
-                autoComplete="off"
-                // label={t("product.overdose")}
-                onChange={(e) => {
-                  handleChangeImage(e);
-                }}
-                // value={product.o_13}
-                name="o_13"
-                variant="outlined"
-                // inputRef={step14Ref}
-                // onKeyPress={(event) => {
-                //   if (event.key === "Enter") {
-                //   //  handleUpdate();
-                //   }
-                // }}
-              /> */}
-            </Grid>
-            <Grid
-              item
-              xs={6}
-              sm={3}
-              md={3}
-              className={`${imageUrl ? "" : "dl-none"}`}
-            >
-              {/* <Avatar alt="Logo" src={imageUrl} className={classes.large} /> */}
-              {/* <ImageListItem style={{width:'100px', height:'100px'}}>
-                <img
-                  src={imageUrl}
-                  alt={''}
-                  loading="lazy"
-                />
-              </ImageListItem> */}
             </Grid>
           </Grid>
           <Grid container>
@@ -748,7 +643,7 @@ const ProductEdit = ({
             }
             startIcon={process ? <LoopIcon /> : <SaveIcon />}
           >
-            {t("btn.update")} (F37 )
+            {t("btn.update")} (F3 )
           </Button>
         </CardActions>
       </Card>

@@ -102,6 +102,7 @@ const ProductList = () => {
   const getList = (lastIndex, value) => {
     if (searchProcess) return;
     const inputParam = [lastIndex, "%" + value.trim() + "%"];
+    console.log(serviceInfo.GET_ALL)
     setSearchProcess(true);
     sendRequest(
       serviceInfo.GET_ALL,
@@ -120,6 +121,7 @@ const ProductList = () => {
   };
 
   const handleResultGetAll = (reqInfoMap, message) => {
+    console.log(reqInfoMap, message)
     setSearchProcess(false);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
@@ -129,6 +131,7 @@ const ProductList = () => {
     } else if (message["PROC_DATA"]) {
       let newData = message["PROC_DATA"];
       if (newData.rows.length > 0) {
+        console.log(newData.rows)
         dataSourceRef.current = dataSourceRef.current.concat(newData.rows);
         setDataSource(dataSourceRef.current);
         if (reqInfoMap.inputParam[0] === glb_sv.defaultValueSearch) {
@@ -296,7 +299,7 @@ const ProductList = () => {
     setProcessing(true);
     const inputParam = [
       lockModal.o_1,
-      lockModal.o_22 === "Y" ? "N" : "Y",
+      lockModal.o_23 === "Y" ? "N" : "Y",
       lockNote,
     ];
     sendRequest(
@@ -428,15 +431,16 @@ const ProductList = () => {
                                       <Tooltip
                                         title={
                                           t(
-                                            item["o_22"] === "Y"
+                                            item["o_23"] === "Y"
                                               ? "product.unblock_yn"
                                               : "product.block_yn"
                                           ) + "?"
                                         }
                                       >
-                                        {item["o_22"] === "N" ? (
+                                        {item["o_23"] === "N" ? (
                                           <SyncAltIcon
                                             color={"primary"}
+                                            className="cursor-pointer"
                                             onClick={(e) => {
                                               onLock(item);
                                             }}
@@ -444,6 +448,7 @@ const ProductList = () => {
                                         ) : (
                                           <LockIcon
                                             color={"error"}
+                                            // className="cursor-pointer"
                                             onClick={(e) => {
                                               onLock(item);
                                             }}
@@ -625,7 +630,7 @@ const ProductList = () => {
           <CardHeader
             title={
               t(
-                lockModal.o_22 === "N"
+                lockModal.o_23 === "N"
                   ? "product.block_yn"
                   : "product.unblock_yn"
               ) + "?"

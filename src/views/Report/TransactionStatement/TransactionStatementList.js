@@ -220,7 +220,7 @@ const TransactionStatementList = () => {
         <CardHeader
           title={
             <>
-              {t("transaction_statement_list")}
+              {t("transaction_statement_listff")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}
