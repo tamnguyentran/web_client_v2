@@ -511,6 +511,9 @@ tr.warning td {
 .justify-content-end {
     justify-content: flex-end;
 }
+.justify-content-center {
+    justify-content: center;
+}
 
 .dl-none {
     display: none !important;

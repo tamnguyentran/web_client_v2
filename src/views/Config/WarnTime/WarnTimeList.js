@@ -40,7 +40,7 @@ import { tableColumn, config } from "./Modal/WarnTime.modal";
 import WarnTimeAdd from "./WarnTimeAdd";
 import WarnTimeEdit from "./WarnTimeEdit";
 import Breadcrumb from "../../../components/Breadcrumb/View";
-
+import { useHotkeys } from 'react-hotkeys-hook'
 
 const serviceInfo = {
   GET_ALL: {
@@ -75,6 +75,14 @@ const WarnTimeList = () => {
   const dataSourceRef = useRef([]);
   const searchRef = useRef("");
   const idRef = useRef(0);
+
+  useHotkeys(
+    'F10',
+    () => {
+      handleDelete()
+    },
+    { enableOnTags: ['INPUT', 'SELECT', 'TEXTAREA'] }
+)
 
   useEffect(() => {
     getList(glb_sv.defaultValueSearch, "");

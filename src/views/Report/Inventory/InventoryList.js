@@ -215,7 +215,7 @@ const InventoryList = () => {
         <CardHeader
           title={
             <>
-              {t("list_of_products_in_stock_with_lot_detailsdd")}
+              {t("list_of_products_in_stock_with_lot_details")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}

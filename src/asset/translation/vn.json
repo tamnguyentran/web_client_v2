@@ -400,6 +400,7 @@
         "trans_nm": "Loại giao dịch",
         "qty": "Số lượng giao dịch",
         "payment_amount": "Số tiền thanh toán",
+        "amount_received": "Số tiền nhận lại",
         "payment_method": "Phương thức thanh toán",
         "payment_date": "Ngày thanh toán",
         "invoice_val": "Giá trị HĐ",

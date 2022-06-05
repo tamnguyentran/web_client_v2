@@ -36,21 +36,6 @@ const InventorySearch = ({ handleSearch, process = false }) => {
     return (
         <>
             <Grid container spacing={2}>
-                {/* <Grid item xs>
-                    <TextField
-                        fullWidth={true}
-                        margin="dense"
-                        autoComplete="off"
-                        label={t('report.lot_no')}
-                        onChange={handleChange}
-                        onKeyPress={key => {
-                            if (key.which === 13) return handleSearch(searchModal)
-                        }}
-                        value={searchModal.lot_no}
-                        name='lot_no'
-                        variant="outlined"
-                    />
-                </Grid> */}
                 <Grid item xs={3}>
                     <Dictionary_Autocomplete
                         diectionName="groups"

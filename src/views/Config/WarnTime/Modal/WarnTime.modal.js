@@ -4,8 +4,8 @@ const tableColumn = [
     { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
     { field: 'action', title: 'lbl.action', show: true, disabled: true, minWidth: 100 },
     { field: 'o_3', title: 'menu.product', show: true, disabled: true, minWidth: 100 },
-    { field: 'o_4', title: 'config.warnTime.warn_amt', show: true, disabled: false, minWidth: 100 },
-    { field: 'o_6', title: 'config.warnTime.warn_time_tp', show: true, disabled: false, minWidth: 100 },
+    { field: 'o_4', title: 'config.warnTime.warn_amt', show: true, disabled: true, minWidth: 100 },
+    { field: 'o_6', title: 'config.warnTime.warn_time_tp', show: true, disabled: true, minWidth: 100 },
     { field: 'o_7', title: 'updateUser', show: true, disabled: false, minWidth: 100 },
     { field: 'o_8', title: 'updateDate', show: true, disabled: false, minWidth: 100, type: 'date' },
     { field: 'o_9', title: 'titleBranch', show: true, disabled: false, minWidth: 100 }

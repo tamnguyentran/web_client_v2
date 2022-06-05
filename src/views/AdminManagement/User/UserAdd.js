@@ -55,6 +55,7 @@ const UserAdd = ({ onRefresh }) => {
     useHotkeys(
         'esc',
         () => {
+          if(process) return
             setShouldOpenModal(false)
             setUserInfo({ ...defaultUserModalAdd })
         },
@@ -171,6 +172,7 @@ const UserAdd = ({ onRefresh }) => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth={true}
+                    required
                     margin="dense"
                     autoComplete="off"
                     label={t("user.userID")}
@@ -189,6 +191,8 @@ const UserAdd = ({ onRefresh }) => {
                 <Grid item xs={12} sm={4}>
                   <TextField
                     fullWidth={true}
+                    required
+                    type='password'
                     margin="dense"
                     autoComplete="off"
                     label={t("user.userPass")}
@@ -208,6 +212,7 @@ const UserAdd = ({ onRefresh }) => {
                   <TextField
                     fullWidth={true}
                     margin="dense"
+                    required
                     autoComplete="off"
                     label={t("user.userEmail")}
                     onChange={handleChange}
@@ -250,8 +255,8 @@ const UserAdd = ({ onRefresh }) => {
                 size="small"
                 onClick={(e) => {
                   if (
-                    controlTimeOutKey &&
-                    control_sv.ControlTimeOutObj[controlTimeOutKey]
+                    (controlTimeOutKey &&
+                    control_sv.ControlTimeOutObj[controlTimeOutKey]) || process
                   ) {
                     return;
                   }
