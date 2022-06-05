@@ -18,31 +18,23 @@ import {
   TableHead,
   Tooltip,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-// import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
-// import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-// import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import Alert from "@material-ui/lab/Alert";
 import PublishIcon from "@material-ui/icons/Publish";
 import sendRequest from "../../utils/service/sendReq";
 import reqFunction from "../../utils/constan/functions";
 import glb_sv from "../../utils/service/global_service";
 import control_sv from "../../utils/service/control_services";
-// import ProductGroup_Autocomplete from "../../views/Products/ProductGroup/Control/ProductGroup.Autocomplete";
-// import UnitAdd_Autocomplete from "../../views/Config/Unit/Control/UnitAdd.Autocomplete";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import { ReactComponent as IC_DOCUMENT_FOLDER } from "../../asset/images/document-folder.svg";
 import { ReactComponent as IC_DOCUMENT_DOWNLOAD_EXAMPLE } from "../../asset/images/document-download-example.svg";
 import info_dec from "./info_dec.json";
 
 import { ExcelRenderer } from "react-excel-renderer";
-// import { defaultModalAdd } from "../../views/Partner/Supplier/Modal/Supplier.modal";
-// import { Delete } from "@material-ui/icons";
-// import NumberFormat from "react-number-format";
 
 import ModalUpdateProduct from "./ModalUpdateProduct";
 
@@ -157,7 +149,6 @@ const productDefaulModal = {
 };
 
 const arrKeyProduct = [
-  "code",
   "name",
   "group",
   "unit",
@@ -188,12 +179,13 @@ const arrKeyProduct = [
 ];
 
 const ImportExcel = ({ title, onRefresh }) => {
-  console.log(title);
   const { t } = useTranslation();
 
   const [shouldOpenModal, setShouldOpenModal] = useState(false);
+  const [showMessage, setShowMessage] = useState(null)
   const [dataSource, setDataSource] = useState([]);
   const [isError, setIsError] = useState(false);
+  const [process, setProcess] = useState(false)
 
   const [unitNotAvailable, setUnitNotAvailable] = useState([]);
   const [groupNotAvailable, setGroupNotAvailable] = useState([]);
@@ -204,7 +196,7 @@ const ImportExcel = ({ title, onRefresh }) => {
     isInventory: false,
     isExpanded: false,
     isAddUnit: false,
-    isInfoPrice: false
+    isInfoPrice: false,
   });
   const [shouldOpenModalEdit, setShouldOpenModalEdit] = useState(false);
   const [editID, setEditID] = useState(null);
@@ -215,7 +207,10 @@ const ImportExcel = ({ title, onRefresh }) => {
   const unitListRef = useRef([]);
   const groupListRef = useRef([]);
   const step19Ref = useRef(null);
-  const lengthList = useRef(0)
+  const step28Ref = useRef(null);
+  const step22Ref = useRef(null);
+  const step18Ref = useRef(null);
+  const lengthList = useRef(0);
 
   const allowFileTypes = useRef([
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -223,8 +218,18 @@ const ImportExcel = ({ title, onRefresh }) => {
   ]);
   const dataAddExcelFaild = useRef([]);
 
+  useHotkeys(
+    "esc",
+    () => {
+      if(process) return
+      handleCloseModal()
+    },
+    { enableOnTags: ["INPUT", "SELECT", "TEXTAREA"] }
+  );
+
   useEffect(() => {
     console.log("vào UNIT_DROPDOWN_LIST excel");
+    lengthList.current = 0;
     sendRequest(
       serviceInfo.UNIT_DROPDOWN_LIST,
       ["units", "%"],
@@ -293,8 +298,6 @@ const ImportExcel = ({ title, onRefresh }) => {
     });
     setIsEnableSave(!!result);
   }, [dataSource]);
-  console.log(isEnableSave);
-  const checkShowMessage = (data) => {};
 
   const resultUnitDropDownList = (reqInfoMap, message = {}) => {
     console.log("vào get resultUnitDropDownList", message);
@@ -339,6 +342,8 @@ const ImportExcel = ({ title, onRefresh }) => {
 
   const handleOk = (e) => {
     e.preventDefault();
+    setShowMessage(true)
+    setProcess(true)
     if (!!isError) {
       return;
     }
@@ -352,7 +357,6 @@ const ImportExcel = ({ title, onRefresh }) => {
         continue;
       } else if (!!e?.groupID && !!e?.unitID) {
         // Đủ thông tin tên sp, nhóm, đơn vị => gửi lên sv
-        console.log(e.code)
         const inputParam = [
           e.groupID,
           !e.code || e.code.trim() === "" ? "AUTO" : e.code.trim(),
@@ -387,8 +391,6 @@ const ImportExcel = ({ title, onRefresh }) => {
           e.unit_other_id || 0,
           Number(e.convert_rate) || 0,
         ];
-        console.log(e);
-        console.log(inputParam);
         sendRequest(
           serviceInfo.CREATE_PRODUCT,
           inputParam,
@@ -555,7 +557,6 @@ const ImportExcel = ({ title, onRefresh }) => {
         }
       }
     }
-    // if (i === dataSource.length) {
     onRefresh();
     setGroupNotAvailable([]);
     setUnitNotAvailable([]);
@@ -563,12 +564,10 @@ const ImportExcel = ({ title, onRefresh }) => {
     setEditModal({ ...productDefaulModal });
     setShouldOpenModalEdit(false);
     setFileSelected("");
-    //   setDataSource([]);
-    //   setShouldOpenModal(false);
-    // }
   };
 
   const handleResultCreate = (reqInfoMap, message, e, i) => {
+    setProcess(false)
     if (message["PROC_STATUS"] !== 1) {
       e["warning"] = message["PROC_MESSAGE"];
       dataAddExcelFaild.current.push(e);
@@ -580,6 +579,7 @@ const ImportExcel = ({ title, onRefresh }) => {
       if (dataSource.length === 1) {
         setDataSource([]);
         setShouldOpenModal(false);
+        setShowMessage(false)
       }
     }
   };
@@ -623,11 +623,12 @@ const ImportExcel = ({ title, onRefresh }) => {
               const groupObject = groupList.find(
                 (x) => x.o_2 === objTam?.group
               );
-              console.log(groupObject, groupList);
               objTam["groupID"] = !!groupObject?.o_1 ? groupObject?.o_1 : null;
             }
             if (arrKeyProduct[i] === "unit_other") {
-              let unitObject = unitList.find((x) => x.o_2 === objTam?.unit_other);
+              let unitObject = unitList.find(
+                (x) => x.o_2 === objTam?.unit_other
+              );
               objTam["unit_other_id"] = !!unitObject?.o_1
                 ? unitObject?.o_1
                 : null;
@@ -635,7 +636,7 @@ const ImportExcel = ({ title, onRefresh }) => {
           });
           arrTam.push(objTam);
         });
-        lengthList.current = arrTam.length || 0
+        lengthList.current = arrTam.length || 0;
         setDataSource(arrTam || []);
       }
     });
@@ -870,48 +871,7 @@ const ImportExcel = ({ title, onRefresh }) => {
     setShouldOpenModalEdit(true);
   };
 
-  // const handleChange = (e) => {
-  //   const newModal = { ...editModal };
-  //   newModal[e.target.name] =
-  //     (e.target.name === "name" || e.target.code === "name") ? e.target.value.toUpperCase() : e.target.value;
-  //   setEditModal({...newModal});
-  // };
-
-  // const handleValueChange = (name,value)=>{
-  //   const newModal = { ...editModal };
-  //   if(name === "imp_vat" || name === "exp_vat"){
-  //     newModal[name] = (value < 0 || value > 100) ? 10 : value
-  //   }if(name === "convert_rate"){
-  //     console.log("vsvsss")
-  //     newModal[name] = (value < 2) ? 2 : value
-  //   }
-  //   else{
-  //     newModal[name] = value
-  //   }
-  //   setEditModal({...newModal});
-  // };
-  
-
-  // const handleChangeShowDropdownInfoProduct = (keyShow) => {
-  //   switch (keyShow) {
-  //     case "infoExpanded":
-  //       setIsInfoObj({ ...isInfoObj, isExpanded: !isInfoObj.isExpanded });
-  //       break;
-  //     case "infoInventory":
-  //       console.log();
-  //       setIsInfoObj({ ...isInfoObj, isInventory: !isInfoObj.isInventory });
-  //       break;
-  //     case "infoPrice":
-  //       setIsInfoObj({ ...isInfoObj, isInfoPrice: !isInfoObj.isInfoPrice });
-  //       break;
-  //     case "infoAddUnit":
-  //       setIsInfoObj({ ...isInfoObj, isAddUnit: !isInfoObj.isAddUnit });
-  //       break;
-  //   }
-  // };
-
   const handleSelectProductGroup = (obj) => {
-    console.log(obj)
     const newModal = { ...editModal };
     newModal["groupID"] = !!obj ? obj?.o_1 : null;
     newModal["group"] = !!obj ? obj?.o_2 : "";
@@ -928,9 +888,15 @@ const ImportExcel = ({ title, onRefresh }) => {
   const handleUpdateRow = () => {
     if (
       (editModal.groupID === 19 || editModal.groupID === 20) &&
-      editModal.expire_date === "" || (editModal.inven_max < editModal.inven_min) || editModal.convert_rate < 1
+      editModal.expire_date === ""
     ) {
       step19Ref.current.focus();
+    } else if (editModal.convert_rate < 1) {
+      step28Ref.current.focus();
+    } else if (editModal.inven_max < editModal.inven_min) {
+      step22Ref.current.focus();
+    } else if (!editModal.lotno && editModal.invenqty) {
+      step18Ref.current.focus();
     } else {
       let newDataSource = JSON.parse(JSON.stringify(dataSource));
       newDataSource.splice(editID, 1, editModal);
@@ -966,7 +932,6 @@ const ImportExcel = ({ title, onRefresh }) => {
                 <Button
                   size="small"
                   variant="outlined"
-                  // className="bg-print text-white"
                   style={{
                     color: "var(--white)",
                     border: "1px solid white",
@@ -999,22 +964,15 @@ const ImportExcel = ({ title, onRefresh }) => {
                 handleImportChange(e);
               }}
             />
-            <label for="container-upload-file" style={{width:'100%'}}>
-              <Button variant="contained" component="span" style={{width:'100%'}}>
-              <IC_DOCUMENT_FOLDER />{" "}
-                {fileSelected !== "" ? `(${fileSelected})` : t("choose_file")}
-              </Button>
-              {/* <div
-                title={t("choose_file")}
-                style={{
-                  borderRadius: 5,
-                  backgroundColor: "rgb(225 227 228 / 57%)",
-                  padding: "2px 10px",
-                }}
+            <label for="container-upload-file" style={{ width: "100%" }}>
+              <Button
+                variant="contained"
+                component="span"
+                style={{ width: "100%" }}
               >
                 <IC_DOCUMENT_FOLDER />{" "}
                 {fileSelected !== "" ? `(${fileSelected})` : t("choose_file")}
-              </div> */}
+              </Button>
             </label>
             {isError && (
               <Alert severity="error">{t("message.error_file")}</Alert>
@@ -1064,8 +1022,6 @@ const ImportExcel = ({ title, onRefresh }) => {
                           >
                             {columns?.map((col, indexRow) => {
                               let value = item[col.key];
-                              if (col.key === "proctatus")
-                                console.log("key-proctatus", value);
                               return col.key === "proctatus" ? (
                                 <TableCell
                                   nowrap="true"
@@ -1149,36 +1105,50 @@ const ImportExcel = ({ title, onRefresh }) => {
               </TableContainer>
             )}
           </CardContent>
-          <CardActions
-            className="align-items-end"
-            style={{ justifyContent: "space-between" }}
-          >
-            <div>{lengthList.current - dataSource.length}/{lengthList.current}{" "}được thêm thành công</div>
-            <div>
-            <Button
-              size="small"
-              onClick={handleCloseModal}
-              startIcon={<ExitToAppIcon />}
-              variant="contained"
-              disableElevation
-            >
-              {t("btn.close")} (Esc)
-            </Button>
-            {" "}
-            <Button
-              disabled={isEnableSave || !dataSource || dataSource.length === 0}
-              variant="contained"
-              size="small"
-              onClick={handleOk}
-              startIcon={!process && <SaveIcon />}
-              className={
-                !isEnableSave && dataSource && dataSource.length > 0
-                  ? "bg-success text-white"
-                  : ""
-              }
-            >
-              {t("btn.save")} (F3)
-            </Button>
+          <CardActions>
+            <div className="w-100">
+              <div className="flex justify-content-between">
+                <div>
+                  {lengthList.current - dataSource.length}/{lengthList.current}{" "}
+                  được thêm thành công
+                </div>
+                <div>
+                  <Button
+                    size="small"
+                    onClick={()=>{
+                      if(process) return
+                      handleCloseModal()
+                    }}
+                    startIcon={<ExitToAppIcon />}
+                    variant="contained"
+                    disableElevation
+                  >
+                    {t("btn.close")} (Esc)
+                  </Button>{" "}
+                  <Button
+                    disabled={
+                      isEnableSave || !dataSource || dataSource.length === 0
+                    }
+                    variant="contained"
+                    size="small"
+                    onClick={handleOk}
+                    startIcon={!process && <SaveIcon />}
+                    className={
+                      !isEnableSave && dataSource && dataSource.length > 0
+                        ? "bg-success text-white"
+                        : ""
+                    }
+                  >
+                    {t("btn.save")} (F3)
+                  </Button>
+                </div>
+              </div>
+              {showMessage === true &&  <div style={{ width: "70%", color:"red" }}>
+                <i>* Đã có dữ liệu không đúng, xin hãy kiểm tra lại! (đưa con trỏ
+                vào dòng bôi đỏ để biết thông tin chi tiết dữ liệu sai, bạn có
+                thể click vào hình cây viết để thực hiện sửa hoặc sửa trên file
+                excel gốc rồi import lại)". Khi có ít nhất 1 dòng bị lỗi!</i>
+              </div>}
             </div>
           </CardActions>
         </Card>
@@ -1189,7 +1159,10 @@ const ImportExcel = ({ title, onRefresh }) => {
         shouldOpenModalEdit={shouldOpenModalEdit}
         editModal={editModal}
         handleSelectProductGroup={handleSelectProductGroup}
+        step18Ref={step18Ref}
         step19Ref={step19Ref}
+        step28Ref={step28Ref}
+        step22Ref={step22Ref}
         handleSelectUnit={handleSelectUnit}
         isInfoObj={isInfoObj}
         setIsInfoObj={setIsInfoObj}
