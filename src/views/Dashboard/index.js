@@ -37,18 +37,19 @@ const DashboardLayout = () => {
     const { t } = useTranslation()
     const [dataReportStatic, setDataReportStatic] = useState({})
     const [dataChart, setDataChart] = useState([])
-    const [typeChart, setTypeChart] = useState('1') // '1' là tháng hiện tại - 0 tháng trước
+    const [typeChart, setTypeChart] = useState('1') // '1' là tháng hiện tại - 2 tháng trước
 
     useEffect(() => {
         sendRequest(serviceInfo.REPORT_STATIC, [], handleResultGetReportStatic, true, handleTimeOut)
     }, [])
 
     useEffect(() => {
-        if (typeChart === '1') {
-            sendRequest(serviceInfo.REPORT_STATIC_CHART, [moment().startOf('months').format('YYYYMMDD'), moment().format('YYYYMMDD')], handleResultGetChartData, true, handleTimeOut)
-        } else {
-            sendRequest(serviceInfo.REPORT_STATIC_CHART, [moment().subtract(1, 'months').startOf('months').format('YYYYMMDD'), moment().subtract(1, 'months').endOf('months').format('YYYYMMDD')], handleResultGetChartData, true, handleTimeOut)
-        }
+        // if (typeChart === '1') {
+        //     sendRequest(serviceInfo.REPORT_STATIC_CHART, [moment().startOf('months').format('YYYYMMDD'), moment().format('YYYYMMDD')], handleResultGetChartData, true, handleTimeOut)
+        // } else {
+        //     sendRequest(serviceInfo.REPORT_STATIC_CHART, [moment().subtract(1, 'months').startOf('months').format('YYYYMMDD'), moment().subtract(1, 'months').endOf('months').format('YYYYMMDD')], handleResultGetChartData, true, handleTimeOut)
+        // }
+        sendRequest(serviceInfo.REPORT_STATIC_CHART, [typeChart], handleResultGetChartData, true, handleTimeOut)
     }, [typeChart])
 
     const handleResultGetChartData = (reqInfoMap, message) => {
@@ -334,7 +335,7 @@ const DashboardLayout = () => {
                                         style={{ color: 'var(--primary)' }}
                                     >
                                         <MenuItem value={'1'}> {t('dashboard.current_month')}</MenuItem>
-                                        <MenuItem value={'0'}>{t('dashboard.last_month')}</MenuItem>
+                                        <MenuItem value={'2'}>{t('dashboard.last_month')}</MenuItem>
                                     </Select>
                                     {/* <Button key='month-0' size='small'
                                         onClick={() => { setTypeChart('0') }}

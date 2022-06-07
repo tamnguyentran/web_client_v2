@@ -305,7 +305,7 @@ const ProductEdit = ({
       open={shouldOpenModal}
     >
       <Card>
-        <CardHeader title={t("product.titleEditvsvs", { name: product.o_3 })} />
+        <CardHeader title={t("product.titleEdit", { name: product.o_3 })} />
         <CardContent>
           <Grid container spacing={1}>
             <Grid item xs={6} sm={3} md={3}>
@@ -599,7 +599,7 @@ const ProductEdit = ({
                 <label htmlFor='profilePic'>
                 <Avatar
                   variant="square"
-                  style={{ height: "110px", width: "110px" }}
+                  style={{ height: "110px", width: "110px", cursor: "pointer" }}
                   src={imageUrl}
                 />
                 <div>Hình Sản phẩm</div>

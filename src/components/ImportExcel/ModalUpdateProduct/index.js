@@ -63,6 +63,9 @@ const ModalUpdateProduct = (props) => {
     editModal,
     handleSelectProductGroup,
     step19Ref,
+    step18Ref,
+    step20Ref,
+    step28Ref,
     handleSelectUnit,
     isInfoObj,
     setIsInfoObj,
@@ -92,17 +95,13 @@ const ModalUpdateProduct = (props) => {
   const step15Ref = useRef(null);
   const step16Ref = useRef(null);
   const step17Ref = useRef(null);
-  const step18Ref = useRef(null);
-  // const step19Ref = useRef(null);
-  const step20Ref = useRef(null);
-  const step21Ref = useRef(null);
   const step22Ref = useRef(null);
+  const step21Ref = useRef(null);
   const step23Ref = useRef(null);
   const step24Ref = useRef(null);
   const step25Ref = useRef(null);
   const step26Ref = useRef(null);
   const step27Ref = useRef(null);
-  const step28Ref = useRef(null);
   const { t } = useTranslation();
 
   const handleExpDateChange = (date) => {
@@ -593,7 +592,7 @@ const ModalUpdateProduct = (props) => {
                     <TextField
                       fullWidth={true}
                       margin="dense"
-                      //   required={product.store_current > 0}
+                      required={editModal.invenqty > 0}
                       autoComplete="off"
                       label={t("order.import.lot_no")}
                       onChange={handleChange}

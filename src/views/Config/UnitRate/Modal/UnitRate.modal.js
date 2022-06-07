@@ -4,9 +4,9 @@ const tableColumn = [
     { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
     { field: 'action', title: 'lbl.action', show: true, disabled: true, minWidth: 100 },
     { field: 'o_3', title: 'menu.product', show: true, disabled: true, minWidth: 100 },
-    { field: 'o_5', title: 'menu.configUnit', show: true, disabled: false, minWidth: 100 },
-    { field: 'o_6', title: 'config.unitRate.rate', show: true, disabled: false, minWidth: 100, type: 'number', align: 'right' },
-    { field: 'o_8', title: 'config.unitRate.minRate', show: true, disabled: false, minWidth: 100 },
+    { field: 'o_5', title: 'menu.configUnit', show: true, disabled: true, minWidth: 100 },
+    { field: 'o_6', title: 'config.unitRate.rate', show: true, disabled: true, minWidth: 100, type: 'number', align: 'right' },
+    { field: 'o_8', title: 'config.unitRate.minRate', show: true, disabled: true, minWidth: 100 },
     { field: 'o_9', title: 'updateUser', show: true, disabled: false, minWidth: 100 },
     { field: 'o_10', title: 'updateDate', show: true, disabled: false, minWidth: 100, type: 'date' },
     { field: 'o_11', title: 'config.unit.titleBranch', show: true, disabled: false, minWidth: 100 }

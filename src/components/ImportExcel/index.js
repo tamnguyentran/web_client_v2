@@ -208,7 +208,7 @@ const ImportExcel = ({ title, onRefresh }) => {
   const groupListRef = useRef([]);
   const step19Ref = useRef(null);
   const step28Ref = useRef(null);
-  const step22Ref = useRef(null);
+  const step20Ref = useRef(null);
   const step18Ref = useRef(null);
   const lengthList = useRef(0);
 
@@ -894,7 +894,7 @@ const ImportExcel = ({ title, onRefresh }) => {
     } else if (editModal.convert_rate < 1) {
       step28Ref.current.focus();
     } else if (editModal.inven_max < editModal.inven_min) {
-      step22Ref.current.focus();
+      step20Ref.current.focus();
     } else if (!editModal.lotno && editModal.invenqty) {
       step18Ref.current.focus();
     } else {
@@ -1162,7 +1162,7 @@ const ImportExcel = ({ title, onRefresh }) => {
         step18Ref={step18Ref}
         step19Ref={step19Ref}
         step28Ref={step28Ref}
-        step22Ref={step22Ref}
+        step20Ref={step20Ref}
         handleSelectUnit={handleSelectUnit}
         isInfoObj={isInfoObj}
         setIsInfoObj={setIsInfoObj}

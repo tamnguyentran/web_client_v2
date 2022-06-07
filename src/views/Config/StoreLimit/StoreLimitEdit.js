@@ -204,6 +204,7 @@ const StoreLimitEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) 
                                 style={{ width: '100%' }}
                                 required
                                 value={StoreLimit.o_7}
+                                helperText={<div style={{color: 'red'}}>{StoreLimit.o_6 > StoreLimit.o_7 ? "Phải lớn hơn hạn mức tối thiểu" : ""}</div>}
                                 label={t('config.store_limit.maxQuantity')}
                                 customInput={TextField}
                                 autoComplete="off"

@@ -413,7 +413,7 @@ const UnitRateList = () => {
               disabled={dataSourceRef.current.length >= totalRecords}
             />
             <ExportExcel
-              filename="product"
+              filename="unit_ratio"
               data={dataCSV()}
               headers={headersCSV}
             />
