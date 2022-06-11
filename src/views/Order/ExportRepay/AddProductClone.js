@@ -314,7 +314,7 @@ const AddProduct = ({ onAddProduct, resetFlag }) => {
                                     name="only_get_inventory_lot_no"
                                 />
                             }
-                            label={t('only_get_inventory_lot_noh')}
+                            label={t('only_get_inventory_lot_no')}
                         />
                     </>
                 }

@@ -357,7 +357,7 @@ const EditImportInventory = ({}) => {
         />
         <Card>
           <CardHeader
-            title={t("order.import.productImportList")}
+            title={t("order.import.productImportListdd")}
             action={
               <ExportExcel
                 filename={`import_inventory_${ImportInventory.invoice_no}`}

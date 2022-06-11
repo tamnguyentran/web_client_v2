@@ -585,7 +585,7 @@ const InsExportRepay = ({}) => {
             }
           />
           <CardContent>
-            <TableContainer className="height-table-260 tableContainer tableOrder">
+            <TableContainer style={{height: "calc(100vh - 260px)"}}>
               <Table stickyHeader>
                 <caption
                   className={[
@@ -714,7 +714,7 @@ const InsExportRepay = ({}) => {
         </Card>
       </Grid>
       <Grid item md={3} xs={12}>
-        <Card>
+        <Card className="h-100">
           <CardHeader title={t("order.exportRepay.invoice_info")} />
           <CardContent>
             <Grid container spacing={1}>

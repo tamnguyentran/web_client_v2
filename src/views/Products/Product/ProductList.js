@@ -30,6 +30,7 @@ import LoopIcon from "@material-ui/icons/Loop";
 import ColumnCtrComp from "../../../components/_ColumnCtr";
 import LockIcon from "@material-ui/icons/Lock";
 import SyncAltIcon from "@material-ui/icons/SyncAlt";
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 import glb_sv from "../../../utils/service/global_service";
 import control_sv from "../../../utils/service/control_services";
@@ -84,6 +85,7 @@ const ProductList = () => {
   const [processing, setProcessing] = useState(false);
   const [searchProcess, setSearchProcess] = useState(false);
   const [id, setId] = useState(0);
+  const [imgValue, setImgValue] = useState("")
   const [name, setName] = useState("");
 
   const dataSourceRef = useRef([]);
@@ -206,6 +208,7 @@ const ProductList = () => {
   const onEdit = (item) => {
     setShouldOpenEditModal(item ? true : false);
     setId(item ? item.o_1 : 0);
+    setImgValue(item.o_19 || "")
     idRef.current = item && item.o_1 > 0 ? item.item && item.o_1 > 0 : 0;
   };
 
@@ -359,7 +362,7 @@ const ProductList = () => {
         <CardHeader
           title={
             <>
-              {t("product.titleList")}
+              {t("product.titleListdd")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}
@@ -438,17 +441,17 @@ const ProductList = () => {
                                         }
                                       >
                                         {item["o_23"] === "N" ? (
-                                          <SyncAltIcon
+                                          <LockOpenIcon
                                             color={"primary"}
                                             className="cursor-pointer"
                                             onClick={(e) => {
                                               onLock(item);
                                             }}
-                                          ></SyncAltIcon>
+                                          ></LockOpenIcon>
                                         ) : (
                                           <LockIcon
                                             color={"error"}
-                                            // className="cursor-pointer"
+                                            className="cursor-pointer"
                                             onClick={(e) => {
                                               onLock(item);
                                             }}
@@ -701,6 +704,7 @@ const ProductList = () => {
       {/* modal edit */}
       <ProductEdit
         id={id}
+        imgValue={imgValue}
         shouldOpenModal={shouldOpenEditModal}
         setShouldOpenModal={setShouldOpenEditModal}
         onRefresh={handleRefresh}

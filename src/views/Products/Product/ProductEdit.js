@@ -12,7 +12,7 @@ import {
   Dialog,
   Divider,
   Avatar,
-  makeStyles
+  makeStyles,
 } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SaveIcon from "@material-ui/icons/Save";
@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const ProductEdit = ({
   id,
+  imgValue,
   shouldOpenModal,
   setShouldOpenModal,
   onRefresh,
@@ -188,20 +189,22 @@ const ProductEdit = ({
 
   const handleUpdate = async () => {
     //console.log(await saveImageIntoServer());
-    let result = {}
+    let result = {};
     try {
-      result =  await saveImageIntoServer()   
-      result['success'] = true
+      result = await saveImageIntoServer();
+      result["success"] = true;
     } catch (error) {
-      result['success'] = false
+      result["success"] = false;
     }
-    console.log(result)
+    console.log(result);
     if (process) return;
     if (checkValidate()) return;
     setProcess(true);
     let inputParam = Object.keys(product).map((key) => product[key]);
     inputParam.splice(-2); // xóa mã sp + tên units
-    inputParam = result.success ?  inputParam.concat(`${result.data.image_nm}`) : inputParam.concat(" ");
+    inputParam = result.success
+      ? inputParam.concat(`${result.data.image_nm}`)
+      : inputParam.concat(" ");
     sendRequest(
       serviceInfo.UPDATE,
       inputParam,
@@ -291,19 +294,17 @@ const ProductEdit = ({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(ImageObjRef.current),
     };
-      let result = await fetch(
-        `${"http://171.244.133.198/prod/upload_img"}`,
-        requestOptions
-      )
-      return result.json();
+    let result = await fetch(
+      `${"http://171.244.133.198/prod/upload_img"}`,
+      requestOptions
+    );
+    return result.json();
   };
 
+  console.log(product);
+
   return (
-    <Dialog
-      fullWidth={true}
-      maxWidth="md"
-      open={shouldOpenModal}
-    >
+    <Dialog fullWidth={true} maxWidth="md" open={shouldOpenModal}>
       <Card>
         <CardHeader title={t("product.titleEdit", { name: product.o_3 })} />
         <CardContent>
@@ -584,29 +585,30 @@ const ProductEdit = ({
                 }}
               />
             </Grid>
-            <Grid item xs={6} sm={3} md={3}>
-              <div className="flex aligh-item-center mt-1">
-                <div>
-                  <input
-                    hidden
-                    id="profilePic"
-                    type="file"
-                    onChange={(e) => {
-                      handleChangeImage(e);
-                    }}
-                  />
-                </div>
-                <label htmlFor='profilePic'>
-                <Avatar
-                  variant="square"
-                  style={{ height: "110px", width: "110px", cursor: "pointer" }}
-                  src={imageUrl}
-                />
-                <div>Hình Sản phẩm</div>
-                </label>
-              </div>
-            </Grid>
           </Grid>
+          <div className="text-center mt-3">
+            <div>
+              <input
+                hidden
+                id="profilePic"
+                type="file"
+                onChange={(e) => {
+                  handleChangeImage(e);
+                }}
+              />
+            </div>
+            <label htmlFor="profilePic">
+              <Avatar
+                variant="square"
+                style={{ height: "150px", width: "150px", cursor: "pointer" }}
+                src={
+                  imageUrl ||
+                  `http://171.244.133.198/upload/product/${imgValue}`
+                }
+              />
+              <div>Hình Sản phẩm</div>
+            </label>
+          </div>
           <Grid container>
             <span className="required_note">(*) {t("required_note")}</span>
           </Grid>

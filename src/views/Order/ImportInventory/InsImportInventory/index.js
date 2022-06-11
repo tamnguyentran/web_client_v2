@@ -375,7 +375,7 @@ const ProductImportInventory = ({}) => {
         />
         <Card>
           <CardHeader
-            title={t("order.importInventory.productImportList")}
+            title={t("order.importInventory.productImportListss")}
             action={
               <ExportExcel
                 filename={`import_inventory_${importInventory.invoice_no}`}
@@ -386,7 +386,7 @@ const ProductImportInventory = ({}) => {
             }
           />
           <CardContent>
-            <TableContainer className="height-table-260 tableContainer tableOrder">
+            <TableContainer style={{height: "calc(100vh - 260px)"}}>
               <Table stickyHeader>
                 <caption
                   className={[
@@ -514,7 +514,7 @@ const ProductImportInventory = ({}) => {
         </Card>
       </Grid>
       <Grid item md={3} xs={12}>
-        <Card>
+        <Card className="h-100">
           <CardHeader title={t("order.import.invoice_info")} />
           <CardContent>
             <Grid container spacing={1}>
