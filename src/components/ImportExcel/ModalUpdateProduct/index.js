@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import * as XLSX from "xlsx";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import DateFnsUtils from "@date-io/date-fns";
@@ -10,13 +9,6 @@ import {
   CardContent,
   Card,
   CardActions,
-  Chip,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  TableContainer,
-  TableHead,
   Grid,
   TextField,
   Accordion,
@@ -32,29 +24,8 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import glb_sv from "../../../utils/service/global_service";
-// import SaveIcon from "@material-ui/icons/Save";
-// import EditIcon from "@material-ui/icons/Edit";
-// import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-// import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
-// import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-// import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
-// import Alert from "@material-ui/lab/Alert";
-// import PublishIcon from "@material-ui/icons/Publish";
-// import sendRequest from "../../utils/service/sendReq";
-// import reqFunction from "../../utils/constan/functions";
-// import glb_sv from "../../utils/service/global_service";
-// import control_sv from "../../utils/service/control_services";
 import ProductGroup_Autocomplete from "../../../views/Products/ProductGroup/Control/ProductGroup.Autocomplete";
 import UnitAdd_Autocomplete from "../../../views/Config/Unit/Control/UnitAdd.Autocomplete";
-
-// import { ReactComponent as IC_DOCUMENT_FOLDER } from "../../asset/images/document-folder.svg";
-// import { ReactComponent as IC_DOCUMENT_DOWNLOAD_EXAMPLE } from "../../asset/images/document-download-example.svg";
-// import info_dec from "./info_dec.json";
-
-// import { ExcelRenderer } from "react-excel-renderer";
-// import { defaultModalAdd } from "../../views/Partner/Supplier/Modal/Supplier.modal";
-// import { Delete } from "@material-ui/icons";
 import NumberFormat from "react-number-format";
 // dược phẩm 19 thực phẩm chức năng 20
 const ModalUpdateProduct = (props) => {
@@ -69,13 +40,11 @@ const ModalUpdateProduct = (props) => {
     handleSelectUnit,
     isInfoObj,
     setIsInfoObj,
-    // handleChangeShowDropdownInfoProduct,
     handleUpdateRow,
     setShouldOpenModalEdit,
     setEditID,
     setEditModal,
     productDefaulModal,
-    // handleValueChange,
   } = props;
 
   const step1Ref = useRef(null);
@@ -111,18 +80,12 @@ const ModalUpdateProduct = (props) => {
   };
 
   const handleSelectUnitRate = (obj) => {
-    console.log(obj);
     const newEditModal = JSON.parse(JSON.stringify(editModal));
-    // if(obj){
     newEditModal["unit_other_id"] = !!obj ? obj?.o_1 : null;
     newEditModal["unit_other"] = !!obj ? obj?.o_2 : null;
     if (!obj) {
-      console.log("vsvs");
       newEditModal["convert_rate"] = 0;
     }
-    // }else{
-    //   newEditModal['convert_rate'] = 0
-    // }
     setEditModal({ ...newEditModal });
   };
 
@@ -153,17 +116,6 @@ const ModalUpdateProduct = (props) => {
         ? e.target.value.toUpperCase()
         : e.target.value;
     setEditModal({ ...newModal });
-  };
-
-  const handleValueChangeInven = (name, value) => {
-    const newModal = JSON.parse(JSON.stringify(editModal));
-    newModal[name] = value
-    // if (name === "inven_max") {
-    //   newModal[name] = value > newModal["inven_min"] ? value : 0;
-    // } else {
-    //   newModal[name] = value < newModal["inven_max"] ? value : 0;
-    // }
-    setEditModal(newModal);
   };
 
   const handleChangeShowDropdownInfoProduct = (keyShow,value) => {
@@ -500,7 +452,6 @@ const ModalUpdateProduct = (props) => {
                           setTimeout(() => {
                             step16Ref.current.focus();
                           }, 500);
-                          // handleUpdateRow();
                         }
                       }}
                     />
@@ -610,7 +561,6 @@ const ModalUpdateProduct = (props) => {
                   <Grid item xs={12} sm={3} md={3}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
-                        // required={true}
                         disableToolbar
                         margin="dense"
                         variant="outlined"
@@ -667,8 +617,7 @@ const ModalUpdateProduct = (props) => {
                       arrow
                     >
                       <NumberFormat
-                        className="inputNumber"
-                        style={{ width: "100%" }}
+                        className="inputNumber w-100"
                         value={editModal.inven_min || 0}
                         name="inven_min"
                         label={t("config.store_limit.minQuantity")}
@@ -698,8 +647,7 @@ const ModalUpdateProduct = (props) => {
                       arrow
                     >
                       <NumberFormat
-                        className="inputNumber"
-                        style={{ width: "100%" }}
+                        className="inputNumber w-100"
                         value={editModal.inven_max || 0}
                         helperText={
                           editModal.inven_max > editModal.inven_min
@@ -741,8 +689,7 @@ const ModalUpdateProduct = (props) => {
                   </Grid>
                   <Grid item xs={12} sm={2} md={2}>
                     <NumberFormat
-                      className="inputNumber"
-                      style={{ width: "100%" }}
+                      className="inputNumber w-100"
                       value={editModal.imp_price || 0}
                       name="imp_price"
                       label={t("config.price.importPrice")}
@@ -766,8 +713,7 @@ const ModalUpdateProduct = (props) => {
                   </Grid>
                   <Grid item xs={12} sm={2} md={2}>
                     <NumberFormat
-                      className="inputNumber"
-                      style={{ width: "100%" }}
+                      className="inputNumber w-100"
                       value={editModal.imp_vat || 0}
                       name="imp_vat"
                       label={t("config.price.importVAT")}
@@ -791,8 +737,7 @@ const ModalUpdateProduct = (props) => {
                   </Grid>
                   <Grid item xs={12} sm={4} md={4}>
                     <NumberFormat
-                      className="inputNumber"
-                      style={{ width: "100%" }}
+                      className="inputNumber w-100"
                       value={editModal.exp_price || 0}
                       name="exp_price"
                       label={t("config.price.price")}
@@ -816,8 +761,7 @@ const ModalUpdateProduct = (props) => {
                   </Grid>
                   <Grid item xs={12} sm={4} md={4}>
                     <NumberFormat
-                      className="inputNumber"
-                      style={{ width: "100%" }}
+                      className="inputNumber w-100"
                       value={editModal.exp_wprice || 0}
                       name="exp_wprice"
                       label={t("config.price.wholePrice")}
@@ -841,8 +785,7 @@ const ModalUpdateProduct = (props) => {
                   </Grid>
                   <Grid item xs={12} sm={4} md={4}>
                     <NumberFormat
-                      className="inputNumber"
-                      style={{ width: "100%" }}
+                      className="inputNumber w-100"
                       value={editModal.exp_vat || 0}
                       name="exp_vat"
                       label={t("config.price.exportVAT")}
@@ -909,8 +852,7 @@ const ModalUpdateProduct = (props) => {
                   <Grid item xs={12} sm={4} md={4}>
                     <NumberFormat
                       disabled={!editModal.unit_other_id}
-                      className="inputNumber"
-                      style={{ width: "100%" }}
+                      className="inputNumber w-100"
                       required
                       name="convert_rate"
                       helperText={

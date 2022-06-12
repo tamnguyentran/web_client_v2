@@ -13,6 +13,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  IconButton
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -642,31 +643,61 @@ console.log(windowHeight)
               </React.Fragment>
             ))}
           <React.Fragment>
-            <Link className={"text-decoration-none text-dark"} to="/page/order/ins-import">
+            <Link
+              className={"text-decoration-none text-dark"}
+              to="/page/order/ins-import"
+            >
               <div className={style.navbar__item}>
-                <div className={style.active} style={{color:'#17a2b8'}}>
+                <div className={style.active} style={{ color: "#17a2b8" }}>
                   <div>{<IC_IMPORT />}</div>
-                  <div className={style.navbar_item_text} style={{color:'#17a2b8'}}>NHẬP HÀNG</div>
+                  <div
+                    className={style.navbar_item_text}
+                    style={{ color: "#17a2b8" }}
+                  >
+                    NHẬP HÀNG
+                  </div>
                 </div>
               </div>
             </Link>
-            <Link className={"text-decoration-none text-dark"} to="/page/order/ins-exportt">
+            <Link
+              className={"text-decoration-none text-dark"}
+              to="/page/order/ins-exportt"
+            >
               <div id="google" className={style.navbar__item}>
-                <div className={style.active} style={{color:'#ff9800'}}>
-                <div>{<LocalShippingIcon />}</div>
-                  <div style={{color:'#ff9800'}} className={style.navbar_item_text}>XUẤT HÀNG</div>
+                <div className={style.active} style={{ color: "#ff9800" }}>
+                  <div>{<LocalShippingIcon />}</div>
+                  <div
+                    style={{ color: "#ff9800" }}
+                    className={style.navbar_item_text}
+                  >
+                    XUẤT HÀNG
+                  </div>
                 </div>
               </div>
             </Link>
           </React.Fragment>
         </div>
-        <div style={{textAlign: "center", height: "40px", cursor:"pointer"}}>
+        {/* <div style={{textAlign: "center", height: "40px", cursor:"pointer"}}>
           <a href="#google">
-          {(windowHeight < 800) && (<ArrowDropDownIcon style={{color:'#fff'}} fontSize="large"/>)}
+          {(windowHeight < 800) && <IconButton><ArrowDropDownIcon style={{color:'#fff'}} fontSize="large"/></IconButton>}
           </a>
-        </div>
-        <div className={[style.navbar_item_avatar].join(" ")}>
+        </div> */}
+        <div style={{height:'150px'}} className={[style.navbar_item_avatar].join(" ")}>
           <div onClick={handleClick}>
+            <div
+              style={{ textAlign: "center", height: "40px", cursor: "pointer" }}
+            >
+              <a href="#google">
+                {windowHeight < 800 && (
+                  <div style={{background:'#066190'}}> 
+                    <ArrowDropDownIcon
+                      style={{ color: "#fff" }}
+                      fontSize="large"
+                    />
+                  </div>
+                )}
+              </a>
+            </div>
             <img
               src={require("../../asset/images/man.png")}
               className={style.avatar}

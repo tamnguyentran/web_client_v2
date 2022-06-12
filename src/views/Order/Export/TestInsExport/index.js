@@ -1675,11 +1675,11 @@ console.log(inputParam)
             </CardContent>
           </Card>
           <Card
-            style={{ height: "calc(47% - 8px)" }}
             className="list-product-bottom"
+            style={{height:'47% - 8px'}}
           >
             <CardHeader
-              title={t("product.titleListvsvs")}
+              title={t("product.titleList")}
               action={
                 <div className="flex">
                   <div style={{ minWidth: "270px" }}>
@@ -1721,7 +1721,7 @@ console.log(inputParam)
                 </div>
               }
             />
-            <CardContent style={{ height: "calc(35vh)", overflow: "auto" }}>
+            <CardContent style={{ height: "calc(35vh - 3px)", overflow: "auto" }}>
               <MuiThemeProvider theme={theme}>
                 <Grid container spacing={2}>
                   {listInventory.map((item, index) => {

@@ -35,22 +35,27 @@ const serviceInfo = {
 
 const DashboardLayout = () => {
     const { t } = useTranslation()
-    const [dataReportStatic, setDataReportStatic] = useState({})
+    const [dataReportStaticDay, setDataReportStaticDay] = useState({})
+    const [dataReportStaticWeek, setDataReportStaticWeek] = useState({})
+    const [dataReportStaticMonth, setDataReportStaticMonth] = useState({})
     const [dataChart, setDataChart] = useState([])
     const [typeChart, setTypeChart] = useState('1') // '1' là tháng hiện tại - 2 tháng trước
 
     useEffect(() => {
-        sendRequest(serviceInfo.REPORT_STATIC, [], handleResultGetReportStatic, true, handleTimeOut)
+        invoiceStatistics("1")
+        invoiceStatistics("2")
+        invoiceStatistics("3")
     }, [])
 
     useEffect(() => {
-        // if (typeChart === '1') {
-        //     sendRequest(serviceInfo.REPORT_STATIC_CHART, [moment().startOf('months').format('YYYYMMDD'), moment().format('YYYYMMDD')], handleResultGetChartData, true, handleTimeOut)
-        // } else {
-        //     sendRequest(serviceInfo.REPORT_STATIC_CHART, [moment().subtract(1, 'months').startOf('months').format('YYYYMMDD'), moment().subtract(1, 'months').endOf('months').format('YYYYMMDD')], handleResultGetChartData, true, handleTimeOut)
-        // }
         sendRequest(serviceInfo.REPORT_STATIC_CHART, [typeChart], handleResultGetChartData, true, handleTimeOut)
     }, [typeChart])
+
+    const invoiceStatistics = (type) =>{
+        sendRequest(serviceInfo.REPORT_STATIC, [type], (reqInfoMap, message) => {
+            handleResultGetReportStatic(reqInfoMap, message,type)
+        }, true, handleTimeOut)
+    }
 
     const handleResultGetChartData = (reqInfoMap, message) => {
         SnackBarService.alert(message['PROC_MESSAGE'], true, message['PROC_STATUS'], 3000)
@@ -66,7 +71,7 @@ const DashboardLayout = () => {
         }
     }
 
-    const handleResultGetReportStatic = (reqInfoMap, message) => {
+    const handleResultGetReportStatic = (reqInfoMap, message,type) => {
         SnackBarService.alert(message['PROC_MESSAGE'], true, message['PROC_STATUS'], 3000)
         if (message['PROC_STATUS'] !== 1) {
             // xử lý thất bại
@@ -76,7 +81,17 @@ const DashboardLayout = () => {
         } else if (message['PROC_DATA']) {
             // xử lý thành công
             let newData = message['PROC_DATA']
-            setDataReportStatic(newData.rows[0])
+            switch (type) {
+              case "1":
+                setDataReportStaticDay(newData.rows[0])
+                break;
+              case "2":
+                setDataReportStaticWeek(newData.rows[0])
+                break;
+              case "3":
+                setDataReportStaticMonth(newData.rows[0])
+                break;
+            }
         }
     }
 
@@ -107,10 +122,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_1} {t('dashboard.invoice')}
+                                            {dataReportStaticDay?.o_4} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--blue)' }}>
-                                            {formatCurrency(dataReportStatic.o_2)} {t('currency')}
+                                            {formatCurrency(dataReportStaticDay?.o_3)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.export')}
@@ -124,10 +139,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_7} {t('dashboard.invoice')}
+                                            {dataReportStaticDay?.o_2} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--green)' }}>
-                                            {formatCurrency(dataReportStatic.o_8)} {t('currency')}
+                                            {formatCurrency(dataReportStaticDay?.o_1)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.import')}
@@ -141,10 +156,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_19} {t('dashboard.invoice')}
+                                            {dataReportStaticDay?.o_8} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--orange)' }}>
-                                            {formatCurrency(dataReportStatic.o_20)} {t('currency')}
+                                            {formatCurrency(dataReportStaticDay?.o_7)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.export_repay')}
@@ -158,10 +173,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_13} {t('dashboard.invoice')}
+                                            {dataReportStaticDay?.o_6} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--danger)' }}>
-                                            {formatCurrency(dataReportStatic.o_14)} {t('currency')}
+                                            {formatCurrency(dataReportStaticDay?.o_5)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.export_destroy')}
@@ -181,10 +196,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_3} {t('dashboard.invoice')}
+                                            {dataReportStaticWeek?.o_4} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--blue)' }}>
-                                            {formatCurrency(dataReportStatic.o_4)} {t('currency')}
+                                            {formatCurrency(dataReportStaticWeek?.o_3)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.export')}
@@ -198,10 +213,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_9} {t('dashboard.invoice')}
+                                            {dataReportStaticWeek?.o_2} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--green)' }}>
-                                            {formatCurrency(dataReportStatic.o_10)} {t('currency')}
+                                            {formatCurrency(dataReportStaticWeek?.o_1)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.import')}
@@ -215,10 +230,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_21} {t('dashboard.invoice')}
+                                            {dataReportStaticWeek?.o_8} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--orange)' }}>
-                                            {formatCurrency(dataReportStatic.o_22)} {t('currency')}
+                                            {formatCurrency(dataReportStaticWeek?.o_7)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.export_repay')}
@@ -232,10 +247,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_15} {t('dashboard.invoice')}
+                                            {dataReportStaticWeek?.o_6} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--danger)' }}>
-                                            {formatCurrency(dataReportStatic.o_16)} {t('currency')}
+                                            {formatCurrency(dataReportStaticWeek?.o_5)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.export_destroy')}
@@ -255,10 +270,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_5} {t('dashboard.invoice')}
+                                            {dataReportStaticMonth?.o_4} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--blue)' }}>
-                                            {formatCurrency(dataReportStatic.o_6)} {t('currency')}
+                                            {formatCurrency(dataReportStaticMonth?.o_3)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.export')}
@@ -272,10 +287,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_11} {t('dashboard.invoice')}
+                                            {dataReportStaticMonth?.o_2} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--green)' }}>
-                                            {formatCurrency(dataReportStatic.o_12)} {t('currency')}
+                                            {formatCurrency(dataReportStaticMonth?.o_1)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.import')}
@@ -289,10 +304,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_23} {t('dashboard.invoice')}
+                                            {dataReportStaticMonth?.o_8} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--orange)' }}>
-                                            {formatCurrency(dataReportStatic.o_24)} {t('currency')}
+                                            {formatCurrency(dataReportStaticMonth?.o_7)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.export_repay')}
@@ -306,10 +321,10 @@ const DashboardLayout = () => {
                                     </div>
                                     <div className='content'>
                                         <div className='invoice'>
-                                            {dataReportStatic.o_17} {t('dashboard.invoice')}
+                                            {dataReportStaticMonth?.o_6} {t('dashboard.invoice')}
                                         </div>
                                         <div className='currency' style={{ color: 'var(--danger)' }}>
-                                            {formatCurrency(dataReportStatic.o_18)} {t('currency')}
+                                            {formatCurrency(dataReportStaticMonth?.o_5)} {t('currency')}
                                         </div>
                                         <div className='title-order'>
                                             {t('dashboard.export_destroy')}
@@ -332,25 +347,11 @@ const DashboardLayout = () => {
                                         id="demo-simple-select"
                                         value={typeChart}
                                         onChange={handleChange}
-                                        style={{ color: 'var(--primary)' }}
+                                        style={{ color: '#fff' }}
                                     >
                                         <MenuItem value={'1'}> {t('dashboard.current_month')}</MenuItem>
                                         <MenuItem value={'2'}>{t('dashboard.last_month')}</MenuItem>
                                     </Select>
-                                    {/* <Button key='month-0' size='small'
-                                        onClick={() => { setTypeChart('0') }}
-                                        variant="contained"
-                                        className=''
-                                    >
-                                        {t('dashboard.last_month')}
-                                    </Button>
-                                    <Button key='month-1' size='small'
-                                        onClick={() => { setTypeChart('1') }}
-                                        variant="contained"
-                                        className='button-loading bg-print text-white'
-                                    >
-                                        {t('dashboard.current_month')}
-                                    </Button> */}
                                 </div>
                             } />
                         <CardContent>

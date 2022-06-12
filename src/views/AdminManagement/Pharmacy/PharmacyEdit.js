@@ -335,7 +335,6 @@ const PharmacyEdit = ({ id, onRefresh, shouldOpenModal, setShouldOpenModal }) =>
                         startIcon={<ExitToAppIcon />}
                         variant="contained"
                         disableElevation
-                        startIcon={<ExitToAppIcon />}
                     >
                         {t('btn.close')} (Esc)
                     </Button>

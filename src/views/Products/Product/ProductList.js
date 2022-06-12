@@ -18,7 +18,7 @@ import {
   Tooltip,
   Grid,
   TextField,
-  Avatar
+  Avatar,
 } from "@material-ui/core";
 import TextImage from "../../../components/TextImage";
 import EditIcon from "@material-ui/icons/Edit";
@@ -29,8 +29,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import LoopIcon from "@material-ui/icons/Loop";
 import ColumnCtrComp from "../../../components/_ColumnCtr";
 import LockIcon from "@material-ui/icons/Lock";
-import SyncAltIcon from "@material-ui/icons/SyncAlt";
-import LockOpenIcon from '@material-ui/icons/LockOpen';
+import LockOpenIcon from "@material-ui/icons/LockOpen";
 
 import glb_sv from "../../../utils/service/global_service";
 import control_sv from "../../../utils/service/control_services";
@@ -44,7 +43,7 @@ import ProductEdit from "./ProductEdit";
 import SearchOne from "../../../components/SearchOne";
 import ExportExcel from "../../../components/ExportExcel";
 import DisplayColumn from "../../../components/DisplayColumn";
-import ImportExcel from '../../../components/ImportExcel'
+import ImportExcel from "../../../components/ImportExcel";
 import Breadcrumb from "../../../components/Breadcrumb/View";
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -85,7 +84,7 @@ const ProductList = () => {
   const [processing, setProcessing] = useState(false);
   const [searchProcess, setSearchProcess] = useState(false);
   const [id, setId] = useState(0);
-  const [imgValue, setImgValue] = useState("")
+  const [imgValue, setImgValue] = useState("");
   const [name, setName] = useState("");
 
   const dataSourceRef = useRef([]);
@@ -104,7 +103,6 @@ const ProductList = () => {
   const getList = (lastIndex, value) => {
     if (searchProcess) return;
     const inputParam = [lastIndex, "%" + value.trim() + "%"];
-    console.log(serviceInfo.GET_ALL)
     setSearchProcess(true);
     sendRequest(
       serviceInfo.GET_ALL,
@@ -123,7 +121,6 @@ const ProductList = () => {
   };
 
   const handleResultGetAll = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message)
     setSearchProcess(false);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
@@ -133,7 +130,6 @@ const ProductList = () => {
     } else if (message["PROC_DATA"]) {
       let newData = message["PROC_DATA"];
       if (newData.rows.length > 0) {
-        console.log(newData.rows)
         dataSourceRef.current = dataSourceRef.current.concat(newData.rows);
         setDataSource(dataSourceRef.current);
         if (reqInfoMap.inputParam[0] === glb_sv.defaultValueSearch) {
@@ -208,7 +204,7 @@ const ProductList = () => {
   const onEdit = (item) => {
     setShouldOpenEditModal(item ? true : false);
     setId(item ? item.o_1 : 0);
-    setImgValue(item.o_19 || "")
+    setImgValue(item.o_19 || "");
     idRef.current = item && item.o_1 > 0 ? item.item && item.o_1 > 0 : 0;
   };
 
@@ -281,7 +277,7 @@ const ProductList = () => {
       item["titleBranch"] = data.o_22;
       return item;
     });
-    
+
     return result;
   };
 
@@ -292,7 +288,6 @@ const ProductList = () => {
   };
 
   const onLock = (item) => {
-    console.log("item", item);
     setLockModal(item);
     setShouldOpenLockModal(true);
   };
@@ -335,7 +330,6 @@ const ProductList = () => {
     }
   };
 
-  console.log(dataSource);
   return (
     <>
       <Card className="mb-2">
@@ -362,7 +356,7 @@ const ProductList = () => {
         <CardHeader
           title={
             <>
-              {t("product.titleListdd")}
+              {t("product.titleListvs")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}
@@ -441,21 +435,26 @@ const ProductList = () => {
                                         }
                                       >
                                         {item["o_23"] === "N" ? (
-                                          <LockOpenIcon
-                                            color={"primary"}
-                                            className="cursor-pointer"
+                                          <IconButton
                                             onClick={(e) => {
                                               onLock(item);
                                             }}
-                                          ></LockOpenIcon>
+                                          >
+                                            <LockOpenIcon
+                                              color={"primary"}
+                                              className="cursor-pointer"
+                                            ></LockOpenIcon>
+                                          </IconButton>
                                         ) : (
-                                          <LockIcon
-                                            color={"error"}
-                                            className="cursor-pointer"
-                                            onClick={(e) => {
-                                              onLock(item);
-                                            }}
-                                          ></LockIcon>
+                                          <IconButton>
+                                            <LockIcon
+                                              color={"error"}
+                                              className="cursor-pointer"
+                                              onClick={(e) => {
+                                                onLock(item);
+                                              }}
+                                            ></LockIcon>
+                                          </IconButton>
                                         )}
                                       </Tooltip>
                                     )}
@@ -580,8 +579,7 @@ const ProductList = () => {
           <CardHeader title={t("product.titleRemove", { name: name })} />
           <CardContent>{name}</CardContent>
           <CardActions
-            className="align-items-end"
-            style={{ justifyContent: "flex-end" }}
+            className="align-items-end justify-content-end"
           >
             <Button
               size="small"

@@ -204,13 +204,14 @@ const ImportExcel = ({ title, onRefresh }) => {
   const [fileSelected, setFileSelected] = useState("");
   const [isEnableSave, setIsEnableSave] = useState(false);
 
+  const [addSuccessImportList, setAddSuccessImportList] = useState(0)
+
   const unitListRef = useRef([]);
   const groupListRef = useRef([]);
   const step19Ref = useRef(null);
   const step28Ref = useRef(null);
   const step20Ref = useRef(null);
   const step18Ref = useRef(null);
-  const lengthList = useRef(0);
 
   const allowFileTypes = useRef([
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -229,7 +230,8 @@ const ImportExcel = ({ title, onRefresh }) => {
 
   useEffect(() => {
     console.log("vào UNIT_DROPDOWN_LIST excel");
-    lengthList.current = 0;
+    // lengthList.current = 0;
+    setAddSuccessImportList(0)
     sendRequest(
       serviceInfo.UNIT_DROPDOWN_LIST,
       ["units", "%"],
@@ -300,7 +302,6 @@ const ImportExcel = ({ title, onRefresh }) => {
   }, [dataSource]);
 
   const resultUnitDropDownList = (reqInfoMap, message = {}) => {
-    console.log("vào get resultUnitDropDownList", message);
     setUnitNotAvailable([]);
     if (message["PROC_STATUS"] !== 1) {
       const cltSeqResult = message["REQUEST_SEQ"];
@@ -328,6 +329,8 @@ const ImportExcel = ({ title, onRefresh }) => {
   };
 
   const handleShowModal = () => {
+    setShowMessage(false)
+    setAddSuccessImportList(0)
     setDataSource([]);
     setShouldOpenModal(true);
     setFileSelected("");
@@ -580,6 +583,8 @@ const ImportExcel = ({ title, onRefresh }) => {
         setDataSource([]);
         setShouldOpenModal(false);
         setShowMessage(false)
+      }else{
+        setDataSource(dataAddExcelFaild.current);
       }
     }
   };
@@ -592,8 +597,9 @@ const ImportExcel = ({ title, onRefresh }) => {
     return true;
   };
 
-  const getDataBeginRow = (file, beginRow) => {
+  const getDataBeginRow = (file) => {
     setIsEnableSave(false);
+    let arrTam = [];
     ExcelRenderer(file, (err, resp) => {
       if (err) {
         console.log(err);
@@ -610,7 +616,7 @@ const ImportExcel = ({ title, onRefresh }) => {
             }
             return [...item].filter((item2, index) => index !== 0);
           });
-        let arrTam = [];
+        // let arrTam = [];
         resultList.forEach((item, index) => {
           let objTam = {};
           item.forEach((x, i) => {
@@ -636,7 +642,7 @@ const ImportExcel = ({ title, onRefresh }) => {
           });
           arrTam.push(objTam);
         });
-        lengthList.current = arrTam.length || 0;
+        setAddSuccessImportList(arrTam.length || 0)
         setDataSource(arrTam || []);
       }
     });
@@ -855,7 +861,7 @@ const ImportExcel = ({ title, onRefresh }) => {
     if (files.length === 1) {
       // Process a file if we have exactly one
       if (validateFile(files[0]) === true) {
-        getDataBeginRow(files[0], 2);
+        getDataBeginRow(files[0]);
         setFileSelected(files[0].name);
         setIsError(false);
       } else {
@@ -962,6 +968,7 @@ const ImportExcel = ({ title, onRefresh }) => {
               accept=".xlsx, .xls, .csv"
               onChange={(e) => {
                 handleImportChange(e);
+                e.target.value = ""
               }}
             />
             <label for="container-upload-file" style={{ width: "100%" }}>
@@ -1009,7 +1016,7 @@ const ImportExcel = ({ title, onRefresh }) => {
                                 ? "1.5px solid orange"
                                 : "",
                             }}
-                            onDoubleClick={() => handleEditRow(item, index)}
+                            onClick={() => handleEditRow(item, index)}
                             className={
                               item.groupID === null || item.unitID === null
                                 ? "warning table-row-p8"
@@ -1109,7 +1116,7 @@ const ImportExcel = ({ title, onRefresh }) => {
             <div className="w-100">
               <div className="flex justify-content-between">
                 <div>
-                  {lengthList.current - dataSource.length}/{lengthList.current}{" "}
+                  {addSuccessImportList - dataSource.length}/{addSuccessImportList}{" "}
                   được thêm thành công
                 </div>
                 <div>

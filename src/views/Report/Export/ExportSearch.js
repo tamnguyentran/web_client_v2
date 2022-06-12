@@ -68,7 +68,7 @@ const ExportSearch = ({ handleSearch, process = false }) => {
 
     return (
         <>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
                 <Grid item xs>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
@@ -142,7 +142,7 @@ const ExportSearch = ({ handleSearch, process = false }) => {
                     />
                 </Grid>
             </Grid>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
                 <Grid item xs={3}>
                     <FormControl margin="dense" variant="outlined" className="w-100">
                         <InputLabel id="status">{t('invoice_status')}</InputLabel>

@@ -367,10 +367,13 @@ const PharmacyList = () => {
                         style={{ margin: 0 }}
                       >
                         <Avatar
+                          style={{height:"150px", width:"150px"}}
+                          variant="square"
                           alt="Logo"
                           src={`http://171.244.133.198/upload/comp_logo/${pharmacyInfo.o_12}`}
                           className={classes.large}
                         />
+                        <div className="text-center">Logo nhà thuốc</div>
                       </label>
                     </Badge>
                   </div>

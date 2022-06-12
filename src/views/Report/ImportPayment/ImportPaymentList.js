@@ -450,18 +450,5 @@ const ImportPaymentList = () => {
   );
 };
 
-const ToolTipInvoiceValue = React.forwardRef(function MyComponent(props, ref) {
-  const { t } = useTranslation();
-  //  Spread the props to the underlying DOM element.
-  return (
-    <div {...props} ref={ref}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          {t("report.invoice_val")} : {props.col["o_5"]}
-        </Grid>
-      </Grid>
-    </div>
-  );
-});
 
 export default ImportPaymentList;
