@@ -356,7 +356,7 @@ const ProductList = () => {
         <CardHeader
           title={
             <>
-              {t("product.titleListvs")}
+              {t("product.titleList")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}
