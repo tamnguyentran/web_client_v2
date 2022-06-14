@@ -3,7 +3,6 @@ import style from "./Menu.module.css";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { scroller } from "react-scroll";
 
 import {
   Tooltip,

@@ -123,7 +123,7 @@ const ImportPaymentSearch = ({ handleSearch, process = false }) => {
                         variant="outlined"
                     />
                 </Grid>
-                <Grid item xs className="d-flex align-items-center">
+                <Grid item className="d-flex align-items-center">
                     <Button
                         className={process ? 'button-loading' : ''}
                         endIcon={process ? <LoopIcon /> : <SearchIcon />}

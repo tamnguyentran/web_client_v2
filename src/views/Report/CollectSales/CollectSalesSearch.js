@@ -123,8 +123,6 @@ const CollectSalesSearch = ({ handleSearch, process = false }) => {
                         variant="outlined"
                     />
                 </Grid>
-            </Grid>
-            <Grid container spacing={2}>
                 <Grid item className="d-flex align-items-center">
                     <Button
                         className={process ? 'button-loading' : ''}
