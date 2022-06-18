@@ -69,6 +69,7 @@ const PriceAdd = ({ onRefresh }) => {
     useHotkeys(
         'esc',
         () => {
+            if(process) return 
             setShouldOpenModal(false)
             setPrice({ ...priceDefaultModal })
             setUnitSelect('')
@@ -431,7 +432,7 @@ const PriceAdd = ({ onRefresh }) => {
                         <Button
                             size="small"
                             onClick={(e) => {
-                                if (controlTimeOutKey && control_sv.ControlTimeOutObj[controlTimeOutKey]) {
+                                if ((controlTimeOutKey && control_sv.ControlTimeOutObj[controlTimeOutKey]) || process) {
                                     return
                                 }
                                 setShouldOpenModal(false)
@@ -480,8 +481,9 @@ const PriceAdd = ({ onRefresh }) => {
                                     : ''
                             }
                             endIcon={process && <LoopIcon />}
+                            startIcon={<SaveIcon />}
                         >
-                            {t('config.save_continue')}
+                            {t('config.save_continue')} (F4)
                         </Button>
                     </CardActions>
                 </Card>

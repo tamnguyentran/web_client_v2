@@ -45,11 +45,13 @@ const WarnTimeEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) =>
     useHotkeys(
         'esc',
         () => {
+            if(process) return
             setShouldOpenModal(false)
             setWarnTime({})
         },
         { enableOnTags: ['INPUT', 'SELECT', 'TEXTAREA'] }
     )
+    
 
     useEffect(() => {
         if (shouldOpenModal && id && id !== 0) {
@@ -194,7 +196,7 @@ const WarnTimeEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) =>
                     <Button
                         size="small"
                         onClick={(e) => {
-                            if (controlTimeOutKey && control_sv.ControlTimeOutObj[controlTimeOutKey]) {
+                            if ((controlTimeOutKey && control_sv.ControlTimeOutObj[controlTimeOutKey]) || process) {
                                 return
                             }
                             setShouldOpenModal(false)

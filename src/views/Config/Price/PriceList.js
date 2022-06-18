@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useHotkeys } from 'react-hotkeys-hook'
 import {
   Card,
   CardHeader,
@@ -75,6 +76,15 @@ const PriceList = () => {
   const dataSourceRef = useRef([]);
   const searchRef = useRef("");
   const idRef = useRef(0);
+
+  useHotkeys(
+    'esc',
+    () => {
+        if(processing) return
+        setShouldOpenRemoveModal(false);
+    },
+    { enableOnTags: ['INPUT', 'SELECT', 'TEXTAREA'] }
+)
 
   useEffect(() => {
     getList(glb_sv.defaultValueSearch, "");
@@ -441,6 +451,7 @@ const PriceList = () => {
             <Button
               size="small"
               onClick={(e) => {
+                if(processing) return
                 setShouldOpenRemoveModal(false);
               }}
               startIcon={<ExitToAppIcon />}

@@ -86,7 +86,6 @@ const ExportList = () => {
       last_invoice_id || glb_sv.defaultValueSearch,
       last_invoice_detail_id || glb_sv.defaultValueSearch,
     ];
-    console.log(inputParam);
     sendRequest(
       serviceInfo.GET_ALL,
       inputParam,

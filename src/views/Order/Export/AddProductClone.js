@@ -326,7 +326,7 @@ console.log(productInfo)
             <CardHeader
                 title={
                     <>
-                        {t('order.import.productAddd')}
+                        {t('order.import.productAdd')}
                         <span className="ml-2 p-1 action_ctr">
                             {isScan ? (
                                 <Tooltip

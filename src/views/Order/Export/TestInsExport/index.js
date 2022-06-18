@@ -326,7 +326,6 @@ const InsExport = () => {
   ) => {
     //const inputParam = ["20220420", end_dt, last_id];
     const inputParam = [start_dt, end_dt, last_id];
-console.log(inputParam)
     sendRequest(
       serviceInfo.GET_ALL_LIST_INVOICE,
       inputParam,

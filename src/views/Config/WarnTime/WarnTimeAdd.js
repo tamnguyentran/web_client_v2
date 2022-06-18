@@ -69,6 +69,7 @@ const WarnTimeAdd = ({ onRefresh }) => {
   useHotkeys(
     "esc",
     () => {
+      if(process) return
       setShouldOpenModal(false);
       setWarnTime({});
       setProductSelect("");
@@ -266,8 +267,8 @@ const WarnTimeAdd = ({ onRefresh }) => {
               size="small"
               onClick={(e) => {
                 if (
-                  controlTimeOutKey &&
-                  control_sv.ControlTimeOutObj[controlTimeOutKey]
+                  (controlTimeOutKey &&
+                  control_sv.ControlTimeOutObj[controlTimeOutKey]) || process
                 ) {
                   return;
                 }
@@ -282,6 +283,7 @@ const WarnTimeAdd = ({ onRefresh }) => {
             <Button
               size="small"
               onClick={() => {
+                if(process) return
                 handleCreate();
               }}
               variant="contained"

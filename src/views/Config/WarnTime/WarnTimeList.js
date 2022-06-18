@@ -71,7 +71,6 @@ const WarnTimeList = () => {
   const [name, setName] = useState("");
   const [processing, setProcessing] = useState(false);
   const [searchProcess, setSearchProcess] = useState(false);
-
   const dataSourceRef = useRef([]);
   const searchRef = useRef("");
   const idRef = useRef(0);
@@ -83,6 +82,15 @@ const WarnTimeList = () => {
     },
     { enableOnTags: ['INPUT', 'SELECT', 'TEXTAREA'] }
 )
+
+  useHotkeys(
+    "esc",
+    () => {
+      if (processing) return;
+      setShouldOpenRemoveModal(false);
+    },
+    { enableOnTags: ["INPUT", "SELECT", "TEXTAREA"] }
+  );
 
   useEffect(() => {
     getList(glb_sv.defaultValueSearch, "");
@@ -196,6 +204,7 @@ const WarnTimeList = () => {
 
   const handleDelete = (e) => {
     // e.preventDefault();
+    setProcessing(true)
     idRef.current = id;
     sendRequest(
       serviceInfo.DELETE,
@@ -423,9 +432,6 @@ const WarnTimeList = () => {
           },
         }}
         open={shouldOpenRemoveModal}
-        onClose={(e) => {
-          setShouldOpenRemoveModal(false);
-        }}
       >
         <Card>
           <CardHeader
@@ -439,6 +445,7 @@ const WarnTimeList = () => {
             <Button
               size="small"
               onClick={(e) => {
+                if(processing) return
                 setShouldOpenRemoveModal(false);
               }}
               startIcon={<ExitToAppIcon />}
@@ -449,12 +456,14 @@ const WarnTimeList = () => {
             </Button>
             <Button
               className={processing ? "button-loading" : ""}
-              endIcon={processing && <LoopIcon />}
               size="small"
-              onClick={handleDelete}
+              onClick={
+                handleDelete
+              }
               variant="contained"
               color="secondary"
               startIcon={<DeleteIcon />}
+              endIcon={processing && <LoopIcon />}
             >
               {t("btn.delete")} (f10)
             </Button>

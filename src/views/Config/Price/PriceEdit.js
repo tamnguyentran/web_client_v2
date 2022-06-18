@@ -51,6 +51,7 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
     useHotkeys(
         'esc',
         () => {
+            if(process) return
             setShouldOpenModal(false)
             setPrice({})
             setUnitSelect('')
@@ -383,7 +384,7 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                     <Button
                         size="small"
                         onClick={(e) => {
-                            if (controlTimeOutKey && control_sv.ControlTimeOutObj[controlTimeOutKey]) {
+                            if ((controlTimeOutKey && control_sv.ControlTimeOutObj[controlTimeOutKey]) || process) {
                                 return
                             }
                             setShouldOpenModal(false)

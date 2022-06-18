@@ -285,7 +285,6 @@ const PharmacyList = () => {
       logoInfo?.current.file,
       logoInfo?.current.name,
     ];
-    console.log(inputParam);
     sendRequest(
       serviceInfo.UPDATE_LOGO,
       inputParam,

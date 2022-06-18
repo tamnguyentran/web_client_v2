@@ -344,7 +344,6 @@ const InsExport = ({}) => {
               item.discount_per,
               item.vat_per,
             ];
-            console.log(inputParam)
             sendRequest(
               serviceInfo.ADD_PRODUCT_TO_INVOICE,
               inputParam,

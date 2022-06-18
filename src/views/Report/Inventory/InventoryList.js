@@ -67,7 +67,6 @@ const InventoryList = () => {
       group_id,
       invent_yn,
     ];
-    console.log(inputParam);
     sendRequest(
       serviceInfo.GET_ALL,
       inputParam,

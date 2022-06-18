@@ -132,7 +132,8 @@
         "setting-user": "Thông tin người dùng",
         "setting-permission": "Phân quyền",
         "setting-lock-order": "Khóa đơn hàng",
-        "setting-lock-product": "Khóa sản phẩm"
+        "setting-lock-product": "Khóa sản phẩm",
+        "list-permission": "Danh sách các quyền"
     },
     "user": {
         "userName": "Tên người dùng",
