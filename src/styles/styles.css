@@ -9,7 +9,7 @@ body {
 }
 
 /* html {
-    scroll-behavior: smooth;
+    scroll-behavior: smooth !important;
 } */
 
 button:focus {
@@ -445,6 +445,8 @@ button.MuiButtonBase-root.MuiButton-root.MuiButton-text.btnSubmit {
 
 .content {
     margin-left: 1rem;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .content .invoice {
@@ -465,7 +467,7 @@ tr.warning td {
 }
 
 .cardContent_modal {
-    max-height: 80vh;
+    max-height: 68vh;
     overflow: auto;
 }
 

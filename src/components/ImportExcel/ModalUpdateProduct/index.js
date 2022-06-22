@@ -124,7 +124,6 @@ const ModalUpdateProduct = (props) => {
         setIsInfoObj({ ...isInfoObj, isExpanded: value });
         break;
       case "infoInventory":
-        console.log();
         setIsInfoObj({ ...isInfoObj, isInventory: value });
         break;
       case "infoPrice":
@@ -140,11 +139,11 @@ const ModalUpdateProduct = (props) => {
     <>
       {/* Modal cập nhật dòng dữ liệu */}
       <Dialog fullWidth={true} maxWidth="md" open={shouldOpenModalEdit}>
-        <Card className="product-card">
-          <CardHeader title={t("product.titleEdit")} />
-          <CardContent>
+        <Card>
+          <CardHeader title={t("product.titleEditvvs")} />
+          <CardContent className="cardContent_modal">
             <Grid container spacing={1}>
-              <Grid item xs={6} sm={3}>
+              {/* <Grid item xs={6} sm={3}>
                 <Tooltip
                   placement="top"
                   title={t("product.tooltip.productCode")}
@@ -168,7 +167,7 @@ const ModalUpdateProduct = (props) => {
                     }}
                   />
                 </Tooltip>
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={6} sm={3}>
                 <TextField

@@ -960,6 +960,11 @@
         "value_transaction": "Giá trị giao dịch",
         "current_month": "Tháng này",
         "last_month": "Tháng trước",
-        "revenue": "Doanh thu"
+        "revenue": "Doanh thu",
+        "day": "trong ngày",
+        "week": "trong tuần",
+        "month": "trong tháng",
+        "invoice_value": "Giá trị HĐ",
+        "invoice_count": "Số lượng HĐ"
     }
 }

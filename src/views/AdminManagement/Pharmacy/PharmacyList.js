@@ -13,9 +13,7 @@ import {
   CardActions,
   Divider,
   Avatar,
-  Badge,
-  withStyles,
-  Dialog,
+  Badge
 } from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -23,10 +21,6 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import moment from "moment";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SaveIcon from "@material-ui/icons/Save";
-import CheckIcon from "@material-ui/icons/Check";
-import DeleteIcon from "@material-ui/icons/Delete";
 
 import glb_sv from "../../../utils/service/global_service";
 import control_sv from "../../../utils/service/control_services";
@@ -36,7 +30,6 @@ import sendRequest from "../../../utils/service/sendReq";
 import Breadcrumb from "../../../components/Breadcrumb/View";
 
 import LoopIcon from "@material-ui/icons/Loop";
-import { ReactComponent as IC_CAMERA } from "../../../asset/images/camera.svg";
 
 const serviceInfo = {
   UPDATE: {
@@ -106,7 +99,6 @@ const PharmacyList = () => {
   const step6Ref = useRef(null);
   const step7Ref = useRef(null);
   const step8Ref = useRef(null);
-  const [modalPreviewImage, setModalPreviewImage] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const logoInfo = useRef({
     file: null,
@@ -214,6 +206,7 @@ const PharmacyList = () => {
     } else if (message["PROC_DATA"]) {
       // xử lý thành công
       setPharmacyInfo({});
+      uploadFileToServer();
       sendRequest(
         serviceInfo.GET_PHARMACY_BY_ID,
         [glb_sv.pharId],
@@ -256,7 +249,6 @@ const PharmacyList = () => {
 
       reader.onloadend = (e) => {
         setPreviewImage(e.target.result);
-        setModalPreviewImage(true);
       };
 
       reader2.onloadend = (e) => {
@@ -285,6 +277,7 @@ const PharmacyList = () => {
       logoInfo?.current.file,
       logoInfo?.current.name,
     ];
+    console.log(inputParam)
     sendRequest(
       serviceInfo.UPDATE_LOGO,
       inputParam,
@@ -315,11 +308,11 @@ const PharmacyList = () => {
         type: "",
         size: 0,
       };
-      setModalPreviewImage(false);
       setPreviewImage(null);
       handleRefresh();
     }
   };
+  console.log(pharmacyInfo)
 
   return (
     <>
@@ -329,7 +322,6 @@ const PharmacyList = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={8}>
           <Card className="mb-2">
-            {/* <CardHeader title={t("menu.setting-pharmacy")} /> */}
             <CardHeader
           title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
         />
@@ -369,7 +361,7 @@ const PharmacyList = () => {
                           style={{height:"150px", width:"150px"}}
                           variant="square"
                           alt="Logo"
-                          src={`http://171.244.133.198/upload/comp_logo/${pharmacyInfo.o_12}`}
+                          src={previewImage || `http://171.244.133.198/upload/comp_logo/${pharmacyInfo.o_12}`}
                           className={classes.large}
                         />
                         <div className="text-center">Logo nhà thuốc</div>
@@ -562,46 +554,6 @@ const PharmacyList = () => {
           </Card>
         </Grid>
       </Grid>
-
-      <Dialog fullWidth={true} maxWidth="xs" open={modalPreviewImage}>
-        <Card>
-          <CardHeader title={t("update_pharmacy_logo")} />
-          <CardContent>
-            <div
-              className="d-flex justify-content-center aligh-item-center"
-            >
-              <Avatar alt="Logo" src={previewImage} className={classes.large} />
-            </div>
-          </CardContent>
-          <CardActions
-            className="align-items-end justify-content-end"
-          >
-            <Button
-              size="small"
-              onClick={(e) => {
-                setModalPreviewImage(false);
-                setPreviewImage(null);
-              }}
-              startIcon={<ExitToAppIcon />}
-              variant="contained"
-              disableElevation
-            >
-              {t("btn.close")} (Esc)
-            </Button>
-            <Button
-              size="small"
-              onClick={(e) => {
-                uploadFileToServer();
-              }}
-              className="bg-success text-white"
-              variant="contained"
-              disableElevation
-            >
-              {t("btn.update")} (F3)
-            </Button>
-          </CardActions>
-        </Card>
-      </Dialog>
     </>
   );
 };

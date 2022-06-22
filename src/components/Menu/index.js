@@ -58,7 +58,7 @@ import { ReactComponent as IC_SETTING_USER } from "../../asset/images/setting-us
 import { ReactComponent as IC_SETTING_PERMISSION } from "../../asset/images/setting-permission.svg";
 import { ReactComponent as IC_SETTING_LOCK_ORDER } from "../../asset/images/setting-lock-order.svg";
 import LocalShippingIcon from '@material-ui/icons/LocalShipping'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 
 const menuList = [
@@ -469,7 +469,7 @@ console.log(windowHeight)
             alt=""
           />
         </div>
-        <div className={style.navbar}>
+        <div className={style.navbar} style={{position:"relative",scrollBehavior: "smooth"}}>
           {menuList.map((item, index) => {
             return (
               <React.Fragment key={item.key}>
@@ -674,16 +674,33 @@ console.log(windowHeight)
                 </div>
               </div>
             </Link>
+            <div
+              style={{ 
+                textAlign: "center",
+                bottom:0, 
+                cursor: "pointer", 
+                position:'sticky',
+                zIndex:'1000', 
+                marginLeft:'5px',
+                height:'25px'
+              }}
+            >
+              <a href="#google">
+                {windowHeight < 800 && (
+                  <div style={{background:'#8797a5'}}> 
+                    <KeyboardArrowDown
+                      style={{ color: "#000"}}
+                      fontSize="middle"
+                    />
+                  </div>
+                )}
+              </a>
+            </div>
           </React.Fragment>
         </div>
-        {/* <div style={{textAlign: "center", height: "40px", cursor:"pointer"}}>
-          <a href="#google">
-          {(windowHeight < 800) && <IconButton><ArrowDropDownIcon style={{color:'#fff'}} fontSize="large"/></IconButton>}
-          </a>
-        </div> */}
-        <div style={{height:'150px'}} className={[style.navbar_item_avatar].join(" ")}>
+        <div style={{height:'100px'}} className={[style.navbar_item_avatar].join(" ")}>
           <div onClick={handleClick}>
-            <div
+            {/* <div
               style={{ textAlign: "center", height: "40px", cursor: "pointer" }}
             >
               <a href="#google">
@@ -696,7 +713,7 @@ console.log(windowHeight)
                   </div>
                 )}
               </a>
-            </div>
+            </div> */}
             <img
               src={require("../../asset/images/man.png")}
               className={style.avatar}

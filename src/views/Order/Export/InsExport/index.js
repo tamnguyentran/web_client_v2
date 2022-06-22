@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect,forwardRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useHotkeys } from "react-hotkeys-hook";

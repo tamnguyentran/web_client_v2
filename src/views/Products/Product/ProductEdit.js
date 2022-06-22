@@ -196,7 +196,6 @@ const ProductEdit = ({
     } catch (error) {
       result["success"] = false;
     }
-    console.log(result);
     if (process) return;
     if (checkValidate()) return;
     setProcess(true);
@@ -300,8 +299,6 @@ const ProductEdit = ({
     );
     return result.json();
   };
-
-  console.log(product);
 
   return (
     <Dialog fullWidth={true} maxWidth="md" open={shouldOpenModal}>
