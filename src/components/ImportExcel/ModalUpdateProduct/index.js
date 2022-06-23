@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import DateFnsUtils from "@date-io/date-fns";
@@ -140,35 +140,9 @@ const ModalUpdateProduct = (props) => {
       {/* Modal cập nhật dòng dữ liệu */}
       <Dialog fullWidth={true} maxWidth="md" open={shouldOpenModalEdit}>
         <Card>
-          <CardHeader title={t("product.titleEditvvs")} />
+          <CardHeader title={t("product.titleEdit")} />
           <CardContent className="cardContent_modal">
             <Grid container spacing={1}>
-              {/* <Grid item xs={6} sm={3}>
-                <Tooltip
-                  placement="top"
-                  title={t("product.tooltip.productCode")}
-                  arrow
-                >
-                  <TextField
-                    fullWidth={true}
-                    autoComplete="off"
-                    margin="dense"
-                    label={t("product.code")}
-                    value={editModal.code}
-                    name="code"
-                    onChange={handleChange}
-                    variant="outlined"
-                    className="uppercaseInput"
-                    inputRef={step1Ref}
-                    onKeyPress={(event) => {
-                      if (event.key === "Enter") {
-                        step2Ref.current.focus();
-                      }
-                    }}
-                  />
-                </Tooltip>
-              </Grid> */}
-
               <Grid item xs={6} sm={3}>
                 <TextField
                   fullWidth={true}

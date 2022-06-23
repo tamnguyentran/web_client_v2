@@ -393,6 +393,7 @@ const ImportExcel = ({ title, onRefresh }) => {
 
           e.unit_other_id || 0,
           Number(e.convert_rate) || 0,
+          " "
         ];
         sendRequest(
           serviceInfo.CREATE_PRODUCT,
@@ -445,6 +446,7 @@ const ImportExcel = ({ title, onRefresh }) => {
 
             e.unit || 0,
             Number(e.convert_rate) || 0,
+            " "
           ];
           sendRequest(
             serviceInfo.CREATE_PRODUCT,
@@ -496,6 +498,7 @@ const ImportExcel = ({ title, onRefresh }) => {
 
               e.unit || 0,
               Number(e.convert_rate) || 0,
+              " "
             ];
             sendRequest(
               serviceInfo.CREATE_PRODUCT,
@@ -545,6 +548,7 @@ const ImportExcel = ({ title, onRefresh }) => {
 
               e.unit || 0,
               Number(e.convert_rate) || 0,
+              " "
             ];
             sendRequest(
               serviceInfo.CREATE_PRODUCT,

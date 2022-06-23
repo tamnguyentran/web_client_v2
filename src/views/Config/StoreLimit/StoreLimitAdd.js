@@ -293,6 +293,11 @@ const StoreLimitAdd = ({ onRefresh }) => {
                   className="inputNumber"
                   style={{ width: "100%" }}
                   required
+                  helperText={
+                    StoreLimit.maxQuantity >= StoreLimit.minQuantity
+                      ? ""
+                      : <div style={{color: 'red'}}>{"phải lớn hơn hạn mức tối thiểu"}</div>
+                  }
                   value={StoreLimit.maxQuantity}
                   label={t("config.store_limit.maxQuantity")}
                   customInput={TextField}
