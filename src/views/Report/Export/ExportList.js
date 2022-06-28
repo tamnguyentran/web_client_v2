@@ -104,7 +104,6 @@ const ExportList = () => {
       control_sv.clearReqInfoMapRequest(cltSeqResult);
     } else if (message["PROC_DATA"]) {
       let newData = message["PROC_DATA"];
-      console.log(newData);
       if (newData.rows.length > 0) {
         if (
           reqInfoMap.inputParam[6] === glb_sv.defaultValueSearch &&
@@ -119,7 +118,6 @@ const ExportList = () => {
           );
         }
         dataSourceRef.current = dataSourceRef.current.concat(newData.rows);
-        console.log(dataSourceRef.current);
         setDataSource(dataSourceRef.current);
       } else {
         dataSourceRef.current = [];
@@ -179,7 +177,6 @@ const ExportList = () => {
       const lastIndex = dataSourceRef.current.length - 1;
       const lastInvoiceID = dataSourceRef.current[lastIndex].o_1;
       const lastInvoiceDetailID = dataSourceRef.current[lastIndex].o_5;
-      console.log(lastInvoiceDetailID, lastInvoiceID);
       getList(
         moment(searchModal.start_dt).format("YYYYMMDD"),
         moment(searchModal.end_dt).format("YYYYMMDD"),

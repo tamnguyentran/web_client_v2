@@ -185,13 +185,10 @@ const InsExport = ({}) => {
   };
 
   const handleAddProduct = (productObject) => {
-    console.log("hhhhhhhhh");
     if (!Export.customer || !Export.order_dt) {
-      console.log("hhhhhhhhh1");
       SnackBarService.alert(t("message.requireExportInvoice"), true, 4, 3000);
       return;
     } else if (!invoiceFlag) {
-      console.log("hhhhhhhhh3");
       dataWaitAdd.current.push(productObject);
       handleCreateInvoice();
       return;
@@ -207,7 +204,6 @@ const InsExport = ({}) => {
         productObject.discount_per,
         productObject.vat_per,
       ];
-      console.log("inputParamsvs", inputParam);
       sendRequest(
         serviceInfo.ADD_PRODUCT_TO_INVOICE,
         inputParam,
@@ -292,7 +288,6 @@ const InsExport = ({}) => {
       Export.staff_exp,
       Export.note,
     ];
-    console.log("inputParam1234",inputParam)
     sendRequest(
       serviceInfo.CREATE_INVOICE,
       inputParam,
@@ -303,7 +298,6 @@ const InsExport = ({}) => {
   };
 
   const handleResultCreateInvoice = (reqInfoMap, message) => {
-      console.log(message);
     SnackBarService.alert(
       message["PROC_MESSAGE"],
       true,
@@ -328,9 +322,7 @@ const InsExport = ({}) => {
           true,
           handleTimeOut
         );
-        console.log(dataWaitAdd.current.length)
         if (dataWaitAdd.current.length > 0) {
-            console.log(dataWaitAdd);
           for (let i = 0; i < dataWaitAdd.current.length; i++) {
             const item = dataWaitAdd.current[i];
             const inputParam = [
@@ -358,7 +350,6 @@ const InsExport = ({}) => {
   };
 
   const handleResultAddProductToInvoice = (reqInfoMap, message) => {
-      console.log(reqInfoMap)
     SnackBarService.alert(
       message["PROC_MESSAGE"],
       true,
@@ -406,8 +397,6 @@ const InsExport = ({}) => {
         invoice_discount: newData.rows[0].o_13,
         invoice_vat: newData.rows[0].o_14,
       };
-
-      console.log(dataExport) // list hóa đơn
       setCustomerSelect(newData.rows[0].o_5);
       setExport(dataExport);
     }
@@ -428,12 +417,10 @@ const InsExport = ({}) => {
 
   const handleUpdateInvoice = () => {
     if (!Export.invoice_id && !invoiceFlag) {
-      console.log("kkkkkkk");
       handleCreateInvoice();
       // SnackBarService.alert(t('can_not_found_id_invoice_please_try_again'), true, 'error', 3000)
       return;
     } else if (!Export.customer || !Export.order_dt) {
-      console.log("iiiiiiiiii");
       SnackBarService.alert(
         t("message.requireExportInvoice"),
         true,
@@ -566,9 +553,6 @@ const InsExport = ({}) => {
   const handlePrint = useReactToPrint({
     content: () => componentPrint.current,
   });
-
-  console.log(Export,Export.payment_amount)
-  console.log(paymentInfo)
   return (
     <Grid container spacing={1}>
       <EditProductRows
@@ -625,7 +609,6 @@ const InsExport = ({}) => {
                 </TableHead>
                 <TableBody>
                   {dataSource.map((item, index) => {
-                    console.log(item);
                     return (
                       <TableRow
                         onDoubleClick={(e) => {

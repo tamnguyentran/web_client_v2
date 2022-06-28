@@ -191,7 +191,6 @@ const EditImport = ({}) => {
     cltSeqResult = 0,
     reqInfoMap = new requestInfo()
   ) => {
-    console.log("create settlement result: ", reqInfoMap, message);
     control_sv.clearTimeOutRequest(reqInfoMap.timeOutKey);
     if (reqInfoMap.procStat !== 0 && reqInfoMap.procStat !== 1) {
       return;
@@ -406,11 +405,6 @@ const EditImport = ({}) => {
       glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
       control_sv.clearReqInfoMapRequest(cltSeqResult);
     } else if (message["PROC_DATA"]) {
-      console.log(
-        "handleResultGetSettlementByInvoiceID: ",
-        reqInfoMap,
-        message
-      );
       let newData = message["PROC_DATA"];
       if (newData.rowTotal === 0) {
         // chưa có bút toán nào => tạo bút toán cho nó
@@ -450,7 +444,6 @@ const EditImport = ({}) => {
       glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
       control_sv.clearReqInfoMapRequest(cltSeqResult);
     } else if (message["PROC_DATA"]) {
-      console.log("handleResultGetInvoiceByID: ", reqInfoMap, message);
       // xử lý thành công
       let newData = message["PROC_DATA"];
       let dataImport = {
@@ -592,7 +585,7 @@ const EditImport = ({}) => {
                         
                     </div> */}
           <CardHeader
-            title={t("order.import.productImportListvsvs")}
+            title={t("order.import.productImportList")}
             action={
               <ExportExcel
                 filename={`import_${Import.invoice_no}`}

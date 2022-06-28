@@ -127,6 +127,16 @@ class socketService {
             } else {
                 this.socket = io(this.url)
             }
+            // if (glb_sv.sslMode) {
+            //     this.socket = io(this.url, { secure: true, path: '/new_core' })
+            // } else {
+            //     this.socket = io(this.url, { path: '/new_core' })
+            // }
+            // if (glb_sv.sslMode) {
+            //     this.socket = io(this.url, { secure: true, path: '/new_core' })
+            // } else {
+            //     this.socket = io(this.url, { path: '/new_core' })
+            // }
             // -- sen token --
             this.socket.on('connect', (data) => {
                 glb_sv.logMessage('connect at Time: ' + Date())

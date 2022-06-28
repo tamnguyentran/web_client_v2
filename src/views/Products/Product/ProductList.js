@@ -258,7 +258,6 @@ const ProductList = () => {
       item = {};
       item["stt"] = index + 1;
       item["productGroup"] = data.o_3;
-      // item['code'] = data.o_4
       item["name"] = data.o_5;
       item["barcode"] = data.o_6;
       item["content"] = data.o_7;

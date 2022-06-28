@@ -45,7 +45,6 @@ const serviceInfo = {
 
 const DashboardLayout = () => {
     const reff = useRef(0)
-    console.log(reff.current)
   const { t } = useTranslation();
   const [dataReportStaticDay, setDataReportStaticDay] = useState({});
   const [dataReportStaticWeek, setDataReportStaticWeek] = useState({});

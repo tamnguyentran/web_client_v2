@@ -259,8 +259,6 @@ const PharmacyList = () => {
       };
     }
   };
-
-  console.log(previewImage);
   const uploadFileToServer = () => {
     if (
       !logoInfo?.current ||
@@ -277,7 +275,6 @@ const PharmacyList = () => {
       logoInfo?.current.file,
       logoInfo?.current.name,
     ];
-    console.log(inputParam)
     sendRequest(
       serviceInfo.UPDATE_LOGO,
       inputParam,
@@ -312,7 +309,6 @@ const PharmacyList = () => {
       handleRefresh();
     }
   };
-  console.log(pharmacyInfo)
 
   return (
     <>

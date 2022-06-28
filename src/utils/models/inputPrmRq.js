@@ -10,7 +10,8 @@ export class inputPrmRq {
         this.timeOut = 15
         this.lang = 'vi'
         this.clientSeq = 0
-        this.clientChanel = '01' //-- web client, 02 mobile web client, 03 android + ios app
+        // this.clientChanel = '01' //-- web client, 02 mobile web client, 03 android + ios app
+        this.clientTp = '04' // # 01 mobile android, 02 mobile iso, 03 mobile web, 04 website, 05 desktop app
         this.clientSentTime = new Date()
         this.biz = ''
         this.object = ''

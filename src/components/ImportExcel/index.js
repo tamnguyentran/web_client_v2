@@ -9,7 +9,6 @@ import {
   CardContent,
   Card,
   CardActions,
-  Chip,
   Table,
   TableBody,
   TableCell,
@@ -934,7 +933,7 @@ const ImportExcel = ({ title, onRefresh }) => {
       </Button>
 
       <Dialog fullWidth={true} maxWidth="md" open={shouldOpenModal}>
-        <Card className="product-card">
+        <Card>
           <CardHeader
             title={title ? title : t("product.import_product_from_excel")}
             action={
@@ -989,7 +988,7 @@ const ImportExcel = ({ title, onRefresh }) => {
               <Alert severity="error">{t("message.error_file")}</Alert>
             )}
             {dataSource.length > 0 && (
-              <TableContainer className="tableContainer mt-2">
+              <TableContainer className="tableContainer height-table-260 mt-2">
                 <Table stickyHeader>
                   <TableHead>
                     <TableRow>

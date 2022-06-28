@@ -22,10 +22,8 @@ import {
   Card,
   CardHeader,
   CardContent,
-  IconButton,
   CardActions,
 } from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import moment from "moment";
 import ExportExcel from "../../../components/ExportExcel";
 import DisplayColumn from "../../../components/DisplayColumn";
@@ -95,7 +93,6 @@ const ImportList = () => {
   };
 
   const handleResultGetAll = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message)
     setSearchProcess(false);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
@@ -133,9 +130,9 @@ const ImportList = () => {
     setSearchProcess(false);
   };
 
-  const onClickColumn = (e) => {
-    setAnChorEl(e.currentTarget);
-  };
+  // const onClickColumn = (e) => {
+  //   setAnChorEl(e.currentTarget);
+  // };
 
   const onCloseColumn = () => {
     setAnChorEl(null);

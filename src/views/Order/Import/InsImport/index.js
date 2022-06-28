@@ -34,7 +34,6 @@ import {
   defaultDataUpdateProduct,
 } from "../Modal/Import.modal";
 import moment from "moment";
-// import AddProduct from '../AddProduct'
 import Dictionary from "../../../../components/Dictionary";
 import AddProduct from "../AddProductClone";
 import { useReactToPrint } from "react-to-print";
@@ -239,7 +238,6 @@ const ProductImport = () => {
         setDataHistoryListInvoice(dataHistoryListInvoiceRef.current);
         if (
           reqInfoMap.inputParam[2] === glb_sv.defaultValueSearch
-          // reqInfoMap.inputParam[7] === glb_sv.defaultValueSearch
         ) {
           setTotalRecordsListInvoice(newData.rowTotal);
         } else {
@@ -293,33 +291,6 @@ const ProductImport = () => {
     } else {
     }
   };
-
-  // const createSettlement = (invoiceNo) => {
-  //   const inputParams = [
-  //     "10",
-  //     invoiceNo || newInvoiceId.current,
-  //     importDataRef.current.payment_type,
-  //     moment(importDataRef.current.order_dt).format("YYYYMMDD"),
-  //     importDataRef.current.payment_amount > paymentInfo.invoice_needpay
-  //       ? paymentInfo.invoice_needpay
-  //       : importDataRef.current.payment_amount,
-  //     importDataRef.current.bank_transf_acc_number,
-  //     importDataRef.current.bank_transf_acc_name,
-  //     importDataRef.current.bank_transf_name || "",
-  //     importDataRef.current.bank_recei_acc_number,
-  //     importDataRef.current.bank_recei_acc_name,
-  //     importDataRef.current.bank_recei_name || "",
-  //     importDataRef.current.note,
-  //   ];
-  //   sendRequest(
-  //     serviceInfo.CREATE_SETTLEMENT,
-  //     inputParams,
-  //     null,
-  //     true,
-  //     handleTimeOut
-  //   );
-  // };
-
   const handleSelectSupplier = (obj) => {
     const newImport = { ...Import };
     newImport["supplier"] = !!obj ? obj?.o_1 : null;
@@ -682,20 +653,6 @@ const ProductImport = () => {
         setResetFormAddFlag(false);
       }, 1000);
       handleRefresh();
-      // sendRequest(
-      //   serviceInfo.GET_ALL_PRODUCT_BY_INVOICE_ID,
-      //   [newInvoiceId.current],
-      //   handleGetAllProductByInvoiceID,
-      //   true,
-      //   handleTimeOut
-      // );
-      // sendRequest(
-      //   serviceInfo.GET_INVOICE_BY_ID,
-      //   [newInvoiceId.current],
-      //   handleResultGetInvoiceByID,
-      //   true,
-      //   handleTimeOut
-      // );
     }
   };
 
@@ -763,23 +720,23 @@ const ProductImport = () => {
     );
   };
 
-  const changePaymentType = () => {
-    const newData = { ...Import };
-    if (Import.payment_type === "1") {
-      newData["payment_type"] = "2";
-      newData["bank_transf_name"] = null;
-      newData["bank_transf_acc_name"] = "";
-      newData["bank_transf_acc_number"] = "";
-      newData["bank_recei_name"] = null;
-      newData["bank_recei_acc_number"] = "";
-      newData["bank_recei_acc_number"] = "";
-      setImport(newData);
-      setShouldOpenPaymentModal(true);
-    } else {
-      newData["payment_type"] = "1";
-      setImport(newData);
-    }
-  };
+  // const changePaymentType = () => {
+  //   const newData = { ...Import };
+  //   if (Import.payment_type === "1") {
+  //     newData["payment_type"] = "2";
+  //     newData["bank_transf_name"] = null;
+  //     newData["bank_transf_acc_name"] = "";
+  //     newData["bank_transf_acc_number"] = "";
+  //     newData["bank_recei_name"] = null;
+  //     newData["bank_recei_acc_number"] = "";
+  //     newData["bank_recei_acc_number"] = "";
+  //     setImport(newData);
+  //     setShouldOpenPaymentModal(true);
+  //   } else {
+  //     newData["payment_type"] = "1";
+  //     setImport(newData);
+  //   }
+  // };
 
   const headersCSV = [
     { label: t("stt"), key: "stt" },
@@ -993,12 +950,6 @@ const ProductImport = () => {
   };
   return (
     <Grid container spacing={1} className="h-100">
-      {/* <EditProductRows
-        productEditID={productEditID}
-        invoiceID={newInvoiceId.current}
-        onRefresh={handleRefresh}
-        setProductEditID={setProductEditID}
-      /> */}
       <Drawer
         anchor="right"
         open={openModalShowBill}
@@ -1044,7 +995,6 @@ const ProductImport = () => {
                     setOpenModalShowBill(false);
                     setInvoiceFlag(true);
                     setDisableUpdateInvoice(false);
-                    // setIsIndexRow(null);
                   }}
                 >
                   <div className="w-100">
@@ -1128,7 +1078,7 @@ const ProductImport = () => {
           style={{ height: "160px" }}
         />
         <Card style={{ height: "calc(100% - 168px)" }}>
-          <CardHeader title={t("order.import.productImportList")} />
+          <CardHeader title={t("order.import.productImportListbdb")} />
           <CardContent className="insImport">
             <div className="flex justify-content-between aligh-item-center mb-1">
               <div className="flex aligh-item-center">

@@ -62,8 +62,6 @@ import CustomerAdd_Autocomplete from "../../../Partner/Customer/Control/Customer
 import { useReactToPrint } from "react-to-print";
 import Export_Bill from "../../../../components/Bill/Export_Bill";
 import ExportExcel from "../../../../components/ExportExcel";
-//import ImportExcel1 from '../../../../components/ImportExcel1'
-//import ImportExcel from '../../../../components/ImportExcel'
 import {
   searchDefaultModal,
   defaultDataUpdateProduct,
@@ -1298,9 +1296,6 @@ const InsExport = () => {
                     headers={headersCSV}
                     style={{ backgroundColor: "#00A248", color: "#066190" }}
                   />
-                  {/* <ImportExcel1
-                    // title={'title'}
-                  /> */}
                   <DisplayColumn
                     style={{ backgroundColor: "#066190", color: "#fff" }}
                     columns={column}

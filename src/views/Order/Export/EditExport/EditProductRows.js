@@ -127,7 +127,6 @@ const EditProductRows = ({ productEditID, invoiceID, onRefresh, setProductEditID
             productInfo.discount_per,
             productInfo.vat_per,
         ]
-        console.log('inputParamiii',inputParam)
         setControlTimeOutKey(serviceInfo.UPDATE_PRODUCT_TO_INVOICE.reqFunct + '|' + JSON.stringify(inputParam))
         sendRequest(serviceInfo.UPDATE_PRODUCT_TO_INVOICE, inputParam, handleResultUpdateProduct, true, handleTimeOut)
     }

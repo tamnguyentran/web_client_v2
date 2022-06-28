@@ -301,8 +301,6 @@ const ImportList = () => {
     // { label: t('titleBranch'), key: 'titleBranch' }
   ];
 
-  console.log(dataSource)
-
   const dataCSV = () => {
     const result = dataSource.map((item, index) => {
       const data = item;
@@ -329,8 +327,6 @@ const ImportList = () => {
     });
     return result;
   };
-
-  console.log()
 
   return (
     <>

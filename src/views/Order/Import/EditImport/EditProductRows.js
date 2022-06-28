@@ -128,7 +128,6 @@ const EditProductRows = ({ productEditID, invoiceID, onRefresh, setProductEditID
     }
 
     const resultCreateSettlement = (message = {}, cltSeqResult = 0, reqInfoMap = new requestInfo()) => {
-        console.log('create settlement result: ', reqInfoMap, message)
         control_sv.clearTimeOutRequest(reqInfoMap.timeOutKey)
         if (reqInfoMap.procStat !== 0 && reqInfoMap.procStat !== 1) {
             return
@@ -214,7 +213,6 @@ const EditProductRows = ({ productEditID, invoiceID, onRefresh, setProductEditID
     }
 
     const createSettlement = () => {
-        console.log('Kiểm tra và tạo hđ công nợ')
         if (checked) {
             const oldTotalPaided = Math.round(
                 productInfoPrev.current.price *

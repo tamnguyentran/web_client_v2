@@ -431,9 +431,7 @@ const MenuView = ({ baseLink }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   },[])
-console.log(windowHeight)
   useEffect(() => {
-    console.log(window.innerHeight)
     glb_sv.commonEvent.subscribe((msg) => {
       if (msg.msgTp === glb_sv.setExpand) {
         // setExpand(msg.data)

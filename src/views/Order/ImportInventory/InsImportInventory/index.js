@@ -144,7 +144,6 @@ const ProductImportInventory = ({}) => {
   };
 
   const handleResultCreateInvoice = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message)
     SnackBarService.alert(
       message["PROC_MESSAGE"],
       true,
@@ -217,7 +216,6 @@ const ProductImportInventory = ({}) => {
   };
 
   const handleResultAddProductToInvoice = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message)
     SnackBarService.alert(
       message["PROC_MESSAGE"],
       true,
@@ -377,7 +375,7 @@ const ProductImportInventory = ({}) => {
         />
         <Card>
           <CardHeader
-            title={t("order.importInventory.productImportList")}
+            title={t("order.importInventory.productImportListvdvd")}
             action={
               <ExportExcel
                 filename={`import_inventory_${importInventory.invoice_no}`}

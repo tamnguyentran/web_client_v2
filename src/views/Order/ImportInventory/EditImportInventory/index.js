@@ -177,7 +177,6 @@ const EditImportInventory = ({}) => {
         : "",
       productObject.price,
     ];
-    console.log("inputParam", inputParam);
     sendRequest(
       serviceInfo.ADD_PRODUCT_TO_INVOICE,
       inputParam,

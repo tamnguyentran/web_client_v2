@@ -59,6 +59,7 @@ const LoginLayout = () => {
         }
         //-- xet for test: admin.12/mDKfqs
         setUser({ username: 'admin.12', password: 'mDKfqs' })
+        // setUser({ username: 'admin.107', password: 'jltFKR' })
     }, [])
 
     const handleChange = (e) => {

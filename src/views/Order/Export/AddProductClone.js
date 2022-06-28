@@ -112,7 +112,6 @@ const AddProduct = ({ onAddProduct, resetFlag, invoiceType = true }) => {
 
     const handleSelectProduct = (obj) => {
         const newProductInfo = { ...productInfo }
-        console.log(obj)
         newProductInfo['prod_id'] = !!obj ? obj?.o_1 : null
         newProductInfo['prod_nm'] = !!obj ? obj?.o_2 : ''
         newProductInfo['lot_no'] = null
@@ -122,11 +121,9 @@ const AddProduct = ({ onAddProduct, resetFlag, invoiceType = true }) => {
 
             // bắn event lấy thông tin cấu hình bảng giá => nhập fill vào các ô dưới
         }
-        console.log(newProductInfo)
         setProductOpenFocus(false)
         setProductInfo(newProductInfo)
     }
-console.log(productInfo)
     const handleResultGetPrice = (reqInfoMap, message) => {
         if (message['PROC_STATUS'] !== 1) {
             // xử lý thất bại
@@ -146,13 +143,11 @@ console.log(productInfo)
                         newProductInfo['discount_per'] = 0
                         newProductInfo['vat_per'] = itemMinUnit.o_10
                         setProductInfo(newProductInfo)
-                        console.log(newProductInfo);
                     }
                 } else {
                     // bảng giá chưa config giá nhỏ nhất
                     if (productInfo.exp_tp === '1') {
                         newProductInfo['unit_id'] = data.rows[0].o_4
-                        console.log(newProductInfo)
                         newProductInfo['price'] = invoiceType ? data.rows[0].o_8 : data.rows[0].o_9
                         newProductInfo['discount_per'] = 0
                         newProductInfo['vat_per'] = data.rows[0].o_10
@@ -175,7 +170,6 @@ console.log(productInfo)
     }
 
     const handleSelectUnit = (obj) => {
-        console.log(obj)
         const newProductInfo = { ...productInfo }
         newProductInfo['unit_id'] = !!obj ? obj?.o_1 : null
         newProductInfo['unit_nm'] = !!obj ? obj?.o_2 : ''
@@ -312,7 +306,6 @@ console.log(productInfo)
             return true
         }
     }
-    console.log(productInfo)
     return (
         <Card className="mb-2">
             <ConfirmProduct

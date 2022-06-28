@@ -126,9 +126,6 @@ const UnitRateList = () => {
         setDataSource([]);
         setTotalRecords(0);
       }
-      console.log(message);
-      console.log(newData);
-      console.log(dataSourceRef.current.length, newData.rowTotal);
     }
   };
 

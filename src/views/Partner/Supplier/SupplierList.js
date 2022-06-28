@@ -17,11 +17,8 @@ import {
   TableHead,
 } from "@material-ui/core";
 import FastForwardIcon from "@material-ui/icons/FastForward";
-import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import EditIcon from "@material-ui/icons/Edit";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SaveIcon from "@material-ui/icons/Save";
-import CheckIcon from "@material-ui/icons/Check";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ColumnCtrComp from "../../../components/_ColumnCtr";
 

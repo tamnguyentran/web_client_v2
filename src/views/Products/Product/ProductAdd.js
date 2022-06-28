@@ -1241,7 +1241,7 @@ const ProductAdd = ({ onRefresh }) => {
               </label>
             </div>
             <Grid container>
-              <span className="required_note">(*) {t("required_noteeee")}</span>
+              <span className="required_note">(*) {t("required_note")}</span>
             </Grid>
           </CardContent>
           <CardActions

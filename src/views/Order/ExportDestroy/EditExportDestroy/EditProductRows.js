@@ -100,7 +100,6 @@ const EditProductRows = ({ productEditID, invoiceID, onRefresh, setProductEditID
         if (productInfo.price < 0 || productInfo.qty <= 0 || !!productInfo.reason_tp) return
         setProcess(true)
         const inputParam = [invoiceID, productEditID, productInfo.qty, productInfo.price, productInfo.reason_tp]
-        console.log('inputParamupdate',inputParam)
         setControlTimeOutKey(serviceInfo.UPDATE_PRODUCT_TO_INVOICE.reqFunct + '|' + JSON.stringify(inputParam))
         sendRequest(serviceInfo.UPDATE_PRODUCT_TO_INVOICE, inputParam, handleResultUpdateProduct, true, handleTimeOut)
     }
