@@ -280,6 +280,7 @@
         "import_excel": "Nhập từ Excel",
         "import_product_from_excel": "Nhập danh sách sản phẩm từ file Excel",
         "store_current": "Số lượng tồn kho",
+        "add_success": "được thêm thành công",
         "tooltip": {
             "productCode": "Nếu để trống, hệ thống sẽ tự sinh mã SP",
             "barcode": "Nhập dãy số hoặc dùng máy quét",
@@ -289,7 +290,11 @@
             "minmax_notinput": "Xét hạn mức kho bằng 0 hệ thống sẽ hiểu là không kiểm tra hạn mức",
             "not_process": "Chưa xử lý",
             "success": "Xử lý thành công",
-            "fail": "Xử lý thất bại"
+            "fail": "Xử lý thất bại",
+            "required": "Bắt buộc nhập",
+            "no_required": "Không bắt buộc nhập",
+            "no_info": "Chưa có thông tin",
+            "update": "Chỉnh sửa"
         },
         "store_qty_require_unit_id": "Nếu nhập số lượng tồn kho thì bạn cần phải nhập đơn vị tính tương ứng",
         "price_require_unit_id": "Nếu nhập giá thì bạn cần phải nhập đơn vị tính tương ứng",
@@ -311,7 +316,8 @@
             "inven_min_qty_uncorect": "Hạn mức kho tối thiểu nếu có nhập thì phải là một số tự nhiên lớn hơn hoặc bằng 0",
             "inven_min_qty_uncorect2": "Hạn mức kho tối thiểu phải nhỏ hơn hạn mức kho tối đa",
             "inven_max_qty_uncorect": "Hạn mức kho tối đa nếu có nhập thì phải là một số tự nhiên lớn hơn hoặc bằng 0 (bằng 0 hệ thống sẽ hiểu là không xét hạn mức tối đa)",
-            "import_price_uncorect": "Thông tin giá nhập không hợp lệ"
+            "import_price_uncorect": "Thông tin giá nhập không hợp lệ",
+            "err_import_excel": "* Đã có dữ liệu không đúng, xin hãy kiểm tra lại! (đưa con trỏ vào dòng bôi đỏ để biết thông tin chi tiết dữ liệu sai, bạn có thể click vào hình cây viết để thực hiện sửa hoặc sửa trên file excel gốc rồi import lại). Khi có ít nhất 1 dòng bị lỗi!"
         }
     },
     "productType": {

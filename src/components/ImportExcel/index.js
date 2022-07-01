@@ -228,8 +228,6 @@ const ImportExcel = ({ title, onRefresh }) => {
   );
 
   useEffect(() => {
-    console.log("vào UNIT_DROPDOWN_LIST excel");
-    // lengthList.current = 0;
     setAddSuccessImportList(0)
     sendRequest(
       serviceInfo.UNIT_DROPDOWN_LIST,
@@ -573,20 +571,21 @@ const ImportExcel = ({ title, onRefresh }) => {
   };
 
   const handleResultCreate = (reqInfoMap, message, e, i) => {
-    setProcess(false)
     if (message["PROC_STATUS"] !== 1) {
       e["warning"] = message["PROC_MESSAGE"];
       dataAddExcelFaild.current.push(e);
       if (i === dataSource.length - 1) {
         setDataSource(dataAddExcelFaild.current);
         dataAddExcelFaild.current = [];
+        setProcess(false)
       }
     } else if (message["PROC_DATA"]) {
       if (dataSource.length === 1) {
         setDataSource([]);
         setShouldOpenModal(false);
         setShowMessage(false)
-      }else{
+        setProcess(false)
+      }else if(i === dataSource.length - 1){
         setDataSource(dataAddExcelFaild.current);
       }
     }
@@ -649,212 +648,6 @@ const ImportExcel = ({ title, onRefresh }) => {
         setDataSource(arrTam || []);
       }
     });
-  };
-
-  const valiadateData = (data) => {
-    // { key: 'proctatus', title: 'product.procstat' },
-    // { key: 'name', title: 'product.name' },
-    // { key: 'group', title: 'menu.productGroup' },
-    // { key: 'unit', title: 'product.minUnit' },
-    // { key: 'barcode', title: 'product.barcode' },
-    // { key: 'contents', title: 'product.content' },
-    // { key: 'designate', title: 'product.designate' },
-    // { key: 'contraind', title: 'product.contraind' },
-    // { key: 'packing', title: 'product.packing' },
-    // { key: 'dosage', title: 'product.dosage' },
-    // { key: 'manufact', title: 'product.manufact' },
-    // { key: 'interact', title: 'product.interact' },
-    // { key: 'storages', title: 'product.storages' },
-    // { key: 'effect', title: 'product.effect' },
-    // { key: 'overdose', title: 'product.overdose' },
-    // { key: 'invenqty', title: 'product.store_current' },
-    // { key: 'inven_price', title: 'product.inven_price' },
-    // { key: 'lotno', title: 'order.import.lot_no' },
-    // { key: 'expire_date', title: 'order.import.exp_dt' },
-    // { key: 'inven_min', title: 'config.store_limit.minQuantity' },
-    // { key: 'inven_max', title: 'config.store_limit.maxQuantity' },
-    // { key: 'imp_price', title: 'config.price.importPrice' },
-    // { key: 'imp_vat', title: 'config.price.importVAT' },
-    // { key: 'exp_price', title: 'config.price.price' },
-    // { key: 'exp_wprice', title: 'config.price.wholePrice' },
-    // { key: 'exp_vat', title: 'config.price.exportVAT' },
-    // { key: 'unit_other', title: 'config.price.unit' },
-    // { key: 'convert_rate', title: 'config.unitRate.rate' },
-    // //-- Key for validate
-    // { key: 'validate', title: '' },
-    // { key: 'noted', title: '' }
-    let i = 0,
-      newDat = [];
-    for (i = 0; i < data.length; i++) {
-      const item = data[i];
-      const newItem = {};
-      columns.map((col) => {
-        newItem["noted"] = "";
-        newItem["validate"] = true;
-        if (col.key === "name") {
-          if (!item[col.key] || item[col.key].Trim() === "") {
-            newItem["validate"] = false;
-            newItem["noted"] =
-              newItem["noted"].length > 0
-                ? newItem["noted"] + ", " + t("imp_excel.no_prduct_info")
-                : t("imp_excel.no_prduct_info");
-          } else {
-            newItem["name"] = item[col.key].toUpperCase();
-          }
-        }
-        if (col.key === "group") {
-          if (!item[col.key] || item[col.key].Trim() === "") {
-            item["validate"] = false;
-            item["noted"] =
-              item["noted"].length > 0
-                ? item["noted"] + ", " + t("imp_excel.no_prduct_group")
-                : t("imp_excel.no_prduct_group");
-          } else {
-            const findInd = info_dec.groups.findIndex(
-              (item) => item.name === item[col.key]
-            );
-            if (findInd < 0) {
-              item["validate"] = false;
-              item["noted"] =
-                item["noted"].length > 0
-                  ? item["noted"] + ", " + t("imp_excel.prduct_group_uncorrect")
-                  : t("imp_excel.prduct_group_uncorrect");
-            }
-          }
-        }
-        if (col.key === "unit") {
-          if (!item[col.key] || item[col.key].Trim() === "") {
-            item["validate"] = false;
-            item["noted"] =
-              item["noted"].length > 0
-                ? item["noted"] + ", " + t("imp_excel.no_unit_min_info")
-                : t("imp_excel.no_unit_min_info");
-          } else {
-            const findInd = info_dec.units.findIndex(
-              (item) => item.name === item[col.key]
-            );
-            if (findInd < 0) {
-              item["validate"] = false;
-              item["noted"] =
-                item["noted"].length > 0
-                  ? item["noted"] +
-                    ", " +
-                    t("imp_excel.unit_min_info_uncorrect")
-                  : t("imp_excel.unit_min_info_uncorrect");
-            }
-          }
-        }
-        if (col.key === "invenqty") {
-          if (
-            !!item[col.key] &&
-            (isNaN(item[col.key]) || Number(item[col.key]) < 0)
-          ) {
-            item["validate"] = false;
-            item["noted"] =
-              item["noted"].length > 0
-                ? item["noted"] + ", " + t("imp_excel.inven_qty_uncorrect")
-                : t("imp_excel.inven_qty_uncorrect");
-          }
-        }
-        if (col.key === "inven_price") {
-          if (
-            !!item[col.key] &&
-            (isNaN(item[col.key]) || Number(item[col.key]) < 0)
-          ) {
-            item["validate"] = false;
-            item["noted"] =
-              item["noted"].length > 0
-                ? item["noted"] + ", " + t("imp_excel.import_price_uncorrect")
-                : t("imp_excel.import_price_uncorrect");
-          }
-        }
-        if (col.key === "lotno") {
-          if (!!item[col.key] || item[col.key].Trim() === "") {
-            item["validate"] = false;
-            item["noted"] =
-              item["noted"].length > 0
-                ? item["noted"] + ", " + t("imp_excel.lotno_is_require")
-                : t("imp_excel.lotno_is_require");
-          }
-        }
-        if (col.key === "expire_date") {
-          if (!!item[col.key] || item[col.key].Trim() === "") {
-            if (
-              info_dec.groups.findIndex(
-                (item) => item["group"] === "DƯỢC PHẨM"
-              ) > 0 ||
-              info_dec.groups.findIndex(
-                (item) => item["group"] === "THỰC PHẨM CHỨC NĂNG"
-              ) > 0
-            ) {
-              item["validate"] = false;
-              item["noted"] =
-                item["noted"].length > 0
-                  ? item["noted"] + ", " + t("imp_excel.expire_date_is_require")
-                  : t("imp_excel.expire_date_is_require");
-            }
-          } else {
-            let exp_dt = item[col.key].Trim(); // 12/11/2021
-            let arrDt = (exp_dt = exp_dt.split("/"));
-            if (
-              !arrDt ||
-              arrDt.length !== 3 ||
-              !glb_sv.verifyDt(arrDt[0], arrDt[1], arrDt[2])
-            ) {
-              item["validate"] = false;
-              item["noted"] =
-                item["noted"].length > 0
-                  ? item["noted"] + ", " + t("imp_excel.expire_date_uncorect")
-                  : t("imp_excel.expire_date_uncorect");
-            }
-          }
-        }
-        if (col.key === "inven_min") {
-          if (!!item[col.key] && isNaN(item[col.key])) {
-            item["validate"] = false;
-            item["noted"] =
-              item["noted"].length > 0
-                ? item["noted"] + ", " + t("imp_excel.inven_min_qty_uncorect")
-                : t("imp_excel.inven_min_qty_uncorect");
-          }
-        }
-        if (col.key === "inven_max") {
-          if (!!item[col.key] && isNaN(item[col.key])) {
-            item["validate"] = false;
-            item["noted"] =
-              item["noted"].length > 0
-                ? item["noted"] + ", " + t("imp_excel.inven_max_qty_uncorect")
-                : t("imp_excel.inven_max_qty_uncorect");
-          } else if (
-            !!item["inven_min"] &&
-            !isNaN(item["inven_min"]) &&
-            !!item["inven_max"] &&
-            !isNaN(item["inven_max"]) &&
-            Number(item["inven_min"]) > 0 &&
-            Number(item["inven_max"]) > 0 &&
-            Number(item["inven_min"]) >= Number(item["inven_max"])
-          ) {
-            item["validate"] = false;
-            item["noted"] =
-              item["noted"].length > 0
-                ? item["noted"] + ", " + t("imp_excel.inven_min_qty_uncorect2")
-                : t("imp_excel.inven_min_qty_uncorect2");
-          }
-        }
-        if (col.key === "importPrice") {
-          if (
-            !!item[col.key] &&
-            (isNaN(item[col.key]) || Number(item[col.key]) < 0)
-          ) {
-            item["validate"] = false;
-            item["noted"] =
-              item["noted"].length > 0
-                ? item["noted"] + ", " + t("imp_excel.import_price_uncorect")
-                : t("imp_excel.import_price_uncorect");
-          }
-        }
-      });
-    }
   };
 
   const handleImportChange = (e) => {
@@ -1040,7 +833,7 @@ const ImportExcel = ({ title, onRefresh }) => {
                                 >
                                   <Tooltip
                                     placement="top"
-                                    title={t("Chỉnh sửa")}
+                                    title={t("product.tooltip.update")}
                                     arrow
                                   >
                                     <EditIcon
@@ -1075,7 +868,7 @@ const ImportExcel = ({ title, onRefresh }) => {
                                       }}
                                     >
                                       <span>
-                                        {!value && "Chưa có thông tin"}
+                                        {!value && t("product.tooltip.no_info")}
                                       </span>{" "}
                                       <span
                                         style={{
@@ -1084,8 +877,8 @@ const ImportExcel = ({ title, onRefresh }) => {
                                       >
                                         {t(
                                           col.status
-                                            ? "(Bắt buộc)"
-                                            : "(Không bắt buộc)"
+                                            ? t("product.tooltip.required")
+                                            : t("product.tooltip.no_required")
                                         )}
                                       </span>
                                     </div>
@@ -1120,7 +913,7 @@ const ImportExcel = ({ title, onRefresh }) => {
               <div className="flex justify-content-between">
                 <div>
                   {addSuccessImportList - dataSource.length}/{addSuccessImportList}{" "}
-                  được thêm thành công
+                  {t("product.add_success")}
                 </div>
                 <div>
                   <Button
@@ -1153,11 +946,8 @@ const ImportExcel = ({ title, onRefresh }) => {
                   </Button>
                 </div>
               </div>
-              {showMessage === true &&  <div style={{ width: "70%", color:"red" }}>
-                <i>* Đã có dữ liệu không đúng, xin hãy kiểm tra lại! (đưa con trỏ
-                vào dòng bôi đỏ để biết thông tin chi tiết dữ liệu sai, bạn có
-                thể click vào hình cây viết để thực hiện sửa hoặc sửa trên file
-                excel gốc rồi import lại)". Khi có ít nhất 1 dòng bị lỗi!</i>
+              {showMessage === true &&  <div style={{ width: "70%", color:"red", fontSize:'12px' }}>
+                <i>{t("product.imp_excel.err_import_excel")}</i>
               </div>}
             </div>
           </CardActions>
