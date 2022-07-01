@@ -27,6 +27,7 @@ import sendRequest from "../../utils/service/sendReq";
 import reqFunction from "../../utils/constan/functions";
 import glb_sv from "../../utils/service/global_service";
 import control_sv from "../../utils/service/control_services";
+import SnackBarService from "../../utils/service/snackbar_service";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import { ReactComponent as IC_DOCUMENT_FOLDER } from "../../asset/images/document-folder.svg";
@@ -580,13 +581,25 @@ const ImportExcel = ({ title, onRefresh }) => {
         setProcess(false)
       }
     } else if (message["PROC_DATA"]) {
-      if (dataSource.length === 1) {
-        setDataSource([]);
-        setShouldOpenModal(false);
-        setShowMessage(false)
-        setProcess(false)
-      }else if(i === dataSource.length - 1){
+      // if (dataSource.length === 1) {
+      //   setDataSource([]);
+      //   setShouldOpenModal(false);
+      //   setShowMessage(false)
+      //   setProcess(false)
+      // }else 
+      if(i === dataSource.length - 1){
+        if(dataAddExcelFaild.current.length===0){
+          SnackBarService.alert(
+            "Nhập dữ liệu từ file excel thành công",
+            true,
+            1,
+            3000
+          );
+          setShowMessage(false)
+          setShouldOpenModal(false);
+        }
         setDataSource(dataAddExcelFaild.current);
+        setProcess(false)
       }
     }
   };
