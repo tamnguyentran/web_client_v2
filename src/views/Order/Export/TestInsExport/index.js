@@ -1684,7 +1684,7 @@ const InsExport = () => {
           </Card>
           <Card
             className="list-product-bottom"
-            style={{height:'47% - 8px'}}
+            style={{height:'calc(47% - 8px)', position:'relative'}}
           >
             <CardHeader
               title={t("product.titleList")}
@@ -1729,7 +1729,7 @@ const InsExport = () => {
                 </div>
               }
             />
-            <CardContent style={{ height: "calc(35vh - 3px)", overflow: "auto" }}>
+            <CardContent style={{ maxHeight: "calc(35vh - 2px)", overflow: "auto" }}>
               <MuiThemeProvider theme={theme}>
                 <Grid container spacing={2}>
                   {listInventory.map((item, index) => {
@@ -1791,7 +1791,7 @@ const InsExport = () => {
                 </Grid>
               </MuiThemeProvider>
             </CardContent>
-            <CardActions disableSpacing>
+            <CardActions disableSpacing style={{position: "absolute", bottom: 0, width: "100%"}}>
               <div className="d-flex align-items-center">
                 <Chip
                   size="small"
