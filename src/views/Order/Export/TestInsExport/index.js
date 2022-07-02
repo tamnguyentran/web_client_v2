@@ -3,6 +3,7 @@ import "./Export.css";
 import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router";
 import TextImage from "../../../../components/TextImage";
 import Modal from "../../../../components/Modal/View";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
@@ -148,6 +149,8 @@ const theme = createTheme({
 });
 const InsExport = () => {
   const { t } = useTranslation();
+  const history = useHistory();
+  const id = history?.location?.state?.id || 0;
   const [Export, setExport] = useState({ ...invoiceExportModal });
   const [customerSelect, setCustomerSelect] = useState("");
   const [dataSource, setDataSource] = useState([]);
@@ -252,6 +255,17 @@ const InsExport = () => {
       searchModal.invent_yn
     );
   }, [dataSource, searchModal]);
+
+  useEffect(() => {
+    if (id !== 0) {
+      newInvoiceId.current = id
+      handleRefresh();
+      setOpenModalShowBill(false);
+      setInvoiceFlag(true);
+      setIsIndexRow(null);
+      setDisableUpdateInvoice(false);
+    }
+  }, []);
 
   useEffect(() => {
     getListInvoice(
@@ -1820,6 +1834,12 @@ const InsExport = () => {
                       >
                         <HistoryIcon
                           onClick={() => {
+                            dataHistoryListInvoiceRef.current = []
+                            getListInvoice(
+                              searchModalInvoice.start_dt, 
+                              searchModalInvoice.end_dt, 
+                              searchModalInvoice.last_id
+                            );
                             setOpenModalShowBill((pre) => !pre);
                           }}
                         />
@@ -2061,7 +2081,7 @@ const InsExport = () => {
           </Card>
         </Grid>
 
-        <div className="display-none">
+        <div className="dl-none">
           <Export_Bill
             headerModal={Export}
             detailModal={dataSource}

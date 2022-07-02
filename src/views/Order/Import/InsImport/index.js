@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect, memo } from "react";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router";
 import {
   Grid,
   Button,
@@ -112,6 +113,8 @@ const serviceInfo = {
 
 const ProductImport = () => {
   const { t } = useTranslation();
+  const history = useHistory();
+  const id  = history?.location?.state?.id || 0;
   const [Import, setImport] = useState({ ...invoiceImportModal });
   const [supplierSelect, setSupplierSelect] = useState("");
   const [dataSource, setDataSource] = useState([]);
@@ -210,6 +213,22 @@ const ProductImport = () => {
       searchModalInvoice.vender_nm
     );
   }, [openModalShowBill]);
+
+  useEffect(() => {
+    if (id !== 0) {
+      newInvoiceId.current = id;
+      handleRefresh()
+      setOpenModalShowBill(false);
+      setInvoiceFlag(true);
+      setDisableUpdateInvoice(false);
+    }
+    return () => {
+      history.replace({
+        ...history?.location,
+        state: undefined,
+      });
+    };
+  }, []);
 
   const getListBill = (startdate, endDate, last_id, id_status, vender_nm) => {
     // setSearchProcess(true)

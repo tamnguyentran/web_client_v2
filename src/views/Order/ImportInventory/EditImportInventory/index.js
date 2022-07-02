@@ -177,6 +177,7 @@ const EditImportInventory = ({}) => {
         : "",
       productObject.price,
     ];
+    console.log(inputParam)
     sendRequest(
       serviceInfo.ADD_PRODUCT_TO_INVOICE,
       inputParam,
@@ -342,21 +343,21 @@ const EditImportInventory = ({}) => {
   });
 
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} className="w-100 mr-0">
       <EditProductRows
         productEditID={productEditID}
         invoiceID={newInvoiceID.current}
         onRefresh={handleRefresh}
         setProductEditID={setProductEditID}
       />
-      <Grid item md={9} xs={12}>
+      <Grid item md={9} xs={12} className="h-100">
         <AddProductClone
           onAddProduct={handleAddProduct}
           resetFlag={resetFormAddFlag}
         />
         <Card>
           <CardHeader
-            title={t("order.import.productImportListdd")}
+            title={t("order.import.productImportList")}
             action={
               <ExportExcel
                 filename={`import_inventory_${ImportInventory.invoice_no}`}
@@ -372,7 +373,7 @@ const EditImportInventory = ({}) => {
                 <caption
                   className={[
                     "text-center text-danger border-bottom",
-                    dataSource.length > 0 ? "d-none" : "",
+                    dataSource.length > 0 ? "dl-none" : "",
                   ].join(" ")}
                 >
                   {t("lbl.emptyData")}
@@ -491,8 +492,8 @@ const EditImportInventory = ({}) => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item md={3} xs={12}>
-        <Card>
+      <Grid item md={3} xs={12} >
+        <Card className="h-100">
           <CardHeader title={t("order.import.invoice_info")} />
           <CardContent>
             <Grid container spacing={1}>
@@ -556,7 +557,7 @@ const EditImportInventory = ({}) => {
         </Card>
       </Grid>
 
-      <div className="" style={{ display: "none" }}>
+      <div className="dl-none">
         <Import_Inventory_Bill
           headerModal={ImportInventory}
           detailModal={dataSource}

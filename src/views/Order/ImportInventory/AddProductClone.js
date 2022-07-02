@@ -6,6 +6,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import Product_Autocomplete from '../../Products/Product/Control/Product.Autocomplete'
 import Unit_Autocomplete from '../../Config/Unit/Control/Unit.Autocomplete'
 import { productImportModal } from './Modal/ImportInventory.modal'
+import Breadcrumb from "../../../components/Breadcrumb/View";
 import NumberFormat from 'react-number-format'
 import moment from 'moment'
 
@@ -199,7 +200,9 @@ const AddProduct = ({ onAddProduct, resetFlag }) => {
 
     return (
         <Card className="mb-2">
-            <CardHeader title={t('order.import.productAdd')} />
+            <CardHeader title={
+                <div className="flex aligh-item-center">{<Breadcrumb />}</div>
+            }/>
             <CardContent>
                 <Grid container spacing={1}>
                     <Grid item xs={4}>

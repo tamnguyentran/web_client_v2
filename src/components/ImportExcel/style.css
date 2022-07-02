@@ -1,0 +1,10 @@
+.btn-import-excel{
+    color: #fff;
+    border: 1px solid #fff;
+    max-height: 22px;
+}
+.err-message-import-excel{
+    width: 70%;
+    color: red;
+    font-size: 12px;
+}

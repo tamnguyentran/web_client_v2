@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import * as XLSX from "xlsx";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
+import './style.css'
+
 import {
   Button,
   Dialog,
@@ -729,11 +731,7 @@ const ImportExcel = ({ title, onRefresh }) => {
         variant="outlined"
         startIcon={<PublishIcon />}
         onClick={handleShowModal}
-        style={{
-          color: "var(--white)",
-          border: "1px solid white",
-          maxHeight: 22,
-        }}
+        className="btn-import-excel"
       >
         {t("product.import_excel")}
       </Button>
@@ -771,7 +769,7 @@ const ImportExcel = ({ title, onRefresh }) => {
           <CardContent>
             <input
               title="Chọn file excel"
-              style={{ display: "none" }}
+              className="dl-none"
               id="container-upload-file"
               type="file"
               accept=".xlsx, .xls, .csv"
@@ -780,11 +778,11 @@ const ImportExcel = ({ title, onRefresh }) => {
                 e.target.value = ""
               }}
             />
-            <label for="container-upload-file" style={{ width: "100%" }}>
+            <label for="container-upload-file" className="w-100">
               <Button
                 variant="contained"
                 component="span"
-                style={{ width: "100%" }}
+                className="w-100"
               >
                 <IC_DOCUMENT_FOLDER />{" "}
                 {fileSelected !== "" ? `(${fileSelected})` : t("choose_file")}
@@ -814,17 +812,17 @@ const ImportExcel = ({ title, onRefresh }) => {
                       dataSource?.map((item, index) => {
                         return (
                           <TableRow
-                            style={{
-                              border: !(
-                                item.name &&
-                                item.unitID &&
-                                item.groupID
-                              )
-                                ? "1.5px solid red"
-                                : item?.warning
-                                ? "1.5px solid orange"
-                                : "",
-                            }}
+                            // style={{
+                            //   border: !(
+                            //     item.name &&
+                            //     item.unitID &&
+                            //     item.groupID
+                            //   )
+                            //     ? "1.5px solid red"
+                            //     : item?.warning
+                            //     ? "1.5px solid orange"
+                            //     : "",
+                            // }}
                             onClick={() => handleEditRow(item, index)}
                             className={
                               item.groupID === null || item.unitID === null
@@ -858,7 +856,7 @@ const ImportExcel = ({ title, onRefresh }) => {
                                     <Tooltip
                                       placement="top"
                                       title={
-                                        <div style={{ fontSize: "13px" }}>
+                                        <div className="fz13">
                                           {t(item?.warning)}
                                         </div>
                                       }
@@ -875,11 +873,7 @@ const ImportExcel = ({ title, onRefresh }) => {
                                 <Tooltip
                                   placement="top"
                                   title={
-                                    <div
-                                      style={{
-                                        fontSize: "13px",
-                                      }}
-                                    >
+                                    <div className="fz13">
                                       <span>
                                         {!value && t("product.tooltip.no_info")}
                                       </span>{" "}
@@ -959,7 +953,7 @@ const ImportExcel = ({ title, onRefresh }) => {
                   </Button>
                 </div>
               </div>
-              {showMessage === true &&  <div style={{ width: "70%", color:"red", fontSize:'12px' }}>
+              {showMessage === true &&  <div className="err-message-import-excel">
                 <i>{t("product.imp_excel.err_import_excel")}</i>
               </div>}
             </div>

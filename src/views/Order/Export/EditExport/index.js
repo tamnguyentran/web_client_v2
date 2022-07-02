@@ -497,7 +497,7 @@ const EditExport = ({}) => {
         />
         <Card>
           <CardHeader
-            title={t("order.export.productExportList")}
+            title={t("order.export.productExportListvsvs")}
             action={
               <ExportExcel
                 filename={`export_${Export.invoice_no}`}

@@ -568,10 +568,6 @@ tr.warning td {
     font-weight: 500;
 }
 
-.display-none{
-    display: none !important;
-}
-
 .insImport .tableContainer {
     height: calc(100vh - 300px) !important;
     border-left: 1px solid #e0e0e0;

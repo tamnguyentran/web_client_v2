@@ -445,7 +445,7 @@ const ExportList = () => {
                                       item["o_3"] === "2" ? true : false
                                     }
                                     onClick={(e) => {
-                                      history.push("/page/order/edit-export", {
+                                      history.push("/page/order/ins-exportt", {
                                         id: item.o_1,
                                       });
                                     }}

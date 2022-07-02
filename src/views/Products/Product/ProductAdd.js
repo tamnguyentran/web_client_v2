@@ -155,6 +155,7 @@ const ProductAdd = ({ onRefresh }) => {
         if (prodNameRef.current) prodNameRef.current.focus();
       }, 100);
     } else if (message["PROC_DATA"]) {
+      setImageUrl("")
       onRefresh();
       if (saveContinue.current) {
         resetForm();
@@ -1228,6 +1229,7 @@ const ProductAdd = ({ onRefresh }) => {
                   type="file"
                   onChange={(e) => {
                     handleChangeImage(e);
+                    e.target.value = ""
                   }}
                 />
               </div>
