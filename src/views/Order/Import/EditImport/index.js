@@ -585,7 +585,7 @@ const EditImport = ({}) => {
                         
                     </div> */}
           <CardHeader
-            title={t("order.import.productImportListvsvs  ")}
+            title={t("order.import.productImportList")}
             action={
               <ExportExcel
                 filename={`import_${Import.invoice_no}`}

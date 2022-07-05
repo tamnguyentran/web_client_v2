@@ -76,7 +76,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import { ContactlessOutlined } from "@material-ui/icons";
+// import { ContactlessOutlined } from "@material-ui/icons";
 
 const serviceInfo = {
   GET_INVOICE_BY_ID: {
@@ -1001,7 +1001,6 @@ const InsExport = () => {
   };
 
   const showIconSort = () => {
-
     switch (sortColumn?.status) {
       case "DSC":
         return <ExpandLessIcon/>

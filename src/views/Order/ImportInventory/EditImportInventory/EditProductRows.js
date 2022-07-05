@@ -161,6 +161,8 @@ const EditProductRows = ({ productEditID, invoiceID, onRefresh, setProductEditID
         return true
     }
 
+    
+
     return (
         <>
             <Dialog

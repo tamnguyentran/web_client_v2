@@ -151,6 +151,7 @@ const ProductImport = () => {
   const dataWaitAdd = useRef([]);
   const newInvoiceId = useRef(-1);
   const dataSourceRef = useRef([]);
+  const dataRef = useRef([])
   const importDataRef = useRef(invoiceImportModal);
   const totalProductCountAdded = useRef(0);
   const step1Ref = useRef(null);
@@ -298,6 +299,7 @@ const ProductImport = () => {
       3000
     );
     dataSourceRef.current = [];
+    dataRef.current = [];
     totalProductCountAdded.current = 0;
     importDataRef.current = invoiceImportModal;
     setImport({ ...invoiceImportModal });
@@ -417,6 +419,7 @@ const ProductImport = () => {
         productObject.discount_per,
         productObject.vat_per,
       ];
+      console.log("inputParam",inputParam)
       sendRequest(
         serviceInfo.ADD_PRODUCT_TO_INVOICE,
         inputParam,
@@ -718,6 +721,7 @@ const ProductImport = () => {
     } else if (message["PROC_DATA"]) {
       // xử lý thành công
       let newData = message["PROC_DATA"];
+      dataRef.current = newData.rows
       setDataSource(newData.rows);
     }
   };
@@ -940,13 +944,13 @@ const ProductImport = () => {
     if (e.target.value === "") {
       handleRefresh();
     } else {
-      debouncedSave({ value: e.target.value, dataSource });
+      debouncedSave({ value: e.target.value, dataRef: dataRef.current });
     }
   };
 
   const debouncedSave = useCallback(
     debounce((data) => {
-      let result = data.dataSource.filter((item) => {
+      let result = data.dataRef.filter((item) => {
         return (
           data.value.search(item.o_6) != -1 || item.o_6.search(data.value) != -1
         );
@@ -1097,8 +1101,8 @@ const ProductImport = () => {
           style={{ height: "160px" }}
         />
         <Card style={{ height: "calc(100% - 168px)" }}>
-          <CardHeader title={t("order.import.productImportListbdb")} />
-          <CardContent className="insImport">
+          <CardHeader title={t("order.import.productImportList")} />
+          <CardContent className="insImportTable">
             <div className="flex justify-content-between aligh-item-center mb-1">
               <div className="flex aligh-item-center">
                 <TextField
@@ -1170,7 +1174,7 @@ const ProductImport = () => {
           handlePrint={handlePrint}
         />
       </Grid>
-      <div className="" style={{ display: "none" }}>
+      <div className="dl-none">
         <Import_Bill
           headerModal={Import}
           detailModal={dataSource}
