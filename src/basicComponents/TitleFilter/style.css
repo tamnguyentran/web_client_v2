@@ -1,0 +1,5 @@
+.title-filter {
+  color: var(--greenPrimary);
+  font-weight: bold;
+  border-bottom: 3px solid var(--greenPrimary);
+}

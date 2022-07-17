@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import "./style.css";
 import { useTranslation } from "react-i18next";
 import {
   Card,
@@ -19,6 +20,13 @@ import {
   Grid,
   TextField,
   Avatar,
+  Divider,
+  Checkbox,
+  FormControlLabel,
+  Collapse,
+  Box,
+  Paper,
+  TableFooter,
 } from "@material-ui/core";
 import TextImage from "../../../components/TextImage";
 import EditIcon from "@material-ui/icons/Edit";
@@ -30,6 +38,11 @@ import LoopIcon from "@material-ui/icons/Loop";
 import ColumnCtrComp from "../../../components/_ColumnCtr";
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import AutorenewIcon from "@material-ui/icons/Autorenew";
 
 import glb_sv from "../../../utils/service/global_service";
 import control_sv from "../../../utils/service/control_services";
@@ -37,7 +50,7 @@ import SnackBarService from "../../../utils/service/snackbar_service";
 import sendRequest from "../../../utils/service/sendReq";
 import reqFunction from "../../../utils/constan/functions";
 
-import { tableColumn, config } from "./Modal/Product.modal";
+import { tableColumn, config, tableColumnDetail } from "./Modal/Product.modal";
 import ProductAdd from "./ProductAdd";
 import ProductEdit from "./ProductEdit";
 import SearchOne from "../../../components/SearchOne";
@@ -45,7 +58,24 @@ import ExportExcel from "../../../components/ExportExcel";
 import DisplayColumn from "../../../components/DisplayColumn";
 import ImportExcel from "../../../components/ImportExcel";
 import Breadcrumb from "../../../components/Breadcrumb/View";
+import { ReactComponent as IC_SHAPE } from "../../../asset/images/shape.svg";
+import { ReactComponent as IC_VECTOR } from "../../../asset/images/vector.svg";
+import { ReactComponent as IC_ADD } from "../../../asset/images/add.svg";
+import { ReactComponent as IC_LIST } from "../../../asset/images/list.svg";
+import { ReactComponent as IC_TRASH } from "../../../asset/images/trash.svg";
+import { ReactComponent as IC_EDIT } from "../../../asset/images/edit.svg";
+import { ReactComponent as IC_UNLOCK } from "../../../asset/images/unlock.svg";
+import { ReactComponent as IC_LOCK } from "../../../asset/images/lock.svg";
 import { useHotkeys } from "react-hotkeys-hook";
+
+import {
+  CheckBoxCpn,
+  TitleFilterCpn,
+  TextFieldCpn,
+  AutocompleteCpn,
+} from "../../../basicComponents";
+
+import { useHistory } from "react-router-dom";
 
 const serviceInfo = {
   GET_ALL: {
@@ -69,6 +99,7 @@ const serviceInfo = {
 };
 
 const ProductList = () => {
+  let history = useHistory();
   const { t } = useTranslation();
   const [anChorEl, setAnChorEl] = useState(null);
   const [column, setColumn] = useState(tableColumn);
@@ -86,6 +117,9 @@ const ProductList = () => {
   const [id, setId] = useState(0);
   const [imgValue, setImgValue] = useState("");
   const [name, setName] = useState("");
+  const [openShowTableDetail, setOpenShowTableDetail] = useState(0);
+
+  const [showLayoutFilter, setShowLayoutFilter] = useState(false);
 
   const dataSourceRef = useRef([]);
   const searchRef = useRef("");
@@ -331,7 +365,268 @@ const ProductList = () => {
 
   return (
     <>
-      <Card className="mb-2">
+      <div className="product p-2">
+        <div className={`filter-product ${showLayoutFilter && "dl-none"}`}>
+          <div className="p-2 pt-2">
+            <div className="mb-4">
+              <TitleFilterCpn className="mb-2" label="Tìm kiếm" />
+              <TextFieldCpn label="Tên sản phẩm" />
+            </div>
+            <div className="mb-4">
+              <TitleFilterCpn className="mb-2" label="Lọc theo loại hàng" />
+              <TextFieldCpn label="Nhóm sản phẩm" />
+            </div>
+            <TitleFilterCpn className="mb-2" label="Lọc theo tồn kho" />
+            <div>
+              <div>
+                <CheckBoxCpn label="Còn hàng" />
+              </div>
+              <div>
+                <CheckBoxCpn label="Hết hàng" />
+              </div>
+              <div>
+                <CheckBoxCpn label="Vượt định mức tồn" />
+              </div>
+              <div>
+                <CheckBoxCpn label="Hàng cảnh báo hết HSD" />
+              </div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+        <div className={`table-product ${showLayoutFilter && "w-100"}`}>
+          <div
+            className="btn-show-layout"
+            onClick={() => {
+              setShowLayoutFilter((pre) => !pre);
+            }}
+          >
+            {showLayoutFilter ? (
+              <ChevronRightIcon style={{ margin: "3px", color: "#fff" }} />
+            ) : (
+              <ChevronLeftIcon style={{ margin: "3px", color: "#fff" }} />
+            )}
+          </div>
+          <div className="product-header">
+            <div>
+              <Breadcrumb />
+              <div className="mt-2 text-black">
+                Đây là trang giúp bạn tìm kiếm thông tin sản phẩm mà nhà thuốc
+                đang kinh doanh theo các điều kiện lọc bên trái
+              </div>
+            </div>
+            <div className="flex">
+              <Button
+                style={{ height: "40px" }}
+                size="medium"
+                className="primary-bg text-white"
+                variant="contained"
+                onClick={() => {
+                  history.push({
+                    pathname: "/page/products/add-product",
+                  });
+                }}
+              >
+                <IC_ADD className="pr-1" />
+                <div>Thêm mới SP</div>
+              </Button>
+              <button className="btn-custom ml-2 mr-2">
+                <IC_VECTOR className="pr-1" />
+                <div>Nhập từ Excel</div>
+              </button>
+              <button className="btn-custom">
+                <IC_LIST />
+              </button>
+            </div>
+          </div>
+          <div className="product-content p-3">
+            <TableContainer className="table-list-product">
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow>
+                    {column?.map((col) => (
+                      <TableCell
+                        nowrap="true"
+                        className={[
+                          "p-2 border-0",
+                          col.show ? "d-table-cell" : "dl-none",
+                        ].join(" ")}
+                        key={col.field}
+                        style={{ color: "rgb(113 110 110)" }}
+                      >
+                        {t(col.title)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dataSource?.length > 0 &&
+                    dataSource?.map((item, index) => {
+                      return (
+                        <>
+                          <TableRow
+                            style={{ height: "50px" }}
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={index}
+                            onClick={() => {
+                              setOpenShowTableDetail((pre) =>
+                                pre === index + 1 ? null : index + 1
+                              );
+                            }}
+                          >
+                            {column?.map((col, indexRow) => {
+                              let value = item[col.field];
+                              if (col.show) {
+                                switch (col.field) {
+                                  case "stt":
+                                    return (
+                                      <TableCell
+                                        nowrap="true"
+                                        key={indexRow}
+                                        align={col.align}
+                                        className="fz14"
+                                      >
+                                        {index + 1}
+                                      </TableCell>
+                                    );
+                                  case "o_19":
+                                    return (
+                                      <TableCell
+                                        nowrap="true"
+                                        key={indexRow}
+                                        align={col.align}
+                                        className="fz14"
+                                      >
+                                        <Avatar
+                                          variant="square"
+                                          className="m-1 small-avata"
+                                          src={`http://171.244.133.198/upload/product/${item.o_19}`}
+                                        >
+                                          <TextImage className="fz14" />
+                                        </Avatar>
+                                      </TableCell>
+                                    );
+
+                                  case "action":
+                                    return (
+                                      <TableCell
+                                        nowrap="true"
+                                        key={indexRow}
+                                        align={col.align}
+                                      >
+                                        <IconButton
+                                          className="mr-2 p-2"
+                                          style={{
+                                            background: "#BAE7D9",
+                                          }}
+                                          onClick={(e) => {
+                                            onEdit(item);
+                                          }}
+                                        >
+                                          <IC_EDIT />
+                                        </IconButton>
+                                        <IconButton
+                                          className="mr-2 p-2"
+                                          style={{
+                                            background: "#FFA15C",
+                                          }}
+                                          onClick={(e) => {
+                                            onRemove(item);
+                                          }}
+                                        >
+                                          <IC_TRASH />
+                                        </IconButton>
+                                        {glb_sv.userLev === "0" && (
+                                          <Tooltip
+                                            title={
+                                              t(
+                                                item["o_23"] === "Y"
+                                                  ? "product.unblock_yn"
+                                                  : "product.block_yn"
+                                              ) + "?"
+                                            }
+                                          >
+                                            {item["o_23"] === "N" ? (
+                                              <IconButton
+                                                className="mr-2 p-2"
+                                                style={{
+                                                  background: "#BAE7D9",
+                                                }}
+                                                onClick={(e) => {
+                                                  onLock(item);
+                                                }}
+                                              >
+                                                <IC_UNLOCK />
+                                              </IconButton>
+                                            ) : (
+                                              <IconButton
+                                                className="mr-2 p-2"
+                                                onClick={(e) => {
+                                                  onLock(item);
+                                                }}
+                                                style={{
+                                                  background: "#FEE2E2",
+                                                }}
+                                              >
+                                                <IC_LOCK />
+                                              </IconButton>
+                                            )}
+                                          </Tooltip>
+                                        )}
+                                      </TableCell>
+                                    );
+                                  default:
+                                    return (
+                                      <TableCell
+                                        nowrap="true"
+                                        key={indexRow}
+                                        align={col.align}
+                                        className="fz14"
+                                      >
+                                        {glb_sv.formatValue(value, col["type"])}
+                                      </TableCell>
+                                    );
+                                }
+                              }
+                            })}
+                          </TableRow>
+                        </>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+          <div className="product-footer p-2">
+            Hiển thị{" "}
+            {dataSourceRef.current.length +
+              "/" +
+              totalRecords +
+              " " +
+              t("rowData")}
+            <button
+              className="btn-custom ml-3 mr-2"
+              disabled={dataSourceRef.current.length >= totalRecords}
+              onClick={getNextData}
+              style={{
+                background:
+                  dataSourceRef.current.length >= totalRecords &&
+                  "var(--gray3)",
+              }}
+            >
+              <IC_SHAPE className="pr-1" /> Lấy thêm dữ liệu{" "}
+              {searchProcess && <AutorenewIcon />}
+            </button>
+            <button className="btn-custom">
+              <IC_VECTOR className="pr-1" />
+              <div>Xuất ra Excel</div>
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* <Card className="mb-2">
         <CardHeader
           title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
         />
@@ -344,215 +639,312 @@ const ProductList = () => {
             searchSubmit={searchSubmit}
           />
         </CardContent>
-      </Card>
-      <ColumnCtrComp
+      </Card> */}
+      {/* <ColumnCtrComp
         anchorEl={anChorEl}
         columns={tableColumn}
         handleClose={onCloseColumn}
         checkColumnChange={onChangeColumnView}
-      />
-      <Card>
-        <CardHeader
-          title={
-            <>
-              {t("product.titleList")}
-              <DisplayColumn
-                columns={tableColumn}
-                handleCheckChange={onChangeColumnView}
-              />
-            </>
-          }
-          action={
-            <div className="d-flex align-items-center">
-              <ImportExcel onRefresh={handleRefresh} />
-              &ensp;
-              <ProductAdd onRefresh={handleRefresh} />
-            </div>
-          }
-        />
-        <CardContent>
-          <TableContainer className="height-table-260 tableContainer tableReport">
-            <Table stickyHeader>
-              <caption
-                className={[
-                  "text-center text-danger border-bottom",
-                  dataSource.length > 0 ? "dl-none" : "",
-                ].join(" ")}
-              >
-                {t("lbl.emptyData")}
-              </caption>
-              <TableHead>
-                <TableRow>
-                  {column?.map((col) => (
-                    <TableCell
-                      nowrap="true"
-                      className={[
-                        "p-2 border-0",
-                        col.show ? "d-table-cell" : "dl-none",
-                      ].join(" ")}
-                      key={col.field}
-                    >
-                      {t(col.title)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dataSource?.length > 0 &&
-                  dataSource?.map((item, index) => {
-                    return (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                        {column?.map((col, indexRow) => {
-                          let value = item[col.field];
-                          if (col.show) {
-                            switch (col.field) {
-                              case "stt":
-                                return (
-                                  <TableCell
-                                    nowrap="true"
-                                    key={indexRow}
-                                    align={col.align}
-                                  >
-                                    {index + 1}
-                                  </TableCell>
-                                );
-                              case "action":
-                                return (
-                                  <TableCell
-                                    nowrap="true"
-                                    key={indexRow}
-                                    align={col.align}
-                                  >
-                                    {glb_sv.userLev === "0" && (
-                                      <Tooltip
-                                        title={
-                                          t(
-                                            item["o_23"] === "Y"
-                                              ? "product.unblock_yn"
-                                              : "product.block_yn"
-                                          ) + "?"
-                                        }
-                                      >
-                                        {item["o_23"] === "N" ? (
-                                          <IconButton
-                                            onClick={(e) => {
-                                              onLock(item);
-                                            }}
-                                          >
-                                            <LockOpenIcon
-                                              color={"primary"}
-                                              className="cursor-pointer"
-                                            ></LockOpenIcon>
-                                          </IconButton>
-                                        ) : (
-                                          <IconButton>
-                                            <LockIcon
-                                              color={"error"}
-                                              className="cursor-pointer"
-                                              onClick={(e) => {
-                                                onLock(item);
-                                              }}
-                                            ></LockIcon>
-                                          </IconButton>
-                                        )}
-                                      </Tooltip>
-                                    )}
-                                    <IconButton
-                                      onClick={(e) => {
-                                        onRemove(item);
-                                      }}
-                                    >
-                                      <DeleteIcon
-                                        style={{ color: "red" }}
-                                        fontSize="small"
-                                      />
-                                    </IconButton>
-                                    <IconButton
-                                      onClick={(e) => {
-                                        onEdit(item);
-                                      }}
-                                    >
-                                      <EditIcon
-                                        color={"primary"}
-                                        fontSize="small"
-                                      />
-                                    </IconButton>
-                                  </TableCell>
-                                );
-                              case "o_19":
-                                return (
-                                  <TableCell
-                                    style={{ padding: "30px" }}
-                                    nowrap="true"
-                                    key={indexRow}
-                                    align={col.align}
-                                  >
-                                    <Avatar
-                                      variant="square"
-                                      style={{
-                                        height: "60px",
-                                        width: "60px",
-                                        margin: "10px",
-                                      }}
-                                      src={`http://171.244.133.198/upload/product/${item.o_19}`}
-                                    >
-                                      <TextImage className="fz14" />
-                                    </Avatar>
-                                  </TableCell>
-                                );
-                              default:
-                                return (
-                                  <TableCell
-                                    nowrap="true"
-                                    key={indexRow}
-                                    align={col.align}
-                                  >
-                                    {glb_sv.formatValue(value, col["type"])}
-                                  </TableCell>
-                                );
-                            }
-                          }
-                        })}
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
+      /> */}
 
-        <CardActions>
-          <div className="d-flex align-items-center">
-            <Chip
-              size="small"
-              variant="outlined"
-              className="mr-1"
-              label={
-                dataSourceRef.current.length +
-                "/" +
-                totalRecords +
-                " " +
-                t("rowData")
+      {/* <Grid container spacing={1} className="h-100">
+        <Grid item md={2} xs={12} className="h-100">
+          <Card className="h-100">
+            <CardHeader title={"Tìm kiếm"} />
+            <CardContent className="h-100">
+              <div>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Tên sản phẩm"
+                  id="fullWidth"
+                  size="small"
+                />
+              </div>
+
+              <div style={{ marginTop: "10px" }}>
+                <div
+                  style={{
+                    borderBottom: "2px solid #066190",
+                    color: "#066190",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Lọc
+                </div>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Nhóm sản phẩm"
+                  id="fullWidth"
+                  size="small"
+                />
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="đơn sản phẩm"
+                  id="fullWidth"
+                  size="small"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item md={10} xs={12} className="h-100">
+          <Card className="h-100">
+            <CardHeader
+              title={
+                <>
+                  {t("product.titleList")}
+                  <DisplayColumn
+                    columns={tableColumn}
+                    handleCheckChange={onChangeColumnView}
+                  />
+                </>
+              }
+              action={
+                <div className="d-flex align-items-center">
+                  <ImportExcel onRefresh={handleRefresh} />
+                  &ensp;
+                  <ProductAdd onRefresh={handleRefresh} />
+                </div>
               }
             />
-            <Chip
-              variant="outlined"
-              size="small"
-              className="mr-1"
-              deleteIcon={<FastForwardIcon />}
-              onDelete={() => null}
-              label={t("getMoreData")}
-              onClick={getNextData}
-              disabled={dataSourceRef.current.length >= totalRecords}
-            />
-            <ExportExcel
-              filename="product"
-              data={dataCSV()}
-              headers={headersCSV}
-            />
-          </div>
-        </CardActions>
-      </Card>
+            <CardContent className="h-100" style={{ padding: "0px" }}>
+              <TableContainer
+                className="height-table-260 tableContainer tableReport"
+                style={{ padding: "0px 10px" }}
+              >
+                <Table stickyHeader>
+                  <caption
+                    className={[
+                      "text-center text-danger border-bottom",
+                      dataSource.length > 0 ? "dl-none" : "",
+                    ].join(" ")}
+                  >
+                    {t("lbl.emptyData")}
+                  </caption>
+                  <TableHead>
+                    <TableRow>
+                      {column?.map((col) => (
+                        <TableCell
+                          nowrap="true"
+                          className={[
+                            "p-2 border-0",
+                            col.show ? "d-table-cell" : "dl-none",
+                          ].join(" ")}
+                          key={col.field}
+                        >
+                          {t(col.title)}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {dataSource?.length > 0 &&
+                      dataSource?.map((item, index) => {
+                        return (
+                          <>
+                            <TableRow
+                              hover
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={index}
+                            >
+                              {column?.map((col, indexRow) => {
+                                let value = item[col.field];
+                                if (col.show) {
+                                  switch (col.field) {
+                                    case "stt":
+                                      return (
+                                        <TableCell
+                                          nowrap="true"
+                                          key={indexRow}
+                                          align={col.align}
+                                        >
+                                          {index + 1}
+                                        </TableCell>
+                                      );
+                                    case "action":
+                                      return (
+                                        <TableCell
+                                          nowrap="true"
+                                          key={indexRow}
+                                          align={col.align}
+                                        >
+                                          {glb_sv.userLev === "0" && (
+                                            <Tooltip
+                                              title={
+                                                t(
+                                                  item["o_23"] === "Y"
+                                                    ? "product.unblock_yn"
+                                                    : "product.block_yn"
+                                                ) + "?"
+                                              }
+                                            >
+                                              {item["o_23"] === "N" ? (
+                                                <IconButton
+                                                  onClick={(e) => {
+                                                    onLock(item);
+                                                  }}
+                                                >
+                                                  <LockOpenIcon
+                                                    color={"primary"}
+                                                    className="cursor-pointer"
+                                                  ></LockOpenIcon>
+                                                </IconButton>
+                                              ) : (
+                                                <IconButton>
+                                                  <LockIcon
+                                                    color={"error"}
+                                                    className="cursor-pointer"
+                                                    onClick={(e) => {
+                                                      onLock(item);
+                                                    }}
+                                                  ></LockIcon>
+                                                </IconButton>
+                                              )}
+                                            </Tooltip>
+                                          )}
+                                          <IconButton
+                                            onClick={(e) => {
+                                              onRemove(item);
+                                            }}
+                                          >
+                                            <DeleteIcon
+                                              style={{ color: "red" }}
+                                              fontSize="small"
+                                            />
+                                          </IconButton>
+                                          <IconButton
+                                            onClick={(e) => {
+                                              onEdit(item);
+                                            }}
+                                          >
+                                            <EditIcon
+                                              color={"primary"}
+                                              fontSize="small"
+                                            />
+                                          </IconButton>
+                                        </TableCell>
+                                      );
+                                    case "o_19":
+                                      return (
+                                        <TableCell
+                                          style={{ padding: "30px" }}
+                                          nowrap="true"
+                                          key={indexRow}
+                                          align={col.align}
+                                        >
+                                          <Avatar
+                                            variant="square"
+                                            style={{
+                                              height: "60px",
+                                              width: "60px",
+                                              margin: "10px",
+                                            }}
+                                            src={`http://171.244.133.198/upload/product/${item.o_19}`}
+                                          >
+                                            <TextImage className="fz14" />
+                                          </Avatar>
+                                        </TableCell>
+                                      );
+                                    default:
+                                      return (
+                                        <TableCell
+                                          nowrap="true"
+                                          key={indexRow}
+                                          align={col.align}
+                                        >
+                                          {glb_sv.formatValue(
+                                            value,
+                                            col["type"]
+                                          )}
+                                        </TableCell>
+                                      );
+                                  }
+                                }
+                              })}
+                            </TableRow>
+
+                            <TableRow>
+                              <TableCell colSpan={12}>
+                                bdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbd
+                              </TableCell>
+                            </TableRow>
+                          </>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <CardActions>
+                <div className="d-flex align-items-center">
+                  <Chip
+                    size="small"
+                    variant="outlined"
+                    className="mr-1"
+                    label={
+                      dataSourceRef.current.length +
+                      "/" +
+                      totalRecords +
+                      " " +
+                      t("rowData")
+                    }
+                  />
+                  <Chip
+                    variant="outlined"
+                    size="small"
+                    className="mr-1"
+                    deleteIcon={<FastForwardIcon />}
+                    onDelete={() => null}
+                    label={t("getMoreData")}
+                    onClick={getNextData}
+                    disabled={dataSourceRef.current.length >= totalRecords}
+                  />
+                  <ExportExcel
+                    filename="product"
+                    data={dataCSV()}
+                    headers={headersCSV}
+                  />
+                </div>
+              </CardActions>
+            </CardContent>
+
+            <CardActions>
+              <div className="d-flex align-items-center">
+                <Chip
+                  size="small"
+                  variant="outlined"
+                  className="mr-1"
+                  label={
+                    dataSourceRef.current.length +
+                    "/" +
+                    totalRecords +
+                    " " +
+                    t("rowData")
+                  }
+                />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  className="mr-1"
+                  deleteIcon={<FastForwardIcon />}
+                  onDelete={() => null}
+                  label={t("getMoreData")}
+                  onClick={getNextData}
+                  disabled={dataSourceRef.current.length >= totalRecords}
+                />
+                <ExportExcel
+                  filename="product"
+                  data={dataCSV()}
+                  headers={headersCSV}
+                />
+              </div>
+            </CardActions>
+          </Card>
+        </Grid>
+      </Grid> */}
 
       {/* modal delete */}
       <Dialog
@@ -577,9 +969,7 @@ const ProductList = () => {
         <Card>
           <CardHeader title={t("product.titleRemove", { name: name })} />
           <CardContent>{name}</CardContent>
-          <CardActions
-            className="align-items-end justify-content-end"
-          >
+          <CardActions className="align-items-end justify-content-end">
             <Button
               size="small"
               onClick={(e) => {
@@ -606,7 +996,6 @@ const ProductList = () => {
         </Card>
       </Dialog>
 
-      {/* modal lock product */}
       <Dialog
         maxWidth="xs"
         fullWidth={true}
@@ -698,7 +1087,6 @@ const ProductList = () => {
         </Card>
       </Dialog>
 
-      {/* modal edit */}
       <ProductEdit
         id={id}
         imgValue={imgValue}

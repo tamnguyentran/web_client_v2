@@ -493,7 +493,7 @@ const ModalUpdateProduct = (props) => {
                       style={{ width: "100%" }}
                       value={editModal.inven_price}
                       name="inven_price"
-                      label={t("product.inven_pricevsv")}
+                      label={t("product.inven_price")}
                       customInput={TextField}
                       autoComplete="off"
                       margin="dense"

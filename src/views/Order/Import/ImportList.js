@@ -331,7 +331,7 @@ const ImportList = () => {
   return (
     <>
       <Card className="mb-2">
-      <CardHeader
+        <CardHeader
           title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
         />
         <CardContent>
@@ -348,7 +348,7 @@ const ImportList = () => {
         <CardHeader
           title={
             <>
-              {t("order.import.titleListe")}
+              {t("order.import.titleLister")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}

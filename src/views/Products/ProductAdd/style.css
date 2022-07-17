@@ -1,0 +1,27 @@
+.product-add-header {
+  padding: 10px 8px;
+  background: var(--clrMain);
+  border-bottom: 2px solid var(--gray3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.product-add-content {
+  height: calc(100% - 150px) !important;
+  background: var(--clrMain) !important;
+  font-family: var(--fontMain) !important;
+}
+
+.product-add-content .MuiAccordionSummary-root {
+  height: 40px !important;
+  min-height: 35px !important;
+}
+
+.product-add-content .MuiAccordionSummary-content.Mui-expanded {
+  margin: 0 !important;
+}
+
+.MuiPaper-elevation1 {
+  box-shadow: none !important;
+  border: 1px solid #e7eaee;
+}

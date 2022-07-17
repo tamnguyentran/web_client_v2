@@ -12,7 +12,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  IconButton
+  IconButton,
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -57,9 +57,9 @@ import { ReactComponent as IC_SETTING_PHARMACY } from "../../asset/images/settin
 import { ReactComponent as IC_SETTING_USER } from "../../asset/images/setting-user.svg";
 import { ReactComponent as IC_SETTING_PERMISSION } from "../../asset/images/setting-permission.svg";
 import { ReactComponent as IC_SETTING_LOCK_ORDER } from "../../asset/images/setting-lock-order.svg";
-import LocalShippingIcon from '@material-ui/icons/LocalShipping'
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import LocalShippingIcon from "@material-ui/icons/LocalShipping";
+import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 
 const menuList = [
   {
@@ -422,22 +422,22 @@ const MenuView = ({ baseLink }) => {
 
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
-  const [positionIcon, setPositionIcon] = useState(true)
+  const [positionIcon, setPositionIcon] = useState(true);
 
   useEffect(() => {
-    function handleResize(){
-      setWindowHeight(window.innerHeight)
+    function handleResize() {
+      setWindowHeight(window.innerHeight);
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  },[])
+  }, []);
   useEffect(() => {
     glb_sv.commonEvent.subscribe((msg) => {
       if (msg.msgTp === glb_sv.setExpand) {
         // setExpand(msg.data)
       }
     });
-  },[]);
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -451,9 +451,9 @@ const MenuView = ({ baseLink }) => {
     setItemActive(item);
   };
 
-  const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop) 
-  const myRef = useRef(null)
-   const executeScroll = () => scrollToRef(myRef)
+  const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop);
+  const myRef = useRef(null);
+  const executeScroll = () => scrollToRef(myRef);
   return (
     <div
       className={["d-flex", style.iconExpand].join(" ")}
@@ -467,7 +467,10 @@ const MenuView = ({ baseLink }) => {
             alt=""
           />
         </div>
-        <div className={style.navbar} style={{position:"relative",scrollBehavior: "smooth"}}>
+        <div
+          className={style.navbar}
+          style={{ position: "relative", scrollBehavior: "smooth" }}
+        >
           {menuList.map((item, index) => {
             return (
               <React.Fragment key={item.key}>
@@ -673,21 +676,21 @@ const MenuView = ({ baseLink }) => {
               </div>
             </Link>
             <div
-              style={{ 
+              style={{
                 textAlign: "center",
-                bottom:0, 
-                cursor: "pointer", 
-                position:'sticky',
-                zIndex:'1000', 
-                marginLeft:'5px',
-                height:'25px'
+                bottom: 0,
+                cursor: "pointer",
+                position: "sticky",
+                zIndex: "1000",
+                marginLeft: "5px",
+                height: "25px",
               }}
             >
               <a href="#google">
                 {windowHeight < 800 && (
-                  <div style={{background:'#8797a5'}}> 
+                  <div style={{ background: "#8797a5" }}>
                     <KeyboardArrowDown
-                      style={{ color: "#000"}}
+                      style={{ color: "#000" }}
                       fontSize="middle"
                     />
                   </div>
@@ -696,7 +699,10 @@ const MenuView = ({ baseLink }) => {
             </div>
           </React.Fragment>
         </div>
-        <div style={{height:'100px'}} className={[style.navbar_item_avatar].join(" ")}>
+        <div
+          style={{ height: "100px" }}
+          className={[style.navbar_item_avatar].join(" ")}
+        >
           <div onClick={handleClick}>
             {/* <div
               style={{ textAlign: "center", height: "40px", cursor: "pointer" }}

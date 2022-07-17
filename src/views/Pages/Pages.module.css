@@ -1,24 +1,24 @@
 .app_page {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
 .contentPage {
-    overflow: auto !important;
-    height: calc(100vh) !important;
+  overflow: auto !important;
+  height: calc(100vh - 55px) !important;
 }
 
 .bgLightCustome {
-    background-color: #e1e3e4 !important;
+  background-color: #e1e3e4 !important;
 }
 
 .icon {
-    margin-right: spacing(0.5);
-    width: 15;
-    height: 15;
+  margin-right: spacing(0.5);
+  width: 15;
+  height: 15;
 }
 
 .breadText {
-    text-shadow: 0.2px 0.5px 0.5px #b7c5be;
+  text-shadow: 0.2px 0.5px 0.5px #b7c5be;
 }

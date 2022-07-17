@@ -112,7 +112,7 @@ const ExportList = () => {
       endDate,
       index || glb_sv.defaultValueSearch,
       status,
-      name?.trim() ? "%" + name?.trim() + "%" : "%%"
+      name?.trim() ? "%" + name?.trim() + "%" : "%%",
     ];
     setSearchProcess(true);
     sendRequest(
@@ -319,7 +319,7 @@ const ExportList = () => {
   return (
     <>
       <Card className="mb-2">
-      <CardHeader
+        <CardHeader
           title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
         />
         <CardContent>
@@ -336,7 +336,7 @@ const ExportList = () => {
         <CardHeader
           title={
             <>
-              {t("order.export.titleList")}
+              {t("order.export.titleListbebe")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}

@@ -1,0 +1,22 @@
+.autocomplete-style .MuiAutocomplete-input {
+  padding: 2px 4px !important;
+  font-size: 14px !important;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border: 1px solid rgba(0, 0, 0, 0.23);
+}
+
+.autocomplete-style
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  box-shadow: rgb(63 81 181 / 25%) 0px 0px 0px 0.2rem;
+  border: 1px solid rgb(63, 81, 181);
+}
+.MuiAutocomplete-option {
+  font-size: 14px !important;
+}
+
+.autocomplete-style .MuiInputLabel-formControl {
+  position: inherit !important;
+}

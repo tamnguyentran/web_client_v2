@@ -1,14 +1,26 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "@material-ui/core/styles";
 
-import { Breadcrumbs } from "@material-ui/core";
+import {
+  Breadcrumbs,
+  Collapse,
+  List,
+  ListItem,
+  ListItemText,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import style from "./Pages.module.css";
 import { Switch, Route, Redirect, useParams } from "react-router-dom";
 import LoadingView from "../../components/Loading/View";
 import { MenuView, menuList, menuAdmin } from "../../components/Menu/index";
+
+import { MenuView1 } from "../../components/Menu1/index";
+
 import HeaderView from "../../components/Header/index";
 
 import Dashboard from "../Dashboard/index";
@@ -91,28 +103,60 @@ const RenderBreadcrumb = () => {
 
 const Page = () => {
   const history = useHistory();
+  const theme = useTheme();
+  const [personName, setPersonName] = React.useState([]);
 
   useEffect(() => {
     if (!glb_sv.authFlag) {
       history.push("/login");
     }
   }, []);
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  function getStyles(name, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
 
   return (
     <div className={style.app_page}>
-      <div className="d-flex w-100">
-        <div id="menu_view">
+      <div className="w-100">
+        {/* <MenuView1/> */}
+        {/* <div id="menu_view">
           <MenuView baseLink={baseLink} />
+        </div> */}
+        <div>
+          <MenuView1 />
         </div>
         <div
           className={"w-100 " + style.bgLightCustome}
-          style={{ maxWidth: `calc(100vw - 100px)` }}
+          style={{ maxWidth: `calc(100vw)` }}
         >
-          {/* <header className="w-100">
-                        <HeaderView />
-                    </header> */}
           <div className="container-fluid">
-            <div className={["p-3", style.contentPage].join(" ")}>
+            <div className={[style.contentPage].join(" ")}>
               <Suspense fallback={<LoadingView />}>
                 {/* <RenderBreadcrumb /> */}
                 <Switch>
