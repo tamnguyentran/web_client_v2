@@ -1,43 +1,57 @@
-import { Grid, TextField, Button } from '@material-ui/core'
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import SearchIcon from '@material-ui/icons/Search'
-import LoopIcon from '@material-ui/icons/Loop'
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { TextFieldCpn } from "../../basicComponents";
+import AutorenewIcon from "@material-ui/icons/Autorenew";
+import { ReactComponent as IC_SEARCH } from "../../asset/images/search.svg";
 
-const SearchOne = ({ label, name, searchSubmit, process = false, itemGrd = 3 }) => {
-    const { t } = useTranslation()
-    const [searchValue, setSearchValue] = useState('')
+const SearchOne = ({
+  label,
+  name,
+  searchSubmit = () => {},
+  process = false,
+}) => {
+  const { t } = useTranslation();
+  const [searchValue, setSearchValue] = useState("");
 
-    return (
-        <Grid container spacing={2}>
-            <Grid item xs={itemGrd}>
-                <TextField
-                    fullWidth
-                    className="uppercaseInput"
-                    margin="dense"
-                    autoComplete="off"
-                    label={t(label)}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    onKeyPress={(key) => {
-                        if (key.which === 13) return searchSubmit(searchValue)
-                    }}
-                    value={searchValue || ''}
-                    name={name || 'searchOne'}
-                    variant="outlined"
-                />
-            </Grid>
-            <Grid item className="d-flex align-items-center">
-                <Button
-                    className={process ? 'button-loading' : ''}
-                    endIcon={process ? <LoopIcon /> : <SearchIcon />}
-                    onClick={() => searchSubmit(searchValue)}
-                    variant="contained"
-                >
-                    {t('search_btn')}
-                </Button>
-            </Grid>
-        </Grid>
-    )
-}
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      searchSubmit(searchValue);
+    }
+  };
 
-export default SearchOne
+  const handleChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+  return (
+    <div className="flex aligh-item-end">
+      <TextFieldCpn
+        label={label}
+        search={true}
+        value={searchValue}
+        onKeyPress={handleKeyPress}
+        onChange={handleChange}
+        name={name || "searchOne"}
+      />
+      <button
+        style={{
+          height: "32px",
+          width: "32px",
+          border: "1px solid var(--gray4)",
+          borderRadius: "4px",
+          paddingRight: "5px",
+          paddingBottom: "3px",
+        }}
+        onClick={() => searchSubmit(searchValue)}
+        className="ml-1"
+      >
+        {process ? (
+          <AutorenewIcon fontSize="small" className="button-loading" />
+        ) : (
+          <IC_SEARCH />
+        )}
+      </button>
+    </div>
+  );
+};
+
+export default SearchOne;

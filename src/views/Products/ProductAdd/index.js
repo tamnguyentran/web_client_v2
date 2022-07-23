@@ -69,9 +69,6 @@ const ProductAdd = () => {
             <IC_VECTOR className="pr-1" />
             <div>Lưu và thêm mới</div>
           </button>
-          <button className="btn-custom">
-            <IC_LIST />
-          </button>
         </div>
       </div>
       <div className="product-add-content p-3">
@@ -124,16 +121,12 @@ const ProductAdd = () => {
                 </Grid>
                 <Grid item xs={12} sm={6} md>
                   <TextFieldCpn
-                    label="SL quy đổi ra đv nhỏ nhất"
+                    label="SL quy đổi ra đv nhỏ nhất (*)"
                     className="mb-3"
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md>
-                  <AutocompleteCpn
-                    className=""
-                    label="Đơn vị nhỏ nhất"
-                    className="mb-3"
-                  />
+                  <AutocompleteCpn label="Đơn vị nhỏ nhất" className="mb-3" />
                 </Grid>
               </Grid>
             }

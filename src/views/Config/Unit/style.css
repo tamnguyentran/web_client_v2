@@ -6,18 +6,6 @@
   background-color: var(--green3);
 }
 
-.table-product-detail {
-  width: 98%;
-  margin: 20px auto;
-  min-width: 500px;
-  padding-left: 20px;
-}
-
-.MuiAccordionSummary-root {
-  height: 40px !important;
-  min-height: 35px !important;
-}
-
 .table-list-product {
   height: calc(100vh - 250px);
   font-family: var(--fontMain);

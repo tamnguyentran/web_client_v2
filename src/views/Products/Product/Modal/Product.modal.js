@@ -27,6 +27,8 @@ import reqFunction from "../../../../utils/constan/functions";
 // ]
 
 const tableColumn = [
+  { field: "stt", title: "STT", show: true, disabled: true, minWidth: 100 },
+
   { field: "o_4", title: "MÃ SP", show: true, disabled: true, minWidth: 100 },
   {
     field: "o_5",

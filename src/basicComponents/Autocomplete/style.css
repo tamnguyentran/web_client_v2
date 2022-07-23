@@ -10,8 +10,8 @@
 .autocomplete-style
   .MuiOutlinedInput-root.Mui-focused
   .MuiOutlinedInput-notchedOutline {
-  box-shadow: rgb(63 81 181 / 25%) 0px 0px 0px 0.2rem;
-  border: 1px solid rgb(63, 81, 181);
+  /* box-shadow: rgb(63 81 181 / 25%) 0px 0px 0px 0.2rem; */
+  border: 1px solid rgba(0, 0, 0, 0.38);
 }
 .MuiAutocomplete-option {
   font-size: 14px !important;

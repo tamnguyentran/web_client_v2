@@ -25,6 +25,9 @@ export default function TextFieldCpn(props) {
     onChange = () => {},
     className = "",
     placeholder = "",
+    value = "",
+    inputRef,
+    onKeyPress = () => {},
   } = props;
   const [isColorLabel, setIsColorLabel] = useState(false);
   return (
@@ -32,8 +35,12 @@ export default function TextFieldCpn(props) {
       <div className="text-label-input">{label}</div>
       <TextAreaStyle
         rows={2}
+        style={{ padding: "12px" }}
         placeholder={placeholder || label}
         onChange={onChange}
+        value={value}
+        ref={inputRef}
+        onKeyPress={onKeyPress}
         onFocus={() => {
           setIsColorLabel(true);
         }}

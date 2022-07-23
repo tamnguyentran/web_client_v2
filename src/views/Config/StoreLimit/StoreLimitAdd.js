@@ -13,10 +13,10 @@ import {
   Dialog,
 } from "@material-ui/core";
 
-import Product_Autocomplete from "../../Products/Product/Control/Product.Autocomplete";
-import Unit_Autocomplete from "../Unit/Control/Unit.Autocomplete";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SaveIcon from "@material-ui/icons/Save";
+// import Product_Autocomplete from "../../Products/Product/Control/Product.Autocomplete";
+// import Unit_Autocomplete from "../Unit/Control/Unit.Autocomplete";
+// import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+// import SaveIcon from "@material-ui/icons/Save";
 // import CheckIcon from "@material-ui/icons/Check";
 // import DeleteIcon from "@material-ui/icons/Delete";
 import { modalDefaultAdd } from "./Modal/StoreLimit.modal";
@@ -26,9 +26,12 @@ import control_sv from "../../../utils/service/control_services";
 import SnackBarService from "../../../utils/service/snackbar_service";
 import reqFunction from "../../../utils/constan/functions";
 import sendRequest from "../../../utils/service/sendReq";
+import { Unit, Product } from "../../../components/Autocomplete";
+import { TextFieldCpn, ButtonCpn } from "../../../basicComponents";
+import { ReactComponent as IC_ADD } from "../../../asset/images/add.svg";
 
 import AddIcon from "@material-ui/icons/Add";
-import LoopIcon from "@material-ui/icons/Loop";
+// import LoopIcon from "@material-ui/icons/Loop";
 
 const serviceInfo = {
   CREATE: {
@@ -188,33 +191,37 @@ const StoreLimitAdd = ({ onRefresh }) => {
     setStoreLimit(newStoreLimit);
   };
 
-  const handleMinQuantityChange = (value) => {
+  const handleMinQuantityChange = (e) => {
+    console.log(typeof glb_sv.filterNumber(e.target.value));
     const newStoreLimit = { ...StoreLimit };
     newStoreLimit["minQuantity"] =
-      Number(value.value) >= 0 ? Number(value.value) : 10;
+      glb_sv.filterNumber(e.target.value) >= 0
+        ? glb_sv.filterNumber(e.target.value)
+        : 10;
     setStoreLimit(newStoreLimit);
   };
-  const handleMaxQuantityChange = (value) => {
+  const handleMaxQuantityChange = (e) => {
     const newStoreLimit = { ...StoreLimit };
     newStoreLimit["maxQuantity"] =
-      Number(value.value) >= 0 ? Number(value.value) : 1000;
+      glb_sv.filterNumber(e.target.value) >= 0
+        ? glb_sv.filterNumber(e.target.value)
+        : 1000;
     setStoreLimit(newStoreLimit);
   };
 
   return (
     <>
       <Button
-        size="small"
-        variant="outlined"
-        startIcon={<AddIcon />}
-        onClick={() => setShouldOpenModal(true)}
-        style={{
-          color: "var(--white)",
-          border: "1px solid white",
-          maxHeight: 22,
+        style={{ height: "40px" }}
+        size="medium"
+        className="primary-bg text-white"
+        variant="contained"
+        onClick={() => {
+          setShouldOpenModal(true);
         }}
       >
-        Thêm mới (F2)
+        <IC_ADD className="pr-1" />
+        <div>Thêm mới (F2)</div>
       </Button>
 
       <Dialog
@@ -227,11 +234,14 @@ const StoreLimitAdd = ({ onRefresh }) => {
         // }}
       >
         <Card>
-          <CardHeader title={t("config.store_limit.titleAdd")} />
+          <CardHeader
+            className="card-header"
+            title={t("config.store_limit.titleAdd")}
+          />
           <CardContent>
             <Grid container spacing={1}>
               <Grid item xs={6}>
-                <Product_Autocomplete
+                {/* <Product_Autocomplete
                   autoFocus={true}
                   productID={StoreLimit.product}
                   style={{ marginTop: 8, marginBottom: 4 }}
@@ -244,10 +254,23 @@ const StoreLimitAdd = ({ onRefresh }) => {
                       step2Ref.current.focus();
                     }
                   }}
+                /> */}
+                <Product
+                  autoFocus={true}
+                  productID={StoreLimit.product || null}
+                  size={"small"}
+                  label={t("Sản phẩm (*)")}
+                  onSelect={handleSelectProduct}
+                  inputRef={step1Ref}
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      step2Ref.current.focus();
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={6}>
-                <Unit_Autocomplete
+                {/* <Unit_Autocomplete
                   unitID={StoreLimit.unit}
                   style={{ marginTop: 8, marginBottom: 4 }}
                   size={"small"}
@@ -260,10 +283,39 @@ const StoreLimitAdd = ({ onRefresh }) => {
                       step3Ref.current.focus();
                     }
                   }}
+                /> */}
+                <Unit
+                  unitID={StoreLimit.unit || null}
+                  size={"small"}
+                  label={t("Đơn vị (*)")}
+                  onSelect={handleSelectUnit}
+                  onFocus={(e) => e.target.select()}
+                  inputRef={step2Ref}
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      step3Ref.current.focus();
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={6}>
-                <NumberFormat
+                <TextFieldCpn
+                  inputRef={step3Ref}
+                  label={t("Hạn mức tối thiểu (*)")}
+                  onChange={handleMinQuantityChange}
+                  value={glb_sv.formatValue(
+                    StoreLimit.minQuantity || 0,
+                    "currency"
+                  )}
+                  onFocus={(e) => e.target.select()}
+                  inputRef={step3Ref}
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      step4Ref.current.focus();
+                    }
+                  }}
+                />
+                {/* <NumberFormat
                   className="inputNumber"
                   style={{ width: "100%" }}
                   required
@@ -286,17 +338,45 @@ const StoreLimitAdd = ({ onRefresh }) => {
                       step4Ref.current.focus();
                     }
                   }}
-                />
+                /> */}
               </Grid>
               <Grid item xs={6}>
-                <NumberFormat
+                <TextFieldCpn
+                  label={t("Hạn mức tối đa (*)")}
+                  onChange={handleMaxQuantityChange}
+                  value={glb_sv.formatValue(
+                    StoreLimit.maxQuantity || 0,
+                    "currency"
+                  )}
+                  onFocus={(e) => e.target.select()}
+                  inputRef={step3Ref}
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      handleCreate();
+                    }
+                  }}
+                />
+                <div>
+                  {StoreLimit.maxQuantity >= StoreLimit.minQuantity ? (
+                    ""
+                  ) : (
+                    <div className="text-orange fz12">
+                      {"Phải lớn hơn hạn mức tối thiểu"}
+                    </div>
+                  )}
+                </div>
+                {/* <NumberFormat
                   className="inputNumber"
                   style={{ width: "100%" }}
                   required
                   helperText={
-                    StoreLimit.maxQuantity >= StoreLimit.minQuantity
-                      ? ""
-                      : <div style={{color: 'red'}}>{"phải lớn hơn hạn mức tối thiểu"}</div>
+                    StoreLimit.maxQuantity >= StoreLimit.minQuantity ? (
+                      ""
+                    ) : (
+                      <div style={{ color: "red" }}>
+                        {"phải lớn hơn hạn mức tối thiểu"}
+                      </div>
+                    )
                   }
                   value={StoreLimit.maxQuantity}
                   label={t("config.store_limit.maxQuantity")}
@@ -317,15 +397,15 @@ const StoreLimitAdd = ({ onRefresh }) => {
                       handleCreate();
                     }
                   }}
-                />
+                /> */}
               </Grid>
             </Grid>
           </CardContent>
           <CardActions
-            className="align-items-end"
-            style={{ justifyContent: "flex-end" }}
+            className="align-items-end justify-content-end mr-2 ml-2"
+            // style={{ justifyContent: "flex-end" }}
           >
-            <Button
+            {/* <Button
               size="small"
               onClick={(e) => {
                 if (process) return;
@@ -337,8 +417,31 @@ const StoreLimitAdd = ({ onRefresh }) => {
               disableElevation
             >
               {t("btn.close")} (Esc)
-            </Button>
-            <Button
+            </Button> */}
+            <ButtonCpn.ButtonClose
+              process={process}
+              onClick={(e) => {
+                if (process) return;
+                setShouldOpenModal(false);
+                setStoreLimit(modalDefaultAdd);
+              }}
+            />
+            <ButtonCpn.ButtonUpdate
+              title="Lưu (F3)"
+              onClick={handleCreate}
+              process={process}
+              disabled={checkValidate()}
+            />
+            <ButtonCpn.ButtonUpdate
+              title="Lưu và tiếp tục"
+              onClick={() => {
+                saveContinue.current = true;
+                handleCreate();
+              }}
+              process={process}
+              disabled={checkValidate()}
+            />
+            {/* <Button
               size="small"
               onClick={() => {
                 handleCreate();
@@ -355,8 +458,8 @@ const StoreLimitAdd = ({ onRefresh }) => {
               startIcon={process ? <LoopIcon /> : <SaveIcon />}
             >
               {t("btn.save")} (F3)
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               size="small"
               onClick={() => {
                 saveContinue.current = true;
@@ -374,7 +477,7 @@ const StoreLimitAdd = ({ onRefresh }) => {
               startIcon={process ? <LoopIcon /> : <SaveIcon />}
             >
               {t("config.save_continue")}
-            </Button>
+            </Button> */}
           </CardActions>
         </Card>
       </Dialog>

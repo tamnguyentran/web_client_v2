@@ -37,6 +37,15 @@ import { tableColumn, config } from "./Modal/UnitRate.modal";
 import UnitRateAdd from "./UnitRateAdd";
 import UnitRateEdit from "./UnitRateEdit";
 import Breadcrumb from "../../../components/Breadcrumb/View";
+import { Unit } from "../../../components/Autocomplete";
+import { ReactComponent as IC_SHAPE } from "../../../asset/images/shape.svg";
+import UnitRateRemote from "./UnitRateRemote";
+import {
+  TitleFilterCpn,
+  Wrapper,
+  IconButtonCpn,
+  ButtonCpn,
+} from "../../../basicComponents";
 
 const serviceInfo = {
   GET_ALL: {
@@ -79,6 +88,8 @@ const UnitRateList = () => {
   const [name, setName] = useState("");
   const [processing, setProcessing] = useState(false);
   const [searchProcess, setSearchProcess] = useState(false);
+
+  const [isShowLayout, setIsShowLayout] = useState(false);
 
   const dataSourceRef = useRef([]);
   const searchRef = useRef("");
@@ -200,7 +211,7 @@ const UnitRateList = () => {
 
   const handleDelete = (e) => {
     // e.preventDefault();
-    idRef.current = id;
+    // idRef.current = id;
     sendRequest(
       serviceInfo.DELETE,
       [id],
@@ -255,175 +266,345 @@ const UnitRateList = () => {
 
   return (
     <>
-      <Card className="mb-2">
-      <CardHeader
-          title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
-        />
-        <CardContent>
-          <SearchOne
-            process={searchProcess}
-            name="product_name"
-            label={"product.search_name"}
-            searchSubmit={searchSubmit}
-          />
-        </CardContent>
-      </Card>
-      <ColumnCtrComp
-        anchorEl={anChorEl}
-        columns={tableColumn}
-        handleClose={onCloseColumn}
-        checkColumnChange={onChangeColumnView}
-      />
-
-      <Card>
-        <CardHeader
-          title={
-            <>
-              {t("config.unitRate.titleList")}
+      <div className="layout-page p-2">
+        <Wrapper.WrapperFilter isShowLayout={isShowLayout}>
+          <div className="p-2">
+            <div className="mb-4">
+              <TitleFilterCpn className="mb-2" label="Tìm kiếm" />
+              <SearchOne
+                process={searchProcess}
+                // name="unit_name"
+                label={"Tên sản phẩm"}
+                searchSubmit={searchSubmit}
+                itemGrd={3}
+              />
+            </div>
+          </div>
+        </Wrapper.WrapperFilter>
+        <Wrapper.WrapperTable
+          isShowLayout={isShowLayout}
+          setIsShowLayout={setIsShowLayout}
+        >
+          <Wrapper.WrapperHeader>
+            <div>
+              <Breadcrumb />
+              <div className="mt-2 text-black">
+                Đây là trang giúp bạn tìm kiếm, thiết lập hệ số quy đổi đơn vị
+                cho sản phẩm
+              </div>
+            </div>
+            <div className="flex">
+              <UnitRateAdd onRefresh={handleRefresh} />
+              &ensp;
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}
               />
-            </>
-          }
-          action={
-            <div className="d-flex align-items-center">
-              <UnitRateAdd onRefresh={handleRefresh} />
             </div>
-          }
-        />
-        <CardContent>
-          <TableContainer className="height-table-260 tableContainer">
-            <Table stickyHeader>
-              <caption
-                className={[
-                  "text-center text-danger border-bottom",
-                  dataSource.length > 0 ? "d-none" : "",
-                ].join(" ")}
-              >
-                {t("lbl.emptyData")}
-              </caption>
-              <TableHead>
-                <TableRow>
-                  {column.map((col) => (
-                    <TableCell
-                      nowrap="true"
-                      align={col.align}
-                      className={[
-                        "p-2 border-0",
-                        col.show ? "d-table-cell" : "d-none",
-                      ].join(" ")}
-                      key={col.field}
-                    >
-                      {t(col.title)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dataSource.map((item, index) => {
-                  return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                      {column.map((col, indexRow) => {
-                        let value = item[col.field];
-                        if (col.show) {
-                          switch (col.field) {
-                            case "stt":
-                              return (
-                                <TableCell
-                                  nowrap="true"
-                                  key={indexRow}
-                                  align={col.align}
-                                >
-                                  {index + 1}
-                                </TableCell>
-                              );
-                            case "action":
-                              return (
-                                <TableCell
-                                  nowrap="true"
-                                  key={indexRow}
-                                  align={col.align}
-                                >
-                                  <IconButton
-                                    onClick={(e) => {
-                                      onRemove(item);
-                                    }}
+          </Wrapper.WrapperHeader>
+          <Wrapper.WrapperContent>
+            <TableContainer className="table-list-layout">
+              <Table stickyHeader>
+                <caption
+                  className={[
+                    "text-center text-danger border-bottom",
+                    dataSource.length > 0 && "dl-none",
+                  ].join(" ")}
+                >
+                  {t("lbl.emptyData")}
+                </caption>
+                <TableHead>
+                  <TableRow>
+                    {column.map((col) => (
+                      <TableCell
+                        nowrap="true"
+                        className={`p-2 text-uppercase text-black ${
+                          !col.show && "dl-none"
+                        }`}
+                        key={col.field}
+                      >
+                        {t(col.title)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dataSource.map((item, index) => {
+                    return (
+                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                        {column.map((col, indexRow) => {
+                          let value = item[col.field];
+                          if (col.show) {
+                            switch (col.field) {
+                              case "stt":
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
                                   >
-                                    <DeleteIcon
-                                      style={{ color: "red" }}
-                                      fontSize="small"
+                                    {index + 1}
+                                  </TableCell>
+                                );
+                              case "action":
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
+                                  >
+                                    <IconButtonCpn.IconButtonEdit
+                                      onClick={() => {
+                                        onEdit(item);
+                                      }}
                                     />
-                                  </IconButton>
-                                  <IconButton
-                                    onClick={(e) => {
-                                      onEdit(item);
-                                    }}
+                                    <IconButtonCpn.IconButtonTrash
+                                      onClick={() => {
+                                        onRemove(item);
+                                      }}
+                                    />
+                                  </TableCell>
+                                );
+                              default:
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
                                   >
-                                    <EditIcon fontSize="small" />
-                                  </IconButton>
-                                </TableCell>
-                              );
-                            default:
-                              return (
-                                <TableCell
-                                  nowrap="true"
-                                  key={indexRow}
-                                  align={col.align}
-                                >
-                                  {glb_sv.formatValue(value, col["type"])}
-                                </TableCell>
-                              );
+                                    {glb_sv.formatValue(value, col["type"])}
+                                  </TableCell>
+                                );
+                            }
                           }
-                        }
-                      })}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-
-        <CardActions>
-          <div className="d-flex align-items-center">
-            <Chip
-              size="small"
-              variant="outlined"
-              className="mr-1"
-              label={
-                dataSourceRef.current.length +
-                "/" +
-                totalRecords +
-                " " +
-                t("rowData")
-              }
-            />
-            <Chip
-              variant="outlined"
-              size="small"
-              className="mr-1"
-              deleteIcon={<FastForwardIcon />}
-              onDelete={() => null}
-              label={t("getMoreData")}
+                        })}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Wrapper.WrapperContent>
+          <Wrapper.WrapperFooter>
+            {/* Hiển thị{" "}
+            {dataSourceRef.current.length +
+              "/" +
+              totalRecords +
+              " " +
+              t("rowData")}
+            <button
               onClick={getNextData}
+              disabled={dataSourceRef.current.length >= totalRecords}
+              className="btn-custom ml-3 mr-2"
+              style={{
+                background:
+                  dataSourceRef.current.length >= totalRecords &&
+                  "var(--gray3)",
+              }}
+            >
+              <IC_SHAPE className="pr-1" /> Lấy thêm dữ liệu{" "}
+            </button> */}
+            <ButtonCpn.ButtonGetMoreData
+              onClick={getNextData}
+              totalRecords={totalRecords}
+              displayRecords={dataSourceRef.current.length}
               disabled={dataSourceRef.current.length >= totalRecords}
             />
             <ExportExcel
-              filename="unit_ratio"
+              filename="Hệ số quy đổi"
               data={dataCSV()}
               headers={headersCSV}
             />
-          </div>
-        </CardActions>
-      </Card>
+          </Wrapper.WrapperFooter>
+        </Wrapper.WrapperTable>
+      </div>
+
+      {false && (
+        <>
+          <Card className="mb-2">
+            <CardHeader
+              title={
+                <div className="flex aligh-item-center">{<Breadcrumb />}</div>
+              }
+            />
+            <CardContent>
+              <SearchOne
+                process={searchProcess}
+                name="product_name"
+                label={"product.search_name"}
+                searchSubmit={searchSubmit}
+              />
+            </CardContent>
+          </Card>
+          <ColumnCtrComp
+            anchorEl={anChorEl}
+            columns={tableColumn}
+            handleClose={onCloseColumn}
+            checkColumnChange={onChangeColumnView}
+          />
+
+          <Card>
+            <CardHeader
+              title={
+                <>
+                  {t("config.unitRate.titleList")}
+                  <DisplayColumn
+                    columns={tableColumn}
+                    handleCheckChange={onChangeColumnView}
+                  />
+                </>
+              }
+              action={
+                <div className="d-flex align-items-center">
+                  <UnitRateAdd onRefresh={handleRefresh} />
+                </div>
+              }
+            />
+            <CardContent>
+              <TableContainer className="height-table-260 tableContainer">
+                <Table stickyHeader>
+                  <caption
+                    className={[
+                      "text-center text-danger border-bottom",
+                      dataSource.length > 0 ? "d-none" : "",
+                    ].join(" ")}
+                  >
+                    {t("lbl.emptyData")}
+                  </caption>
+                  <TableHead>
+                    <TableRow>
+                      {column.map((col) => (
+                        <TableCell
+                          nowrap="true"
+                          align={col.align}
+                          className={[
+                            "p-2 border-0",
+                            col.show ? "d-table-cell" : "d-none",
+                          ].join(" ")}
+                          key={col.field}
+                        >
+                          {t(col.title)}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {dataSource.map((item, index) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={index}
+                        >
+                          {column.map((col, indexRow) => {
+                            let value = item[col.field];
+                            if (col.show) {
+                              switch (col.field) {
+                                case "stt":
+                                  return (
+                                    <TableCell
+                                      nowrap="true"
+                                      key={indexRow}
+                                      align={col.align}
+                                    >
+                                      {index + 1}
+                                    </TableCell>
+                                  );
+                                case "action":
+                                  return (
+                                    <TableCell
+                                      nowrap="true"
+                                      key={indexRow}
+                                      align={col.align}
+                                    >
+                                      <IconButton
+                                        onClick={(e) => {
+                                          onRemove(item);
+                                        }}
+                                      >
+                                        <DeleteIcon
+                                          style={{ color: "red" }}
+                                          fontSize="small"
+                                        />
+                                      </IconButton>
+                                      <IconButton
+                                        onClick={(e) => {
+                                          onEdit(item);
+                                        }}
+                                      >
+                                        <EditIcon fontSize="small" />
+                                      </IconButton>
+                                    </TableCell>
+                                  );
+                                default:
+                                  return (
+                                    <TableCell
+                                      nowrap="true"
+                                      key={indexRow}
+                                      align={col.align}
+                                    >
+                                      {glb_sv.formatValue(value, col["type"])}
+                                    </TableCell>
+                                  );
+                              }
+                            }
+                          })}
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+
+            <CardActions>
+              <div className="d-flex align-items-center">
+                <Chip
+                  size="small"
+                  variant="outlined"
+                  className="mr-1"
+                  label={
+                    dataSourceRef.current.length +
+                    "/" +
+                    totalRecords +
+                    " " +
+                    t("rowData")
+                  }
+                />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  className="mr-1"
+                  deleteIcon={<FastForwardIcon />}
+                  onDelete={() => null}
+                  label={t("getMoreData")}
+                  onClick={getNextData}
+                  disabled={dataSourceRef.current.length >= totalRecords}
+                />
+                <ExportExcel
+                  filename="unit_ratio"
+                  data={dataCSV()}
+                  headers={headersCSV}
+                />
+              </div>
+            </CardActions>
+          </Card>
+        </>
+      )}
       {/* modal delete */}
-      <Dialog
+      <UnitRateRemote
+        name={name}
+        shouldOpenRemoveModal={shouldOpenRemoveModal}
+        setShouldOpenRemoveModal={setShouldOpenRemoveModal}
+        processing={processing}
+        handleDelete={handleDelete}
+      />
+      {/* <Dialog
         maxWidth="xs"
         fullWidth={true}
         TransitionProps={{
           addEndListener: (node, done) => {
-            // use the css transitionend event to mark the finish of a transition
             node.addEventListener("keypress", function (e) {
               if (e.key === "Enter") {
                 handleDelete();
@@ -469,7 +650,7 @@ const UnitRateList = () => {
             </Button>
           </CardActions>
         </Card>
-      </Dialog>
+      </Dialog> */}
 
       {/* modal edit */}
       <UnitRateEdit

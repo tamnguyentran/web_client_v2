@@ -16,7 +16,7 @@ import {
   CardContent,
   CardActions,
   Dialog,
-  Tooltip
+  Tooltip,
 } from "@material-ui/core";
 import NumberFormat from "react-number-format";
 import IconButton from "@material-ui/core/IconButton";
@@ -39,7 +39,7 @@ import { sortBy, debounce } from "lodash";
 import {
   tableListEditColumn,
   invoiceImportInventoryModal,
-  productImportModal
+  productImportModal,
 } from "../Modal/ImportInventory.modal";
 import moment from "moment";
 import AddProductClone from "../AddProductClone";
@@ -73,11 +73,11 @@ const serviceInfo = {
     object: "imp_inventory_dt",
   },
   UPDATE_PRODUCT_TO_INVOICE: {
-    functionName: 'update',
+    functionName: "update",
     reqFunct: reqFunction.PRODUCT_IMPORT_INVOICE_UPDATE,
-    biz: 'import',
-    object: 'imp_inventory_dt',
-},
+    biz: "import",
+    object: "imp_inventory_dt",
+  },
 };
 
 const EditImportInventory = ({}) => {
@@ -95,8 +95,11 @@ const EditImportInventory = ({}) => {
   const [deleteProcess, setDeleteProcess] = useState(false);
   const [resetFormAddFlag, setResetFormAddFlag] = useState(false);
   const [isIndexRow, setIsIndexRow] = useState(null);
-  const [process, setProcess] = useState(false)
-  const [sortColumn, setSortColumn] = useState({columIndex: null, status: 'DESC'});
+  const [process, setProcess] = useState(false);
+  const [sortColumn, setSortColumn] = useState({
+    columIndex: null,
+    status: "DESC",
+  });
 
   const [productInfo, setProductInfo] = useState({
     ...productImportModal,
@@ -104,7 +107,7 @@ const EditImportInventory = ({}) => {
 
   const componentPrint = useRef(null);
   const newInvoiceID = useRef(-1);
-  const dataRef = useRef([])
+  const dataRef = useRef([]);
 
   useEffect(() => {
     if (id !== 0) {
@@ -171,7 +174,7 @@ const EditImportInventory = ({}) => {
 
   //-- xử lý khi timeout -> ko nhận được phản hồi từ server
   const handleTimeOut = (e) => {
-    setProcess(false)
+    setProcess(false);
     SnackBarService.alert(t(`message.${e.type}`), true, 4, 3000);
   };
 
@@ -357,48 +360,70 @@ const EditImportInventory = ({}) => {
 
   const handleFocus = (event) => event.target.select();
 
-  const updateDataListProduct = (rowData) => { 
-    if (!productInfo.invoice_id || !productInfo.edit_id || productInfo.qty <= 0 || productInfo.price < 0) return
-    setProcess(true)
-    const inputParam = [productInfo.invoice_id, productInfo.edit_id, productInfo.qty, productInfo.price]
-    sendRequest(serviceInfo.UPDATE_PRODUCT_TO_INVOICE, inputParam, handleResultUpdateProduct, true, handleTimeOut)
+  const updateDataListProduct = (rowData) => {
+    if (
+      !productInfo.invoice_id ||
+      !productInfo.edit_id ||
+      productInfo.qty <= 0 ||
+      productInfo.price < 0
+    )
+      return;
+    setProcess(true);
+    const inputParam = [
+      productInfo.invoice_id,
+      productInfo.edit_id,
+      productInfo.qty,
+      productInfo.price,
+    ];
+    sendRequest(
+      serviceInfo.UPDATE_PRODUCT_TO_INVOICE,
+      inputParam,
+      handleResultUpdateProduct,
+      true,
+      handleTimeOut
+    );
   };
 
   const handleResultUpdateProduct = (reqInfoMap, message) => {
-    SnackBarService.alert(message['PROC_MESSAGE'], true, message['PROC_STATUS'], 3000)
-    setProcess(false)
-    if (message['PROC_STATUS'] !== 1) {
-        // xử lý thất bại
-        const cltSeqResult = message['REQUEST_SEQ']
-        glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap)
-        control_sv.clearReqInfoMapRequest(cltSeqResult)
-    } else if (message['PROC_DATA']) {
-        handleRefresh()
-        setIsIndexRow(null)
-        setProductInfo({ ...productImportModal })
+    SnackBarService.alert(
+      message["PROC_MESSAGE"],
+      true,
+      message["PROC_STATUS"],
+      3000
+    );
+    setProcess(false);
+    if (message["PROC_STATUS"] !== 1) {
+      // xử lý thất bại
+      const cltSeqResult = message["REQUEST_SEQ"];
+      glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
+      control_sv.clearReqInfoMapRequest(cltSeqResult);
+    } else if (message["PROC_DATA"]) {
+      handleRefresh();
+      setIsIndexRow(null);
+      setProductInfo({ ...productImportModal });
     }
-  }
+  };
 
-  const handleClickSortColum = (col,index) =>{
-    let sortData
-    if (sortColumn?.status === 'DESC') {
-      sortData = sortBy(dataSource, [col.field],'DESC');
-      setSortColumn({columIndex: index, status: 'DSC'})
+  const handleClickSortColum = (col, index) => {
+    let sortData;
+    if (sortColumn?.status === "DESC") {
+      sortData = sortBy(dataSource, [col.field], "DESC");
+      setSortColumn({ columIndex: index, status: "DSC" });
     } else {
       sortData = sortBy(dataSource, [col.field]).reverse();
-      setSortColumn({columIndex: index, status: 'DESC'})
+      setSortColumn({ columIndex: index, status: "DESC" });
     }
     setDataSource(sortData);
-  }
-  
+  };
+
   const showIconSort = () => {
     switch (sortColumn?.status) {
       case "DSC":
-        return <ExpandLessIcon/>
+        return <ExpandLessIcon />;
       case "DESC":
-        return <KeyboardArrowDownIcon/>
+        return <KeyboardArrowDownIcon />;
       default:
-        return null
+        return null;
     }
   };
 
@@ -413,7 +438,6 @@ const EditImportInventory = ({}) => {
 
   const debouncedSave = useCallback(
     debounce((data) => {
-      console.log("vjjdv")
       let result = data.dataRef.filter((item) => {
         return (
           data.value.search(item.o_4) != -1 || item.o_4.search(data.value) != -1
@@ -430,12 +454,10 @@ const EditImportInventory = ({}) => {
           onAddProduct={handleAddProduct}
           resetFlag={resetFormAddFlag}
         />
-        <Card style={{ height: "calc(100% - 168px)"}}>
-          <CardHeader
-            title={t("order.import.productImportList")}
-          />
+        <Card style={{ height: "calc(100% - 168px)" }}>
+          <CardHeader title={t("order.import.productImportList")} />
           <CardContent className="insImportTable">
-          <div className="flex justify-content-between aligh-item-center mb-1">
+            <div className="flex justify-content-between aligh-item-center mb-1">
               <div className="flex aligh-item-center">
                 <TextField
                   style={{ width: "300px" }}
@@ -466,32 +488,32 @@ const EditImportInventory = ({}) => {
                 </caption>
                 <TableHead>
                   <TableRow>
-                    {column.map((col,index) => (
+                    {column.map((col, index) => (
                       <Tooltip
-                      placement="top"
-                      disableFocusListener
-                      disableTouchListener
-                      title={t(col.tootip)}
-                    >
-                      <TableCell
-                        colSpan={col.field === "action" ? 2 : 1}
-                        nowrap="true"
-                        align={col.align}
-                        className={[
-                          "p-2 border-0 cursor-pointer",
-                          col.show ? "d-table-cell" : "dl-none",
-                        ].join(" ")}
-                        key={col.field}
-                        onClick={() =>{
-                          if(col.field === "action" || col.field === "stt") return
-                          handleClickSortColum(col,index)
-                        }}
+                        placement="top"
+                        disableFocusListener
+                        disableTouchListener
+                        title={t(col.tootip)}
                       >
-                        {t(col.title)}
-                        {" "}{(sortColumn?.columIndex === index) && showIconSort()}
-                      </TableCell>
-                    </Tooltip>
-                      
+                        <TableCell
+                          colSpan={col.field === "action" ? 2 : 1}
+                          nowrap="true"
+                          align={col.align}
+                          className={[
+                            "p-2 border-0 cursor-pointer",
+                            col.show ? "d-table-cell" : "dl-none",
+                          ].join(" ")}
+                          key={col.field}
+                          onClick={() => {
+                            if (col.field === "action" || col.field === "stt")
+                              return;
+                            handleClickSortColum(col, index);
+                          }}
+                        >
+                          {t(col.title)}{" "}
+                          {sortColumn?.columIndex === index && showIconSort()}
+                        </TableCell>
+                      </Tooltip>
                     ))}
                   </TableRow>
                 </TableHead>
@@ -700,7 +722,7 @@ const EditImportInventory = ({}) => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item md={3} xs={12} >
+      <Grid item md={3} xs={12}>
         <Card className="h-100">
           <CardHeader title={t("order.import.invoice_info")} />
           <CardContent>

@@ -11,7 +11,7 @@ export default function CheckBoxCpn(props) {
           {label}
         </div>
       }
-      control={<Checkbox size="small" />}
+      control={<Checkbox className="text-green2" />}
     />
   );
 }

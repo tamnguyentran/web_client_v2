@@ -20,36 +20,22 @@ const serviceInfo = {
 
 export default function AutocompleteCpn(props) {
   const { t } = useTranslation();
-  const { className, label, placeholder } = props;
-  const [dataSource, setDataSource] = useState([]);
-  const [isColorLabel, setIsColorLabel] = useState(false);
-
-  useEffect(() => {
-    const inputParam = ["groups", "%"];
-    sendRequest(
-      serviceInfo.DROPDOWN_LIST,
-      inputParam,
-      handleResultProductGroupDropDownList,
-      true,
-      handleTimeOut
-    );
-  }, []);
-
-  console.log(dataSource);
-  const handleResultProductGroupDropDownList = (reqInfoMap, message = {}) => {
-    if (message["PROC_STATUS"] !== 1) {
-      const cltSeqResult = message["REQUEST_SEQ"];
-      glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
-      control_sv.clearReqInfoMapRequest(cltSeqResult);
-    } else if (message["PROC_DATA"]) {
-      let newData = message["PROC_DATA"];
-      setDataSource(newData.rows);
-    }
-  };
-
-  const handleTimeOut = (e) => {
-    SnackBarService.alert(t(`message.${e.type}`), true, 4, 3000);
-  };
+  const {
+    className = "",
+    label = "",
+    placeholder = "",
+    options = [],
+    disabled = false,
+    onChange = () => {},
+    onInputChange = () => {},
+    onKeyPress = () => {},
+    value = "",
+    size = "small",
+    getOptionLabel,
+    autoFocus = false,
+    inputRef,
+    inputValue = "",
+  } = props;
 
   return (
     <FormControl
@@ -59,17 +45,22 @@ export default function AutocompleteCpn(props) {
       <div className="text-label-input">{label}</div>
       <Autocomplete
         className="w-100 mb-3"
-        size="small"
-        options={dataSource}
-        getOptionLabel={(option) => option?.o_2 || ""}
-        onFocus={() => {
-          setIsColorLabel(true);
-        }}
-        onBlur={() => {
-          setIsColorLabel(false);
-        }}
+        size={size}
+        options={options}
+        autoHighlight={true}
+        autoComplete={true}
+        disabled={disabled}
+        noOptionsText={t("noData")}
+        getOptionLabel={getOptionLabel}
+        onChange={onChange}
+        onInputChange={onInputChange}
+        onKeyPress={onKeyPress}
+        value={value}
         renderInput={(params) => (
           <TextField
+            inputRef={inputRef}
+            value={inputValue}
+            autoFocus={autoFocus}
             size="small"
             {...params}
             variant="outlined"

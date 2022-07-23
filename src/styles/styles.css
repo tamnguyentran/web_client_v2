@@ -11,7 +11,14 @@
   --black2: #191d23;
   --white: #fefefe;
   --clrMain: #ffffff;
+  --red: #fee2e2;
+  --orange: #ffa15c;
 }
+
+/* @font-face {
+  font-family: "Manrope";
+  src: local("Manrope"), url(../../public/font/Manrope.ttf) format("woff");
+} */
 #root,
 body {
   margin: 0;
@@ -118,7 +125,6 @@ label {
 
 table th {
   background: #eee !important;
-  /* font-size: 12px !important; */
   padding: 4px !important;
 }
 
@@ -126,32 +132,28 @@ table td {
   padding: 0px 8px !important;
 }
 
-table .table-row-p8 td {
-  padding: 8px !important;
-}
-
-.listSubHeader {
+/* .listSubHeader {
   background: #eee !important;
   height: 38px;
   line-height: 39px !important;
-}
+} */
 
 button:focus {
   box-shadow: none !important;
 }
 
-.titleDialog h2 {
+/* .titleDialog h2 {
   font-size: 16px !important;
-}
+} */
 
-.customMenuList {
+/* .customMenuList {
   min-width: auto !important;
   margin-left: 10px !important;
-}
+} */
 
-.uppercaseInput input {
+/* .uppercaseInput input {
   text-transform: uppercase !important;
-}
+} */
 
 .icon-menu {
   font-size: 20px !important;
@@ -165,75 +167,75 @@ button:focus {
   text-decoration: none !important;
 }
 
-.MuiOutlinedInput-adornedEnd {
+/* .MuiOutlinedInput-adornedEnd {
   padding-right: unset !important;
-}
+} */
 
-.registerForm .MuiOutlinedInput-inputMarginDense {
+/* .registerForm .MuiOutlinedInput-inputMarginDense {
   padding-top: 8.5px !important;
   padding-bottom: 8.5px !important;
-}
+} */
 
 .mb-09 {
   margin-bottom: 0.8rem !important;
 }
 
-.MuiDialogActions-root {
+/* .MuiDialogActions-root {
   padding: 8px 24px !important;
-}
+} */
 
-.search-area-action button {
+/* .search-area-action button {
   margin-right: 5px;
-}
+} */
 
-.MuiCardHeader-root,
+/* .MuiCardHeader-root,
 .MuiCardActions-root {
   padding: 10px 1rem !important;
-}
+} */
 
-.MuiCardContent-root {
+/* .MuiCardContent-root {
   padding: 0px;
-}
+} */
 
-.MuiCardHeader-root {
+/* .MuiCardHeader-root {
   background-color: #046290;
   color: white;
-}
+} */
 
-.MuiCardHeader-root .MuiCardHeader-title {
+/* .MuiCardHeader-root .MuiCardHeader-title {
   font-size: 14px;
-}
+} */
 
-.MuiCardHeader-action {
+/* .MuiCardHeader-action {
   margin: -5px auto !important;
-}
+} */
 
-.MuiCardActions-root {
+/* .MuiCardActions-root {
   border-top: 1px solid #dfdfdf;
   background-color: whitesmoke;
-}
+} */
 
-.MuiInputBase-root.MuiOutlinedInput-root.Mui-disabled.Mui-disabled.MuiOutlinedInput-marginDense {
+/* .MuiInputBase-root.MuiOutlinedInput-root.Mui-disabled.Mui-disabled.MuiOutlinedInput-marginDense {
   background: #f5f5f5;
   color: #00000040;
-}
+} */
 
-thead.MuiTableHead-root {
+/* thead.MuiTableHead-root {
   background-color: #dcefef;
-}
+} */
 
-.MuiChip-outlined {
+/* .MuiChip-outlined {
   background-color: white !important;
   cursor: pointer !important;
-}
+} */
 
 /* .MuiCardHeader-root .MuiCardHeader-title {
     font-weight: 500;
 } */
 
-.MuiCardHeader-action {
+/* .MuiCardHeader-action {
   margin: auto !important;
-}
+} */
 
 .bg-success,
 a.bg-success:focus,
@@ -274,16 +276,16 @@ button.bg-war:hover {
   animation-timing-function: linear;
 }
 
-.inputNumber .MuiOutlinedInput-inputMarginDense {
+/* .inputNumber .MuiOutlinedInput-inputMarginDense {
   text-align: right;
-}
+} */
 
-hr.MuiDivider-root {
+/* hr.MuiDivider-root {
   width: 100%;
   border-bottom: 1px rgb(0 0 0 / 50%);
   background: unset;
   margin: 5px 0;
-}
+} */
 
 .container-fluid {
   padding: unset;
@@ -311,10 +313,6 @@ hr.MuiDivider-root {
   border-right: 1px solid #dfdfdf !important;
 }
 
-.tableOrder td button {
-  /* padding: 0.6rem; */
-}
-
 .tableOrder .MuiTableRow-root.MuiTableRow-hover:hover {
   background-color: rgb(0 0 0 / 15%) !important;
 }
@@ -324,22 +322,22 @@ div.MuiCardHeader-action
   font-size: 14px;
 }
 
-.tableOrder.tableContainer,
+/* .tableOrder.tableContainer,
 .tableContainer.tableReport {
   max-height: calc(100vh - 175px);
-}
+} */
 
-.height-table-260 {
+/* .height-table-260 {
   height: calc(100vh) !important;
 }
 
 .height-table-300 {
   height: calc(100vh - 260px) !important;
-}
+} */
 
-.MuiGrid-spacing-xs-1 > .MuiGrid-item {
+/* .MuiGrid-spacing-xs-1 > .MuiGrid-item {
   padding: 0px 4px !important;
-}
+} */
 
 .note {
   font-size: 13px;
@@ -349,11 +347,11 @@ div.MuiCardHeader-action
   border-radius: 5px !important;
 }
 
-.submenu-link:hover,
+/* .submenu-link:hover,
 .sub-active {
   color: var(--primary) !important;
   background-color: #373e4c !important;
-}
+} */
 
 .MuiTooltip-popper.MuiTooltip-popperInteractive
   .MuiTooltip-tooltip.MuiTooltip-tooltipPlacementRight {
@@ -366,7 +364,7 @@ div.MuiCardHeader-action
   background-color: #1b1f26;
 }
 
-#menu_view a b:nth-child(1) {
+/* #menu_view a b:nth-child(1) {
   position: absolute;
   top: -5px;
   right: 0px;
@@ -384,9 +382,9 @@ div.MuiCardHeader-action
   height: 100%;
   border-bottom-right-radius: 6px;
   background-color: #373e4c;
-}
+} */
 
-#menu_view a b:nth-child(2) {
+/* #menu_view a b:nth-child(2) {
   position: absolute;
   bottom: -5px;
   right: 0px;
@@ -394,9 +392,9 @@ div.MuiCardHeader-action
   width: 10%;
   background: #1b1f26;
   display: none;
-}
+} */
 
-#menu_view a b:nth-child(2)::before {
+/* #menu_view a b:nth-child(2)::before {
   content: "";
   position: absolute;
   top: 0;
@@ -409,9 +407,9 @@ div.MuiCardHeader-action
 
 #menu_view div.menu-item {
   position: relative;
-}
+} */
 
-#menu_view a.active b:nth-child(1),
+/* #menu_view a.active b:nth-child(1),
 #menu_view a.active b:nth-child(2),
 #menu_view a:hover b:nth-child(1),
 #menu_view a:hover b:nth-child(2) {
@@ -421,11 +419,11 @@ div.MuiCardHeader-action
 .MuiListItemIcon-root {
   min-width: auto !important;
   color: #fff !important;
-}
+} */
 
-button.MuiButtonBase-root.MuiButton-root.MuiButton-text.btnSubmit {
+/* button.MuiButtonBase-root.MuiButton-root.MuiButton-text.btnSubmit {
   background-color: #e32047;
-}
+} */
 
 /* .permission-group .MuiAccordionSummary-content.Mui-expanded {
   margin: 10px 0;
@@ -435,17 +433,17 @@ button.MuiButtonBase-root.MuiButton-root.MuiButton-text.btnSubmit {
   min-height: 50px;
 } */
 
-.permission-group .MuiAccordionSummary-root {
+/* .permission-group .MuiAccordionSummary-root {
   background-color: #e1e3e4;
-}
+} */
 
-.permission label.MuiFormControlLabel-root {
+/* .permission label.MuiFormControlLabel-root {
   margin-bottom: 0;
 }
 
 .permission .title-screen {
   min-width: 200px;
-}
+} */
 
 .breadcrumb-layout a {
   text-transform: capitalize;
@@ -481,7 +479,7 @@ button.MuiButtonBase-root.MuiButton-root.MuiButton-text.btnSubmit {
   cursor: pointer;
 }
 
-.content {
+/* .content {
   margin-left: 1rem;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -490,24 +488,24 @@ button.MuiButtonBase-root.MuiButton-root.MuiButton-text.btnSubmit {
 .content .invoice {
   font-weight: bold;
   color: #373e4c;
-}
+} */
 
-.content .currency {
+/* .content .currency {
   font-size: 1.5rem;
-}
+} */
 
-.content .title-order {
+/* .content .title-order {
   color: #888888;
-}
+} */
 
-tr.warning td {
+/* tr.warning td {
   color: red;
-}
+} */
 
-.cardContent_modal {
+/* .cardContent_modal {
   max-height: 68vh;
   overflow: auto;
-}
+} */
 
 /* .MuiCard-root.product-card {
   max-height: 95vh;
@@ -564,6 +562,10 @@ tr.warning td {
 
 .aligh-item-center {
   align-items: center;
+}
+
+.aligh-item-end {
+  align-items: flex-end;
 }
 
 /* #info-inventory > .list-product-inventory {
@@ -711,17 +713,36 @@ tr.warning td {
 .primary-bg {
   background-color: var(--greenPrimary) !important;
 }
+.text-green2 {
+  color: var(--greenPrimary2) !important;
+}
 .gray-bg {
   background-color: var(--gray) !important;
 }
 .gray2-bg {
   background-color: var(--gray2) !important;
 }
+.gray3-bg {
+  background-color: var(--gray3) !important;
+}
 .text-black {
   color: var(--black) !important;
 }
 .text-black2 {
   color: var(--black2);
+}
+.green3-bg {
+  background-color: var(--green3) !important;
+}
+
+.red-bg {
+  background-color: var(--red) !important;
+}
+.orange-bg {
+  background-color: var(--orange) !important;
+}
+.text-orange {
+  color: var(--orange) !important;
 }
 
 .white-bg {
@@ -737,6 +758,10 @@ tr,
 td {
   font-family: var(--fontMain) !important;
   font-weight: 400 !important;
+}
+
+td {
+  height: 50px;
 }
 
 .btn-custom {
@@ -764,7 +789,29 @@ td {
 }
 
 .text-label-input {
-  font-size: 15px;
+  font-size: 14px;
   padding-bottom: 3px;
   color: var(--black2);
+}
+
+.text-uppercase {
+  text-transform: uppercase !important;
+}
+
+.card-header {
+  padding: 10px 16px !important;
+  font-weight: 700 !important;
+  border-bottom: 2px solid var(--gray3);
+}
+
+.layout-page {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  height: 100%;
+  background-color: var(--green3);
+}
+.table-list-layout {
+  height: calc(100vh - 250px);
+  font-family: var(--fontMain);
 }

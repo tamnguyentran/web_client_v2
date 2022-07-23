@@ -78,6 +78,7 @@
 .menu-navbar {
   overflow: hidden;
   background-color: var(--clrMain);
+  border-bottom: 1px solid var(--green3);
 }
 
 .menu-import-export a {

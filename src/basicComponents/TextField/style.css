@@ -2,3 +2,19 @@
   padding-top: 7.5px;
   padding-bottom: 10.5px;
 }
+
+.input-text-field {
+  width: 100%;
+  border: 1px solid var(--gray4);
+  padding: 5px 12px;
+  position: relative;
+  font-size: 14px;
+  transition: border-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border-radius: 4px;
+}
+
+.input-text-field:focus-visible {
+  outline: none;
+}

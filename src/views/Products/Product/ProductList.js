@@ -20,29 +20,30 @@ import {
   Grid,
   TextField,
   Avatar,
-  Divider,
-  Checkbox,
-  FormControlLabel,
-  Collapse,
-  Box,
-  Paper,
-  TableFooter,
+  // Divider,
+  // Checkbox,
+  // FormControlLabel,
+  // Collapse,
+  // Box,
+  // Paper,
+  // TableFooter,
 } from "@material-ui/core";
 import TextImage from "../../../components/TextImage";
-import EditIcon from "@material-ui/icons/Edit";
-import FastForwardIcon from "@material-ui/icons/FastForward";
+// import EditIcon from "@material-ui/icons/Edit";
+// import FastForwardIcon from "@material-ui/icons/FastForward";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import CheckIcon from "@material-ui/icons/Check";
 import DeleteIcon from "@material-ui/icons/Delete";
 import LoopIcon from "@material-ui/icons/Loop";
-import ColumnCtrComp from "../../../components/_ColumnCtr";
-import LockIcon from "@material-ui/icons/Lock";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+// import ColumnCtrComp from "../../../components/_ColumnCtr";
+// import LockIcon from "@material-ui/icons/Lock";
+// import LockOpenIcon from "@material-ui/icons/LockOpen";
+// import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+// import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+// import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+// import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
+import DisplayColumn from "../../../components/DisplayColumn";
 
 import glb_sv from "../../../utils/service/global_service";
 import control_sv from "../../../utils/service/control_services";
@@ -51,12 +52,12 @@ import sendRequest from "../../../utils/service/sendReq";
 import reqFunction from "../../../utils/constan/functions";
 
 import { tableColumn, config, tableColumnDetail } from "./Modal/Product.modal";
-import ProductAdd from "./ProductAdd";
+// import ProductAdd from "./ProductAdd";
 import ProductEdit from "./ProductEdit";
-import SearchOne from "../../../components/SearchOne";
-import ExportExcel from "../../../components/ExportExcel";
-import DisplayColumn from "../../../components/DisplayColumn";
-import ImportExcel from "../../../components/ImportExcel";
+// import SearchOne from "../../../components/SearchOne";
+// import ExportExcel from "../../../components/ExportExcel";
+// import DisplayColumn from "../../../components/DisplayColumn";
+// import ImportExcel from "../../../components/ImportExcel";
 import Breadcrumb from "../../../components/Breadcrumb/View";
 import { ReactComponent as IC_SHAPE } from "../../../asset/images/shape.svg";
 import { ReactComponent as IC_VECTOR } from "../../../asset/images/vector.svg";
@@ -72,7 +73,9 @@ import {
   CheckBoxCpn,
   TitleFilterCpn,
   TextFieldCpn,
-  AutocompleteCpn,
+  Wrapper,
+  IconButtonCpn,
+  ButtonCpn,
 } from "../../../basicComponents";
 
 import { useHistory } from "react-router-dom";
@@ -119,7 +122,7 @@ const ProductList = () => {
   const [name, setName] = useState("");
   const [openShowTableDetail, setOpenShowTableDetail] = useState(0);
 
-  const [showLayoutFilter, setShowLayoutFilter] = useState(false);
+  const [isShowLayout, setIsShowLayout] = useState(false);
 
   const dataSourceRef = useRef([]);
   const searchRef = useRef("");
@@ -366,8 +369,8 @@ const ProductList = () => {
   return (
     <>
       <div className="product p-2">
-        <div className={`filter-product ${showLayoutFilter && "dl-none"}`}>
-          <div className="p-2 pt-2">
+        <Wrapper.WrapperFilter isShowLayout={isShowLayout}>
+          <div className="p-2">
             <div className="mb-4">
               <TitleFilterCpn className="mb-2" label="Tìm kiếm" />
               <TextFieldCpn label="Tên sản phẩm" />
@@ -393,21 +396,12 @@ const ProductList = () => {
               <div></div>
             </div>
           </div>
-        </div>
-        <div className={`table-product ${showLayoutFilter && "w-100"}`}>
-          <div
-            className="btn-show-layout"
-            onClick={() => {
-              setShowLayoutFilter((pre) => !pre);
-            }}
-          >
-            {showLayoutFilter ? (
-              <ChevronRightIcon style={{ margin: "3px", color: "#fff" }} />
-            ) : (
-              <ChevronLeftIcon style={{ margin: "3px", color: "#fff" }} />
-            )}
-          </div>
-          <div className="product-header">
+        </Wrapper.WrapperFilter>
+        <Wrapper.WrapperTable
+          isShowLayout={isShowLayout}
+          setIsShowLayout={setIsShowLayout}
+        >
+          <Wrapper.WrapperHeader>
             <div>
               <Breadcrumb />
               <div className="mt-2 text-black">
@@ -434,12 +428,13 @@ const ProductList = () => {
                 <IC_VECTOR className="pr-1" />
                 <div>Nhập từ Excel</div>
               </button>
-              <button className="btn-custom">
-                <IC_LIST />
-              </button>
+              <DisplayColumn
+                columns={tableColumn}
+                handleCheckChange={onChangeColumnView}
+              />
             </div>
-          </div>
-          <div className="product-content p-3">
+          </Wrapper.WrapperHeader>
+          <Wrapper.WrapperContent>
             <TableContainer className="table-list-product">
               <Table stickyHeader>
                 <TableHead>
@@ -447,12 +442,10 @@ const ProductList = () => {
                     {column?.map((col) => (
                       <TableCell
                         nowrap="true"
-                        className={[
-                          "p-2 border-0",
-                          col.show ? "d-table-cell" : "dl-none",
-                        ].join(" ")}
+                        className={`p-2 text-uppercase text-black ${
+                          !col.show && "dl-none"
+                        }`}
                         key={col.field}
-                        style={{ color: "rgb(113 110 110)" }}
                       >
                         {t(col.title)}
                       </TableCell>
@@ -465,16 +458,10 @@ const ProductList = () => {
                       return (
                         <>
                           <TableRow
-                            style={{ height: "50px" }}
                             hover
                             role="checkbox"
                             tabIndex={-1}
                             key={index}
-                            onClick={() => {
-                              setOpenShowTableDetail((pre) =>
-                                pre === index + 1 ? null : index + 1
-                              );
-                            }}
                           >
                             {column?.map((col, indexRow) => {
                               let value = item[col.field];
@@ -516,65 +503,22 @@ const ProductList = () => {
                                         key={indexRow}
                                         align={col.align}
                                       >
-                                        <IconButton
-                                          className="mr-2 p-2"
-                                          style={{
-                                            background: "#BAE7D9",
-                                          }}
-                                          onClick={(e) => {
+                                        <IconButtonCpn.IconButtonEdit
+                                          onClick={() => {
                                             onEdit(item);
                                           }}
-                                        >
-                                          <IC_EDIT />
-                                        </IconButton>
-                                        <IconButton
-                                          className="mr-2 p-2"
-                                          style={{
-                                            background: "#FFA15C",
+                                        />
+                                        <IconButtonCpn.IconButtonTrash
+                                          onClick={() => {
+                                            onEdit(item);
                                           }}
-                                          onClick={(e) => {
-                                            onRemove(item);
+                                        />
+                                        <IconButtonCpn.IconButtonLock
+                                          checkLock={item["o_23"] === "N"}
+                                          onClick={() => {
+                                            onLock(item);
                                           }}
-                                        >
-                                          <IC_TRASH />
-                                        </IconButton>
-                                        {glb_sv.userLev === "0" && (
-                                          <Tooltip
-                                            title={
-                                              t(
-                                                item["o_23"] === "Y"
-                                                  ? "product.unblock_yn"
-                                                  : "product.block_yn"
-                                              ) + "?"
-                                            }
-                                          >
-                                            {item["o_23"] === "N" ? (
-                                              <IconButton
-                                                className="mr-2 p-2"
-                                                style={{
-                                                  background: "#BAE7D9",
-                                                }}
-                                                onClick={(e) => {
-                                                  onLock(item);
-                                                }}
-                                              >
-                                                <IC_UNLOCK />
-                                              </IconButton>
-                                            ) : (
-                                              <IconButton
-                                                className="mr-2 p-2"
-                                                onClick={(e) => {
-                                                  onLock(item);
-                                                }}
-                                                style={{
-                                                  background: "#FEE2E2",
-                                                }}
-                                              >
-                                                <IC_LOCK />
-                                              </IconButton>
-                                            )}
-                                          </Tooltip>
-                                        )}
+                                        />
                                       </TableCell>
                                     );
                                   default:
@@ -598,9 +542,15 @@ const ProductList = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-          </div>
-          <div className="product-footer p-2">
-            Hiển thị{" "}
+          </Wrapper.WrapperContent>
+          <Wrapper.WrapperFooter>
+            <ButtonCpn.ButtonGetMoreData
+              onClick={getNextData}
+              totalRecords={totalRecords}
+              displayRecords={dataSourceRef.current.length}
+              disabled={dataSourceRef.current.length >= totalRecords}
+            />
+            {/* Hiển thị{" "}
             {dataSourceRef.current.length +
               "/" +
               totalRecords +
@@ -617,14 +567,14 @@ const ProductList = () => {
               }}
             >
               <IC_SHAPE className="pr-1" /> Lấy thêm dữ liệu{" "}
-              {searchProcess && <AutorenewIcon />}
-            </button>
+              {searchProcess && <AutorenewIcon className="button-loading" />}
+            </button> */}
             <button className="btn-custom">
               <IC_VECTOR className="pr-1" />
               <div>Xuất ra Excel</div>
             </button>
-          </div>
-        </div>
+          </Wrapper.WrapperFooter>
+        </Wrapper.WrapperTable>
       </div>
       {/* <Card className="mb-2">
         <CardHeader
