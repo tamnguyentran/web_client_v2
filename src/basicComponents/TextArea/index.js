@@ -9,7 +9,7 @@ const TextAreaStyle = styled("textarea")(({ theme }) => ({
   border: `1px solid var(--gray4)`,
   flexGrow: 1,
   borderRadius: 3,
-  fontSize: "14px",
+  fontSize: "0.875rem",
   outline: "none",
   // "&:focus": {
   //   border: `1px solid ${theme.palette.primary.main} !important`,
@@ -28,6 +28,7 @@ export default function TextFieldCpn(props) {
     value = "",
     inputRef,
     onKeyPress = () => {},
+    name = "",
   } = props;
   const [isColorLabel, setIsColorLabel] = useState(false);
   return (
@@ -40,6 +41,7 @@ export default function TextFieldCpn(props) {
         onChange={onChange}
         value={value}
         ref={inputRef}
+        name={name}
         onKeyPress={onKeyPress}
         onFocus={() => {
           setIsColorLabel(true);

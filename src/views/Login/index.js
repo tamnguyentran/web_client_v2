@@ -48,7 +48,7 @@ const LoginLayout = () => {
   const passwordRef = useRef(null);
 
   useEffect(() => {
-    localStorage.removeItem("userInfo");
+    sessionStorage.removeItem("userInfo");
     const userNm = localStorage.getItem("userNm");
     if (usernameRef?.current) usernameRef.current.focus();
     if (userNm) {
@@ -66,8 +66,9 @@ const LoginLayout = () => {
       }, 100);
     }
     //-- xet for test: admin.12/mDKfqs
-    setUser({ username: "admin.12", password: "mDKfqs" });
-    // setUser({ username: "admin.107", password: "jltFKR" });
+    // setUser({ username: "admin.12", password: "mDKfqs" });
+    setUser({ username: "admin.107", password: "jltFKR" });
+    console.log("sai nhảy vào đây");
   }, []);
 
   const handleChange = (e) => {
@@ -115,6 +116,7 @@ const LoginLayout = () => {
       glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
       control_sv.clearReqInfoMapRequest(cltSeqResult);
     } else if (message["PROC_DATA"]) {
+      console.log("reqInfoMap, message-", reqInfoMap, message);
       // đăng ký thành công
       let dataMessage = message["PROC_DATA"];
       glb_sv.authFlag = true;
@@ -150,7 +152,8 @@ const LoginLayout = () => {
         pharTele: glb_sv.pharTele,
         auFlag: true,
       };
-      localStorage.setItem("userInfo", JSON.stringify(objAuthen));
+      console.log(objAuthen);
+      sessionStorage.setItem("userInfo", JSON.stringify(objAuthen));
       const msgss = CryptoJS.AES.encrypt(
         JSON.stringify(objAuthen),
         glb_sv.configInfo["0101X10"]
@@ -160,7 +163,7 @@ const LoginLayout = () => {
         glb_sv.configInfo["0101X10"]
       ).toString();
       sessionStorage.setItem("0101X10", msgss);
-      sessionStorage.setItem("0101X11", secrInfo);
+      sessionStorage.setItem("0101X11", secrInfo); // Lưu token
       if (recommend) {
         localStorage.setItem("userNm", user.username);
       } else {

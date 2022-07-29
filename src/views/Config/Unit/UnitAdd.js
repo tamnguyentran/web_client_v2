@@ -279,13 +279,13 @@ const UnitAdd = ({ onRefresh }) => {
               }}
             />
             <ButtonCpn.ButtonUpdate
-              title="Lưu (F4)"
+              title="Lưu (F3)"
               onClick={handleCreate}
               process={process}
               disabled={checkValidate()}
             />
             <ButtonCpn.ButtonUpdate
-              title="Lưu và tiếp tục"
+              title="Lưu và tiếp tục (f4)"
               onClick={() => {
                 saveContinue.current = true;
                 handleCreate();

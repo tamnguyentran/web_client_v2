@@ -2,37 +2,35 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { FormControl } from "@material-ui/core";
 import SnackBarService from "../../utils/service/snackbar_service";
 import sendRequest from "../../utils/service/sendReq";
 import reqFunction from "../../utils/constan/functions";
 import glb_sv from "../../utils/service/global_service";
 import control_sv from "../../utils/service/control_services";
-
 import { AutocompleteCpn } from "../../basicComponents";
 
 const serviceInfo = {
   DROPDOWN_LIST: {
-    functionName: "drop_list",
-    reqFunct: reqFunction.UNIT_DROPDOWN_LIST,
+    functionName: "dictionary",
+    reqFunct: reqFunction.WARN_TIME_DICTIONNARY,
     biz: "common",
     object: "dropdown_list",
   },
 };
 
-const Unit_Autocomplete = ({
+const TimeAutocomplete = ({
   onSelect,
+  defaultSelect = false,
   label,
   style,
   size,
   value,
-  unitID = null,
+  required = false,
+  dictionaryID = null,
   disabled = false,
   onKeyPress = () => null,
   inputRef = null,
-  exceptOption = 0,
-  className,
-  placeholder,
+  placeholder = "",
 }) => {
   const { t } = useTranslation();
 
@@ -41,42 +39,46 @@ const Unit_Autocomplete = ({
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    const inputParam = ["units", "%"];
+    const inputParam = ["warn_time_tp"];
     sendRequest(
       serviceInfo.DROPDOWN_LIST,
       inputParam,
-      resultUnitDropDownList,
+      handleResultDictionnaryDropDownList,
       true,
       handleTimeOut
     );
   }, []);
 
   useEffect(() => {
-    if (!!unitID && unitID !== 0) {
-      let item = dataSource.find((x) => x.o_1 === unitID);
+    if (!!dictionaryID && dictionaryID !== 0) {
+      let item = dataSource.find((x) => x.o_1 === dictionaryID);
       setValueSelect(item);
-      setInputValue(!!item ? item.o_2 : "");
-    } else if (value !== null || value !== undefined) {
-      let item = dataSource.find((x) => x.o_2 === value);
-      setValueSelect(item);
-      setInputValue(value);
+      setInputValue(item.o_2);
     } else {
       setValueSelect({});
-      setInputValue("");
     }
-  }, [unitID, value, dataSource]);
+  }, [dictionaryID, dataSource]);
 
-  const resultUnitDropDownList = (reqInfoMap, message = {}) => {
+  useEffect(() => {
+    if (value !== null || value !== undefined) {
+      setValueSelect(dataSource.find((x) => x.o_2 === value));
+      setInputValue(value);
+    }
+  }, [value, dataSource]);
+
+  const handleResultDictionnaryDropDownList = (reqInfoMap, message) => {
     if (message["PROC_STATUS"] !== 1) {
+      // xử lý thất bại
       const cltSeqResult = message["REQUEST_SEQ"];
       glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
       control_sv.clearReqInfoMapRequest(cltSeqResult);
     } else if (message["PROC_DATA"]) {
       let newData = message["PROC_DATA"];
-      if (exceptOption) {
-        newData.rows = newData.rows.filter((item) => item.o_1 !== exceptOption);
-      }
       setDataSource(newData.rows);
+      if (defaultSelect) {
+        setValueSelect(newData.rows[2]);
+        onSelect(newData.rows[2]);
+      }
     }
   };
 
@@ -92,27 +94,27 @@ const Unit_Autocomplete = ({
   const onChange = (event, object, reson) => {
     setValueSelect(object);
     onSelect(object);
+    setInputValue(object.o_2);
   };
 
   return (
     // <Autocomplete
+    //   margin="dense"
     //   disabled={disabled}
     //   onChange={onChange}
     //   onInputChange={handleChangeInput}
     //   onKeyPress={onKeyPress}
-    //   // autoSelect={true}
-    //   autoHighlight={true}
-    //   autoComplete={true}
     //   size={!!size ? size : "small"}
-    //   noOptionsText={t("noData")}
     //   id="combo-box-demo"
     //   options={dataSource}
     //   value={valueSelect}
     //   getOptionLabel={(option) => option.o_2 || ""}
+    //   inputValue={value}
     //   style={style}
     //   renderInput={(params) => (
     //     <TextField
     //       inputRef={inputRef}
+    //       required={required}
     //       value={inputValue}
     //       {...params}
     //       label={!!label ? label : ""}
@@ -135,4 +137,4 @@ const Unit_Autocomplete = ({
   );
 };
 
-export default Unit_Autocomplete;
+export default TimeAutocomplete;

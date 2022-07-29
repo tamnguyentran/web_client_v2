@@ -39,8 +39,15 @@ import sendRequest from "../../../utils/service/sendReq";
 import { tableColumn, config } from "./Modal/WarnTime.modal";
 import WarnTimeAdd from "./WarnTimeAdd";
 import WarnTimeEdit from "./WarnTimeEdit";
+import WarnTimeRemove from "./WarnTimeRemove";
 import Breadcrumb from "../../../components/Breadcrumb/View";
-import { useHotkeys } from 'react-hotkeys-hook'
+import { useHotkeys } from "react-hotkeys-hook";
+import {
+  TitleFilterCpn,
+  Wrapper,
+  IconButtonCpn,
+  ButtonCpn,
+} from "../../../basicComponents";
 
 const serviceInfo = {
   GET_ALL: {
@@ -71,17 +78,18 @@ const WarnTimeList = () => {
   const [name, setName] = useState("");
   const [processing, setProcessing] = useState(false);
   const [searchProcess, setSearchProcess] = useState(false);
+  const [isShowLayout, setIsShowLayout] = useState(false);
   const dataSourceRef = useRef([]);
   const searchRef = useRef("");
   const idRef = useRef(0);
 
   useHotkeys(
-    'F10',
+    "F10",
     () => {
-      handleDelete()
+      handleDelete();
     },
-    { enableOnTags: ['INPUT', 'SELECT', 'TEXTAREA'] }
-)
+    { enableOnTags: ["INPUT", "SELECT", "TEXTAREA"] }
+  );
 
   useHotkeys(
     "esc",
@@ -204,7 +212,7 @@ const WarnTimeList = () => {
 
   const handleDelete = (e) => {
     // e.preventDefault();
-    setProcessing(true)
+    setProcessing(true);
     idRef.current = id;
     sendRequest(
       serviceInfo.DELETE,
@@ -257,227 +265,452 @@ const WarnTimeList = () => {
 
   return (
     <>
-      <Card className="mb-2">
-      <CardHeader
-          title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
-        />
-        <CardContent>
-          <SearchOne
-            process={searchProcess}
-            name="product_name"
-            label={"product.search_name"}
-            searchSubmit={searchSubmit}
-          />
-        </CardContent>
-      </Card>
-      <ColumnCtrComp
-        anchorEl={anChorEl}
-        columns={tableColumn}
-        handleClose={onCloseColumn}
-        checkColumnChange={onChangeColumnView}
-      />
-      <Card>
-        <CardHeader
-          title={
-            <>
-              {t("config.warnTime.titleList")}
+      <div className="layout-page p-2">
+        <Wrapper.WrapperFilter isShowLayout={isShowLayout}>
+          <div className="p-2">
+            <div className="mb-4">
+              <TitleFilterCpn className="mb-2" label="Tìm kiếm" />
+              <SearchOne
+                process={searchProcess}
+                label={"Tên sản phẩm"}
+                searchSubmit={searchSubmit}
+                itemGrd={3}
+              />
+            </div>
+          </div>
+        </Wrapper.WrapperFilter>
+        <Wrapper.WrapperTable
+          isShowLayout={isShowLayout}
+          setIsShowLayout={setIsShowLayout}
+        >
+          <Wrapper.WrapperHeader>
+            <div>
+              <Breadcrumb />
+              <div className="mt-2 text-black">
+                Đây là trang giúp bạn tìm kiếm, thiết lập cảnh báo hạn sử dụng
+                cho sản phẩm
+              </div>
+            </div>
+            <div className="flex">
+              <WarnTimeAdd onRefresh={handleRefresh} />
+              &ensp;
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}
               />
-            </>
-          }
-          action={
-            <div className="d-flex align-items-center">
-              <WarnTimeAdd onRefresh={handleRefresh} />
             </div>
-          }
-        />
-        <CardContent>
-          <TableContainer className="height-table-260 tableContainer">
-            <Table stickyHeader>
-              <caption
-                className={[
-                  "text-center text-danger border-bottom",
-                  dataSource.length > 0 ? "d-none" : "",
-                ].join(" ")}
-              >
-                {t("lbl.emptyData")}
-              </caption>
-              <TableHead>
-                <TableRow>
-                  {column.map((col) => (
-                    <TableCell
-                      nowrap="true"
-                      className={[
-                        "p-2 border-0",
-                        col.show ? "d-table-cell" : "d-none",
-                      ].join(" ")}
-                      key={col.field}
-                    >
-                      {t(col.title)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dataSource.map((item, index) => {
-                  return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                      {column.map((col, indexRow) => {
-                        let value = item[col.field];
-                        if (col.show) {
-                          switch (col.field) {
-                            case "stt":
-                              return (
-                                <TableCell
-                                  nowrap="true"
-                                  key={indexRow}
-                                  align={col.align}
-                                >
-                                  {index + 1}
-                                </TableCell>
-                              );
-                            case "action":
-                              return (
-                                <TableCell
-                                  nowrap="true"
-                                  key={indexRow}
-                                  align={col.align}
-                                >
-                                  <IconButton
-                                    onClick={(e) => {
-                                      onRemove(item);
-                                    }}
+          </Wrapper.WrapperHeader>
+          <Wrapper.WrapperContent>
+            <TableContainer className="table-list-layout">
+              <Table stickyHeader>
+                <caption
+                  className={[
+                    "text-center text-danger border-bottom",
+                    dataSource.length > 0 && "dl-none",
+                  ].join(" ")}
+                >
+                  {t("lbl.emptyData")}
+                </caption>
+                <TableHead>
+                  <TableRow>
+                    {column.map((col) => (
+                      <TableCell
+                        nowrap="true"
+                        className={`p-2 text-uppercase text-black ${
+                          !col.show && "dl-none"
+                        }`}
+                        key={col.field}
+                      >
+                        {t(col.title)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dataSource.map((item, index) => {
+                    return (
+                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                        {column.map((col, indexRow) => {
+                          let value = item[col.field];
+                          if (col.show) {
+                            switch (col.field) {
+                              case "stt":
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
                                   >
-                                    <DeleteIcon
-                                      style={{ color: "red" }}
-                                      fontSize="small"
+                                    {index + 1}
+                                  </TableCell>
+                                );
+                              case "action":
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
+                                  >
+                                    <IconButtonCpn.IconButtonEdit
+                                      onClick={() => {
+                                        onEdit(item);
+                                      }}
                                     />
-                                  </IconButton>
-                                  <IconButton
-                                    onClick={(e) => {
-                                      onEdit(item);
-                                    }}
+                                    <IconButtonCpn.IconButtonTrash
+                                      onClick={() => {
+                                        onRemove(item);
+                                      }}
+                                    />
+                                  </TableCell>
+                                );
+                              default:
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
                                   >
-                                    <EditIcon fontSize="small" />
-                                  </IconButton>
-                                </TableCell>
-                              );
-                            default:
-                              return (
-                                <TableCell
-                                  nowrap="true"
-                                  key={indexRow}
-                                  align={col.align}
-                                >
-                                  {glb_sv.formatValue(value, col["type"])}
-                                </TableCell>
-                              );
+                                    {glb_sv.formatValue(value, col["type"])}
+                                  </TableCell>
+                                );
+                            }
                           }
-                        }
-                      })}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-        <CardActions>
-          <div className="d-flex align-items-center">
-            <Chip
-              size="small"
-              variant="outlined"
-              className="mr-1"
-              label={
-                dataSourceRef.current.length +
-                "/" +
-                totalRecords +
-                " " +
-                t("rowData")
-              }
-            />
-            <Chip
-              variant="outlined"
-              size="small"
-              className="mr-1"
-              deleteIcon={<FastForwardIcon />}
-              onDelete={() => null}
-              label={t("getMoreData")}
+                        })}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Wrapper.WrapperContent>
+          <Wrapper.WrapperFooter>
+            <ButtonCpn.ButtonGetMoreData
               onClick={getNextData}
+              totalRecords={totalRecords}
+              displayRecords={dataSourceRef.current.length}
               disabled={dataSourceRef.current.length >= totalRecords}
             />
             <ExportExcel
-              filename="warnTime"
+              filename="Mốc cảnh báo trước HSD"
               data={dataCSV()}
               headers={headersCSV}
             />
-          </div>
-        </CardActions>
-      </Card>
-
-      {/* modal delete */}
-      <Dialog
-        maxWidth="xs"
-        fullWidth={true}
-        TransitionProps={{
-          addEndListener: (node, done) => {
-            // use the css transitionend event to mark the finish of a transition
-            node.addEventListener("keypress", function (e) {
-              if (e.key === "Enter") {
-                handleDelete();
+          </Wrapper.WrapperFooter>
+        </Wrapper.WrapperTable>
+        <WarnTimeEdit
+          id={id}
+          shouldOpenModal={shouldOpenEditModal}
+          setShouldOpenModal={setShouldOpenEditModal}
+          onRefresh={handleRefresh}
+        />
+        <WarnTimeRemove
+          shouldOpenRemoveModal={shouldOpenRemoveModal}
+          setShouldOpenRemoveModal={setShouldOpenRemoveModal}
+          processing={processing}
+          handleDelete={handleDelete}
+        />
+        {/* <PriceEdit
+          id={id}
+          shouldOpenModal={shouldOpenEditModal}
+          setShouldOpenModal={setShouldOpenEditModal}
+          onRefresh={handleRefresh}
+        /> */}
+        {/* <PriceRemove
+          name={name}
+          shouldOpenRemoveModal={shouldOpenRemoveModal}
+          setShouldOpenRemoveModal={setShouldOpenRemoveModal}
+          processing={processing}
+          handleDelete={handleDelete}
+        /> */}
+        {/* <Dialog
+          maxWidth="xs"
+          fullWidth={true}
+          TransitionProps={{
+            addEndListener: (node, done) => {
+              // use the css transitionend event to mark the finish of a transition
+              node.addEventListener("keypress", function (e) {
+                if (e.key === "Enter") {
+                  handleDelete();
+                }
+              });
+            },
+          }}
+          open={shouldOpenRemoveModal}
+          onClose={(e) => {
+            setShouldOpenRemoveModal(false);
+          }}
+        >
+          <Card>
+            <CardHeader title={t("config.price.titleRemove", { name: name })} />
+            <CardContent>{name}</CardContent>
+            <CardActions
+              className="align-items-end"
+              style={{ justifyContent: "flex-end" }}
+            >
+              <Button
+                size="small"
+                onClick={(e) => {
+                  if (processing) return;
+                  setShouldOpenRemoveModal(false);
+                }}
+                startIcon={<ExitToAppIcon />}
+                variant="contained"
+                disableElevation
+              >
+                {t("btn.close")} (Esc)
+              </Button>
+              <Button
+                className={processing ? "button-loading" : ""}
+                endIcon={processing && <LoopIcon />}
+                size="small"
+                onClick={handleDelete}
+                variant="contained"
+                color="secondary"
+                startIcon={<DeleteIcon />}
+              >
+                {t("btn.delete")} (f10)
+              </Button>
+            </CardActions>
+          </Card>
+        </Dialog> */}
+        {/* <StoreLimitRemove
+          name={name}
+          shouldOpenRemoveModal={shouldOpenRemoveModal}
+          setShouldOpenRemoveModal={setShouldOpenRemoveModal}
+          processing={processing}
+          handleDelete={handleDelete}
+        /> */}
+      </div>
+      {false && (
+        <>
+          <Card className="mb-2">
+            <CardHeader
+              title={
+                <div className="flex aligh-item-center">{<Breadcrumb />}</div>
               }
-            });
-          },
-        }}
-        open={shouldOpenRemoveModal}
-      >
-        <Card>
-          <CardHeader
-            title={t("config.warnTime.titleRemove", { name: name })}
+            />
+            <CardContent>
+              <SearchOne
+                process={searchProcess}
+                name="product_name"
+                label={"product.search_name"}
+                searchSubmit={searchSubmit}
+              />
+            </CardContent>
+          </Card>
+          <ColumnCtrComp
+            anchorEl={anChorEl}
+            columns={tableColumn}
+            handleClose={onCloseColumn}
+            checkColumnChange={onChangeColumnView}
           />
-          <CardContent>{name}</CardContent>
-          <CardActions
-            className="align-items-end"
-            style={{ justifyContent: "flex-end" }}
-          >
-            <Button
-              size="small"
-              onClick={(e) => {
-                if(processing) return
-                setShouldOpenRemoveModal(false);
-              }}
-              startIcon={<ExitToAppIcon />}
-              variant="contained"
-              disableElevation
-            >
-              {t("btn.close")} (Esc)
-            </Button>
-            <Button
-              className={processing ? "button-loading" : ""}
-              size="small"
-              onClick={
-                handleDelete
+          <Card>
+            <CardHeader
+              title={
+                <>
+                  {t("config.warnTime.titleList")}
+                  <DisplayColumn
+                    columns={tableColumn}
+                    handleCheckChange={onChangeColumnView}
+                  />
+                </>
               }
-              variant="contained"
-              color="secondary"
-              startIcon={<DeleteIcon />}
-              endIcon={processing && <LoopIcon />}
-            >
-              {t("btn.delete")} (f10)
-            </Button>
-          </CardActions>
-        </Card>
-      </Dialog>
+              action={
+                <div className="d-flex align-items-center">
+                  <WarnTimeAdd onRefresh={handleRefresh} />
+                </div>
+              }
+            />
+            <CardContent>
+              <TableContainer className="height-table-260 tableContainer">
+                <Table stickyHeader>
+                  <caption
+                    className={[
+                      "text-center text-danger border-bottom",
+                      dataSource.length > 0 ? "d-none" : "",
+                    ].join(" ")}
+                  >
+                    {t("lbl.emptyData")}
+                  </caption>
+                  <TableHead>
+                    <TableRow>
+                      {column.map((col) => (
+                        <TableCell
+                          nowrap="true"
+                          className={[
+                            "p-2 border-0",
+                            col.show ? "d-table-cell" : "d-none",
+                          ].join(" ")}
+                          key={col.field}
+                        >
+                          {t(col.title)}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {dataSource.map((item, index) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={index}
+                        >
+                          {column.map((col, indexRow) => {
+                            let value = item[col.field];
+                            if (col.show) {
+                              switch (col.field) {
+                                case "stt":
+                                  return (
+                                    <TableCell
+                                      nowrap="true"
+                                      key={indexRow}
+                                      align={col.align}
+                                    >
+                                      {index + 1}
+                                    </TableCell>
+                                  );
+                                case "action":
+                                  return (
+                                    <TableCell
+                                      nowrap="true"
+                                      key={indexRow}
+                                      align={col.align}
+                                    >
+                                      <IconButton
+                                        onClick={(e) => {
+                                          onRemove(item);
+                                        }}
+                                      >
+                                        <DeleteIcon
+                                          style={{ color: "red" }}
+                                          fontSize="small"
+                                        />
+                                      </IconButton>
+                                      <IconButton
+                                        onClick={(e) => {
+                                          onEdit(item);
+                                        }}
+                                      >
+                                        <EditIcon fontSize="small" />
+                                      </IconButton>
+                                    </TableCell>
+                                  );
+                                default:
+                                  return (
+                                    <TableCell
+                                      nowrap="true"
+                                      key={indexRow}
+                                      align={col.align}
+                                    >
+                                      {glb_sv.formatValue(value, col["type"])}
+                                    </TableCell>
+                                  );
+                              }
+                            }
+                          })}
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+            <CardActions>
+              <div className="d-flex align-items-center">
+                <Chip
+                  size="small"
+                  variant="outlined"
+                  className="mr-1"
+                  label={
+                    dataSourceRef.current.length +
+                    "/" +
+                    totalRecords +
+                    " " +
+                    t("rowData")
+                  }
+                />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  className="mr-1"
+                  deleteIcon={<FastForwardIcon />}
+                  onDelete={() => null}
+                  label={t("getMoreData")}
+                  onClick={getNextData}
+                  disabled={dataSourceRef.current.length >= totalRecords}
+                />
+                <ExportExcel
+                  filename="warnTime"
+                  data={dataCSV()}
+                  headers={headersCSV}
+                />
+              </div>
+            </CardActions>
+          </Card>
 
-      {/* modal edit */}
-      <WarnTimeEdit
-        id={id}
-        shouldOpenModal={shouldOpenEditModal}
-        setShouldOpenModal={setShouldOpenEditModal}
-        onRefresh={handleRefresh}
-      />
+          {/* modal delete */}
+          <Dialog
+            maxWidth="xs"
+            fullWidth={true}
+            TransitionProps={{
+              addEndListener: (node, done) => {
+                // use the css transitionend event to mark the finish of a transition
+                node.addEventListener("keypress", function (e) {
+                  if (e.key === "Enter") {
+                    handleDelete();
+                  }
+                });
+              },
+            }}
+            open={shouldOpenRemoveModal}
+          >
+            <Card>
+              <CardHeader
+                title={t("config.warnTime.titleRemove", { name: name })}
+              />
+              <CardContent>{name}</CardContent>
+              <CardActions
+                className="align-items-end"
+                style={{ justifyContent: "flex-end" }}
+              >
+                <Button
+                  size="small"
+                  onClick={(e) => {
+                    if (processing) return;
+                    setShouldOpenRemoveModal(false);
+                  }}
+                  startIcon={<ExitToAppIcon />}
+                  variant="contained"
+                  disableElevation
+                >
+                  {t("btn.close")} (Esc)
+                </Button>
+                <Button
+                  className={processing ? "button-loading" : ""}
+                  size="small"
+                  onClick={handleDelete}
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<DeleteIcon />}
+                  endIcon={processing && <LoopIcon />}
+                >
+                  {t("btn.delete")} (f10)
+                </Button>
+              </CardActions>
+            </Card>
+          </Dialog>
+
+          {/* modal edit */}
+          <WarnTimeEdit
+            id={id}
+            shouldOpenModal={shouldOpenEditModal}
+            setShouldOpenModal={setShouldOpenEditModal}
+            onRefresh={handleRefresh}
+          />
+        </>
+      )}
     </>
   );
 };

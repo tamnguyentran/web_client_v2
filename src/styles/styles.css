@@ -15,6 +15,22 @@
   --orange: #ffa15c;
 }
 
+/* html {
+  font-size: 80%;
+} */
+
+@media only screen and (max-width: 600px) {
+  html {
+    font-size: 60% !important;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  html {
+    font-size: 80% !important;
+  }
+}
+
 /* @font-face {
   font-family: "Manrope";
   src: local("Manrope"), url(../../public/font/Manrope.ttf) format("woff");
@@ -55,7 +71,7 @@ label {
   border: none !important;
   background: #e32047;
   color: #ffffff !important;
-  font-size: 14px !important;
+  font-size: 0.875rem !important;
   letter-spacing: 1px !important;
   transition: transform 80ms ease-in !important;
   padding: 10px 30px;
@@ -72,15 +88,15 @@ label {
 }
 
 .fz12 {
-  font-size: 12px !important;
+  font-size: 0.75rem !important;
 }
 
 .fz13 {
-  font-size: 13px !important;
+  font-size: 0.813rem !important;
 }
 
 .fz14 {
-  font-size: 14px !important;
+  font-size: 0.875rem !important;
 }
 
 .boxContainer {
@@ -156,7 +172,7 @@ button:focus {
 } */
 
 .icon-menu {
-  font-size: 20px !important;
+  font-size: 1.25rem !important;
 }
 
 .font-weight-500 {
@@ -203,7 +219,7 @@ button:focus {
 } */
 
 /* .MuiCardHeader-root .MuiCardHeader-title {
-  font-size: 14px;
+  font-size: 0.875rem;
 } */
 
 /* .MuiCardHeader-action {
@@ -319,7 +335,7 @@ button.bg-war:hover {
 
 div.MuiCardHeader-action
   span.MuiTypography-root.MuiFormControlLabel-label.MuiTypography-body1 {
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 /* .tableOrder.tableContainer,
@@ -340,7 +356,7 @@ div.MuiCardHeader-action
 } */
 
 .note {
-  font-size: 13px;
+  font-size: 0.813rem;
 }
 
 .submenu-link {
@@ -523,7 +539,7 @@ div.MuiCardHeader-action
 
 /* .required_note {
   font-style: italic;
-  font-size: 13px;
+  font-size: 0.813rem;
   color: red;
 } */
 
@@ -789,7 +805,7 @@ td {
 }
 
 .text-label-input {
-  font-size: 14px;
+  font-size: 0.875rem;
   padding-bottom: 3px;
   color: var(--black2);
 }

@@ -11,7 +11,8 @@ class socketService {
     this.connectFlag = false;
     this.clientSeq = 1;
     this.key_SendAuthenInfo = "REAUTH_INFO"; // -- for client send old token right after re connect
-    this.key_RcvAuthenInfo = "AUTH_RESULTINFO"; // -- for client receive new token
+    // this.key_RcvAuthenInfo = "AUTH_RESULTINFO"; // -- for client receive new token
+    this.key_RcvAuthenInfo = "REAUTH_RESULT";
     this.key_NotifyRcv = "SEVER_NOTIFY"; // -- for client receive notify info (on)
     this.key_ClientReq = "CLIENT_REQUEST"; // -- for client send request to call a service (emit)
     this.key_ClientReqRcv = "SEVER_RESULTRQ"; // -- for client receive reponse from a service (on)
@@ -40,18 +41,60 @@ class socketService {
       });
 
       this.socket.on(this.key_RcvAuthenInfo, (data) => {
-        if (!data.resultFlag) {
+        console.log("data", data);
+        const dataUserInfo = sessionStorage.getItem("userInfo");
+        console.log("data", dataUserInfo);
+        console.log(
+          "!data.resultFlag-",
+          !data.resultFlag,
+          data["PROC_STATUS"] !== 1
+        );
+        if (data["PROC_STATUS"] !== 1) {
           // -- Inform to user reauthen fail -> Need to relogin
           glb_sv.authFlag = false;
           sessionStorage.removeItem("0101X10");
           sessionStorage.removeItem("0101X11");
         } else {
+          //--------------------------------
+          console.log("vào đât", dataUserInfo);
+          //--------------------------------------
           // store token if server accept connection
-          const secrInfo = CryptoJS.AES.encrypt(
-            data.resultData[0]["tk"],
-            glb_sv.configInfo["0101X10"]
-          ).toString();
-          sessionStorage.setItem("0101X11", secrInfo);
+          if (dataUserInfo) {
+            console.log("vddb");
+            try {
+              console.log("Nhảy vào này");
+              let data = JSON.parse(dataUserInfo);
+              console.log("data-", data);
+
+              glb_sv.authFlag = true;
+              glb_sv.userId = data.userId;
+              glb_sv.pharId = data.pharId;
+              glb_sv.branchId = data.branchId;
+              glb_sv.pharNm = data.branch_nm;
+              glb_sv.pharAddr = data.pharAddr;
+              glb_sv.branch_nm = data.branch_nm;
+              glb_sv.branch_add = data.branch_add;
+              glb_sv.branch_phone = data.branch_phone;
+              glb_sv.logo_nm = data.logo_nm;
+              glb_sv.userEmail = data.userEmail;
+              glb_sv.pharTele = data.pharTele;
+              glb_sv.userNm = data.userNm;
+              glb_sv.userLev = data.userLev;
+              glb_sv.userSt = data.userSt;
+
+              const secrInfo = CryptoJS.AES.encrypt(
+                data.resultData[0]["tk"],
+                glb_sv.configInfo["0101X10"]
+              ).toString();
+
+              sessionStorage.setItem("0101X11", secrInfo);
+            } catch (error) {
+              console.log("vbdhvdbvdh");
+              glb_sv.authFlag = false;
+              sessionStorage.removeItem("0101X10");
+              sessionStorage.removeItem("0101X11");
+            }
+          }
         }
       });
       this.socket.on("connect_timeout", (data) => {
@@ -69,6 +112,7 @@ class socketService {
 
     this.sendReAuToken = () => {
       const secrInfo = sessionStorage.getItem("0101X11");
+      console.log("secrInfo-", secrInfo);
       if (
         secrInfo != null &&
         secrInfo !== undefined &&
@@ -79,7 +123,9 @@ class socketService {
           glb_sv.configInfo["0101X10"]
         );
         const msgDcode = bytes.toString(CryptoJS.enc.Utf8);
+        console.log("abc");
         if (msgDcode) {
+          console.log("bcd");
           this.sendMsg(this.key_SendAuthenInfo, msgDcode);
         }
       }
@@ -144,15 +190,10 @@ class socketService {
       } else {
         this.socket = io(this.url);
       }
-      //   if (glb_sv.sslMode) {
-      //     this.socket = io(this.url, { secure: true, path: "/new_core" });
-      //   } else {
-      //     this.socket = io(this.url, { path: "/new_core" });
-      //   }
       // if (glb_sv.sslMode) {
-      //     this.socket = io(this.url, { secure: true, path: '/new_core' })
+      //   this.socket = io(this.url, { secure: true, path: "/new_core" });
       // } else {
-      //     this.socket = io(this.url, { path: '/new_core' })
+      //   this.socket = io(this.url, { path: "/new_core" });
       // }
       // -- sen token --
       this.socket.on("connect", (data) => {

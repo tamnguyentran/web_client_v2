@@ -32,8 +32,6 @@
   overflow: auto;
 }
 
-
-
 .navbar__item {
   padding: 5px 0px 5px 5px;
   cursor: pointer;
@@ -46,7 +44,7 @@
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
   padding: 10px 4px;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #bcbab8;
 }
 
@@ -71,7 +69,7 @@
 }
 
 .userName {
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .boxIconExpand {

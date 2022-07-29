@@ -29,6 +29,9 @@ import CheckIcon from "@material-ui/icons/Check";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import LoopIcon from "@material-ui/icons/Loop";
+import { Unit, Product, Time } from "../../../components/Autocomplete";
+import { ReactComponent as IC_ADD } from "../../../asset/images/add.svg";
+import { TextFieldCpn, ButtonCpn, TextAreaCpn } from "../../../basicComponents";
 
 const serviceInfo = {
   CREATE: {
@@ -69,7 +72,7 @@ const WarnTimeAdd = ({ onRefresh }) => {
   useHotkeys(
     "esc",
     () => {
-      if(process) return
+      if (process) return;
       setShouldOpenModal(false);
       setWarnTime({});
       setProductSelect("");
@@ -155,11 +158,11 @@ const WarnTimeAdd = ({ onRefresh }) => {
     setProductSelect(!!obj ? obj?.o_2 : "");
   };
 
-  const handleChangeAmt = (value) => {
+  const handleChangeAmt = (e) => {
     const newWarnTime = { ...warnTime };
     newWarnTime["warn_amt"] =
-      Number(value.value) >= 0 && Number(value.value) <= 100
-        ? Number(value.value)
+      Number(e.target.value) >= 0 && Number(e.target.value) <= 100
+        ? Number(e.target.value)
         : 1;
     setWarnTime(newWarnTime);
   };
@@ -173,7 +176,7 @@ const WarnTimeAdd = ({ onRefresh }) => {
 
   return (
     <>
-      <Button
+      {/* <Button
         size="small"
         variant="outlined"
         startIcon={<AddIcon />}
@@ -185,6 +188,18 @@ const WarnTimeAdd = ({ onRefresh }) => {
         }}
       >
         Thêm mới (F2)
+      </Button> */}
+      <Button
+        style={{ height: "40px" }}
+        size="medium"
+        className="primary-bg text-white"
+        variant="contained"
+        onClick={() => {
+          setShouldOpenModal(true);
+        }}
+      >
+        <IC_ADD className="pr-1" />
+        <div>Thêm mới (F2)</div>
       </Button>
       <Dialog
         fullWidth={true}
@@ -195,11 +210,14 @@ const WarnTimeAdd = ({ onRefresh }) => {
         // }}
       >
         <Card>
-          <CardHeader title={t("config.warnTime.titleAdd")} />
+          <CardHeader
+            className="card-header"
+            title={t("config.warnTime.titleAdd")}
+          />
           <CardContent>
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <Product_Autocomplete
+                {/* <Product_Autocomplete
                   autoFocus={true}
                   value={productSelect || ""}
                   style={{ marginTop: 8, marginBottom: 4 }}
@@ -212,10 +230,22 @@ const WarnTimeAdd = ({ onRefresh }) => {
                       step2Ref.current.focus();
                     }
                   }}
+                /> */}
+                <Product
+                  value={productSelect || ""}
+                  autoFocus={true}
+                  label={t("Sản phẩm (*)")}
+                  onSelect={handleSelectProduct}
+                  inputRef={step1Ref}
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      step2Ref.current.focus();
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={6}>
-                <NumberFormat
+                {/* <NumberFormat
                   className="inputNumber"
                   style={{ width: "100%" }}
                   required
@@ -238,11 +268,36 @@ const WarnTimeAdd = ({ onRefresh }) => {
                       step3Ref.current.focus();
                     }
                   }}
+                /> */}
+                <TextFieldCpn
+                  label={t("Khoảng thời gian tính (*)")}
+                  onChange={handleChangeAmt}
+                  value={warnTime.warn_amt || ""}
+                  onFocus={(e) => e.target.select()}
+                  inputRef={step2Ref}
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      step3Ref.current.focus();
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={6}>
-                <WarnTimeAutocompelte
+                <Time
                   defaultSelect={true}
+                  value={warnTime.warn_time_nm || ""}
+                  autoFocus={true}
+                  label={t("config.warnTime.warn_time_tp")}
+                  onSelect={handleChangeTimeTp}
+                  inputRef={step3Ref}
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      handleCreate();
+                    }
+                  }}
+                />
+                {/* <WarnTimeAutocompelte
+                  // defaultSelect={true}
                   value={warnTime.warn_time_nm || ""}
                   diectionName="warn_time_tp"
                   style={{ marginTop: 8, marginBottom: 4 }}
@@ -255,20 +310,18 @@ const WarnTimeAdd = ({ onRefresh }) => {
                       handleCreate();
                     }
                   }}
-                />
+                /> */}
               </Grid>
             </Grid>
           </CardContent>
-          <CardActions
-            className="align-items-end"
-            style={{ justifyContent: "flex-end" }}
-          >
-            <Button
+          <CardActions className="align-items-end justify-content-end">
+            {/* <Button
               size="small"
               onClick={(e) => {
                 if (
                   (controlTimeOutKey &&
-                  control_sv.ControlTimeOutObj[controlTimeOutKey]) || process
+                    control_sv.ControlTimeOutObj[controlTimeOutKey]) ||
+                  process
                 ) {
                   return;
                 }
@@ -283,7 +336,7 @@ const WarnTimeAdd = ({ onRefresh }) => {
             <Button
               size="small"
               onClick={() => {
-                if(process) return
+                if (process) return;
                 handleCreate();
               }}
               variant="contained"
@@ -319,7 +372,35 @@ const WarnTimeAdd = ({ onRefresh }) => {
               startIcon={<SaveIcon />}
             >
               {t("save_continue")} (F4)
-            </Button>
+            </Button> */}
+            <ButtonCpn.ButtonClose
+              process={process}
+              onClick={() => {
+                if (
+                  (controlTimeOutKey &&
+                    control_sv.ControlTimeOutObj[controlTimeOutKey]) ||
+                  process
+                ) {
+                  return;
+                }
+                setShouldOpenModal(false);
+              }}
+            />
+            <ButtonCpn.ButtonUpdate
+              title="Lưu (F3)"
+              onClick={handleCreate}
+              process={process}
+              disabled={checkValidate()}
+            />
+            <ButtonCpn.ButtonUpdate
+              title="Lưu và tiếp tục (F4)"
+              onClick={() => {
+                saveContinue.current = true;
+                handleCreate();
+              }}
+              process={process}
+              disabled={checkValidate()}
+            />
           </CardActions>
         </Card>
       </Dialog>

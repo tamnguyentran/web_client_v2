@@ -38,6 +38,14 @@
   font-family: var(--fontMain) !important;
 }
 
+@media only screen and (max-width: 1400px) {
+  .wrapper-content {
+    height: calc(100% - 143.5px);
+    background: var(--clrMain);
+    font-family: var(--fontMain) !important;
+  }
+}
+
 .btn-show-layout {
   position: absolute;
   top: 40%;
