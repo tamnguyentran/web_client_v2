@@ -58,6 +58,7 @@ const ListProductImport = (props) => {
               {column.map((col, index) => {
                 return (
                   <Tooltip
+                    key={index}
                     placement="top"
                     disableFocusListener
                     disableTouchListener

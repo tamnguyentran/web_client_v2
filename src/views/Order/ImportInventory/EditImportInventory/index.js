@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import {
@@ -16,30 +16,32 @@ import {
   CardContent,
   CardActions,
   Dialog,
+  Tooltip
 } from "@material-ui/core";
 import NumberFormat from "react-number-format";
 import IconButton from "@material-ui/core/IconButton";
-import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-import EditIcon from "@material-ui/icons/Edit";
 import LoopIcon from "@material-ui/icons/Loop";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SaveIcon from "@material-ui/icons/Save";
-import CheckIcon from "@material-ui/icons/Check";
 import DeleteIcon from "@material-ui/icons/Delete";
+import BorderColorIcon from "@material-ui/icons/BorderColor";
+import CancelIcon from "@material-ui/icons/Cancel";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
 import glb_sv from "../../../../utils/service/global_service";
 import control_sv from "../../../../utils/service/control_services";
 import SnackBarService from "../../../../utils/service/snackbar_service";
 import reqFunction from "../../../../utils/constan/functions";
 import sendRequest from "../../../../utils/service/sendReq";
+import { sortBy, debounce } from "lodash";
 
 import {
   tableListEditColumn,
   invoiceImportInventoryModal,
+  productImportModal
 } from "../Modal/ImportInventory.modal";
 import moment from "moment";
-
-import EditProductRows from "./EditProductRows";
 import AddProductClone from "../AddProductClone";
 import { useReactToPrint } from "react-to-print";
 import Import_Inventory_Bill from "../../../../components/Bill/Import_Inventory_Bill";
@@ -70,6 +72,12 @@ const serviceInfo = {
     biz: "import",
     object: "imp_inventory_dt",
   },
+  UPDATE_PRODUCT_TO_INVOICE: {
+    functionName: 'update',
+    reqFunct: reqFunction.PRODUCT_IMPORT_INVOICE_UPDATE,
+    biz: 'import',
+    object: 'imp_inventory_dt',
+},
 };
 
 const EditImportInventory = ({}) => {
@@ -80,16 +88,23 @@ const EditImportInventory = ({}) => {
     ...invoiceImportInventoryModal,
   });
   const [dataSource, setDataSource] = useState([]);
-  const [productEditID, setProductEditID] = useState(-1);
   const [column, setColumn] = useState([...tableListEditColumn]);
   const [productDeleteIndex, setProductDeleteIndex] = useState(null);
   const [productDeleteModal, setProductDeleteModal] = useState({});
   const [shouldOpenDeleteModal, setShouldOpenDeleteModal] = useState(false);
   const [deleteProcess, setDeleteProcess] = useState(false);
   const [resetFormAddFlag, setResetFormAddFlag] = useState(false);
+  const [isIndexRow, setIsIndexRow] = useState(null);
+  const [process, setProcess] = useState(false)
+  const [sortColumn, setSortColumn] = useState({columIndex: null, status: 'DESC'});
+
+  const [productInfo, setProductInfo] = useState({
+    ...productImportModal,
+  });
 
   const componentPrint = useRef(null);
   const newInvoiceID = useRef(-1);
+  const dataRef = useRef([])
 
   useEffect(() => {
     if (id !== 0) {
@@ -149,12 +164,14 @@ const EditImportInventory = ({}) => {
     } else if (message["PROC_DATA"]) {
       // xử lý thành công
       let newData = message["PROC_DATA"];
+      dataRef.current = newData.rows;
       setDataSource(newData.rows);
     }
   };
 
   //-- xử lý khi timeout -> ko nhận được phản hồi từ server
   const handleTimeOut = (e) => {
+    setProcess(false)
     SnackBarService.alert(t(`message.${e.type}`), true, 4, 3000);
   };
 
@@ -164,11 +181,11 @@ const EditImportInventory = ({}) => {
       return;
     }
     const inputParam = [
-      ImportInventory.invoice_id || newInvoiceID.current,
+      ImportInventory.invoice_no || newInvoiceID.current,
       productObject.prod_id,
       productObject.lot_no,
-      productObject.unit_id,
       productObject.qty,
+      productObject.unit_id,
       productObject.made_dt
         ? moment(productObject.made_dt).format("YYYYMMDD")
         : "",
@@ -205,7 +222,7 @@ const EditImportInventory = ({}) => {
         setResetFormAddFlag(false);
       }, 1000);
       sendRequest(
-        serviceInfo.GET_ALL_PRODUCT_BY_INVOICE_ID,
+        serviceInfo.GET_ALL_PRODUCT_BY_IMPORT_INVENTORY_ID,
         [newInvoiceID.current],
         handleGetAllProductByInvoiceID,
         true,
@@ -252,7 +269,6 @@ const EditImportInventory = ({}) => {
     );
     setDeleteProcess(false);
     if (message["PROC_STATUS"] !== 1) {
-      // xử lý thất bại
       const cltSeqResult = message["REQUEST_SEQ"];
       glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
       control_sv.clearReqInfoMapRequest(cltSeqResult);
@@ -262,25 +278,6 @@ const EditImportInventory = ({}) => {
       setShouldOpenDeleteModal(false);
       handleRefresh();
     }
-  };
-
-  const checkValidate = () => {
-    if (
-      dataSource.length > 0 &&
-      !!ImportInventory.supplier &&
-      !!ImportInventory.order_dt
-    ) {
-      return false;
-    }
-    return true;
-  };
-
-  const onDoubleClickRow = (rowData) => {
-    if (!rowData) {
-      SnackBarService.alert(t("wrongData"), true, "error", 3000);
-      return;
-    }
-    setProductEditID(rowData.o_1);
   };
 
   const handleRefresh = () => {
@@ -341,37 +338,127 @@ const EditImportInventory = ({}) => {
     content: () => componentPrint.current,
   });
 
+  const handleClickEdit = (item, index) => {
+    setIsIndexRow(index);
+    setProductInfo({
+      ...productInfo,
+      invoice_id: item.o_2,
+      edit_id: item.o_1,
+      qty: item.o_8,
+      price: item.o_11,
+    });
+  };
+
+  const handleChangeUpdate = (inputKey, inputValue) => {
+    const newProductInfo = { ...productInfo };
+    newProductInfo[inputKey] = inputValue;
+    setProductInfo(newProductInfo);
+  };
+
+  const handleFocus = (event) => event.target.select();
+
+  const updateDataListProduct = (rowData) => { 
+    if (!productInfo.invoice_id || !productInfo.edit_id || productInfo.qty <= 0 || productInfo.price < 0) return
+    setProcess(true)
+    const inputParam = [productInfo.invoice_id, productInfo.edit_id, productInfo.qty, productInfo.price]
+    sendRequest(serviceInfo.UPDATE_PRODUCT_TO_INVOICE, inputParam, handleResultUpdateProduct, true, handleTimeOut)
+  };
+
+  const handleResultUpdateProduct = (reqInfoMap, message) => {
+    SnackBarService.alert(message['PROC_MESSAGE'], true, message['PROC_STATUS'], 3000)
+    setProcess(false)
+    if (message['PROC_STATUS'] !== 1) {
+        // xử lý thất bại
+        const cltSeqResult = message['REQUEST_SEQ']
+        glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap)
+        control_sv.clearReqInfoMapRequest(cltSeqResult)
+    } else if (message['PROC_DATA']) {
+        handleRefresh()
+        setIsIndexRow(null)
+        setProductInfo({ ...productImportModal })
+    }
+  }
+
+  const handleClickSortColum = (col,index) =>{
+    let sortData
+    if (sortColumn?.status === 'DESC') {
+      sortData = sortBy(dataSource, [col.field],'DESC');
+      setSortColumn({columIndex: index, status: 'DSC'})
+    } else {
+      sortData = sortBy(dataSource, [col.field]).reverse();
+      setSortColumn({columIndex: index, status: 'DESC'})
+    }
+    setDataSource(sortData);
+  }
+  
+  const showIconSort = () => {
+    switch (sortColumn?.status) {
+      case "DSC":
+        return <ExpandLessIcon/>
+      case "DESC":
+        return <KeyboardArrowDownIcon/>
+      default:
+        return null
+    }
+  };
+
+  const handleFilterProduct = (e) => {
+    e.target.value = e.target.value.trimStart().toUpperCase();
+    if (e.target.value === "") {
+      handleRefresh();
+    } else {
+      debouncedSave({ value: e.target.value, dataRef: dataRef.current });
+    }
+  };
+
+  const debouncedSave = useCallback(
+    debounce((data) => {
+      console.log("vjjdv")
+      let result = data.dataRef.filter((item) => {
+        return (
+          data.value.search(item.o_4) != -1 || item.o_4.search(data.value) != -1
+        );
+      });
+      setDataSource(result);
+    }, 100),
+    []
+  );
   return (
-    <Grid container spacing={1}>
-      <EditProductRows
-        productEditID={productEditID}
-        invoiceID={newInvoiceID.current}
-        onRefresh={handleRefresh}
-        setProductEditID={setProductEditID}
-      />
-      <Grid item md={9} xs={12}>
+    <Grid container spacing={1} className="w-100">
+      <Grid item md={9} xs={12} className="h-100">
         <AddProductClone
           onAddProduct={handleAddProduct}
           resetFlag={resetFormAddFlag}
         />
-        <Card>
+        <Card style={{ height: "calc(100% - 168px)"}}>
           <CardHeader
-            title={t("order.import.productImportListdd")}
-            action={
-              <ExportExcel
-                filename={`import_inventory_${ImportInventory.invoice_no}`}
-                data={dataCSV()}
-                headers={headersCSV}
-                style={{ backgroundColor: "#00A248", color: "#fff" }}
-              />
-            }
+            title={t("order.import.productImportList")}
           />
-          <CardContent>
+          <CardContent className="insImportTable">
+          <div className="flex justify-content-between aligh-item-center mb-1">
+              <div className="flex aligh-item-center">
+                <TextField
+                  style={{ width: "300px" }}
+                  size={"small"}
+                  label={t("search_btn")}
+                  variant="outlined"
+                  onChange={handleFilterProduct}
+                />
+              </div>
+              <div>
+                <ExportExcel
+                  filename={`import_inventory_${ImportInventory.invoice_no}`}
+                  data={dataCSV()}
+                  headers={headersCSV}
+                  style={{ backgroundColor: "#00A248", color: "#066190" }}
+                />
+              </div>
+            </div>
             <TableContainer className="height-table-260 tableContainer tableOrder">
               <Table stickyHeader>
                 <caption
                   className={[
-                    "text-center text-danger border-bottom",
+                    "text-center text-danger border-bottom-0",
                     dataSource.length > 0 ? "d-none" : "",
                   ].join(" ")}
                 >
@@ -379,18 +466,32 @@ const EditImportInventory = ({}) => {
                 </caption>
                 <TableHead>
                   <TableRow>
-                    {column.map((col) => (
+                    {column.map((col,index) => (
+                      <Tooltip
+                      placement="top"
+                      disableFocusListener
+                      disableTouchListener
+                      title={t(col.tootip)}
+                    >
                       <TableCell
+                        colSpan={col.field === "action" ? 2 : 1}
                         nowrap="true"
                         align={col.align}
                         className={[
-                          "p-2 border-0",
-                          col.show ? "d-table-cell" : "d-none",
+                          "p-2 border-0 cursor-pointer",
+                          col.show ? "d-table-cell" : "dl-none",
                         ].join(" ")}
                         key={col.field}
+                        onClick={() =>{
+                          if(col.field === "action" || col.field === "stt") return
+                          handleClickSortColum(col,index)
+                        }}
                       >
                         {t(col.title)}
+                        {" "}{(sortColumn?.columIndex === index) && showIconSort()}
                       </TableCell>
+                    </Tooltip>
+                      
                     ))}
                   </TableRow>
                 </TableHead>
@@ -398,8 +499,9 @@ const EditImportInventory = ({}) => {
                   {dataSource.map((item, index) => {
                     return (
                       <TableRow
-                        onDoubleClick={(e) => {
-                          onDoubleClickRow(item);
+                        onDoubleClick={() => {
+                          handleClickEdit(item, index);
+                          // onDoubleClickRow(item);
                         }}
                         hover
                         role="checkbox"
@@ -422,30 +524,84 @@ const EditImportInventory = ({}) => {
                                 );
                               case "action":
                                 return (
-                                  <TableCell
-                                    nowrap="true"
-                                    key={indexRow}
-                                    align={col.align}
-                                  >
-                                    <IconButton
-                                      onClick={(e) => {
-                                        onRemove(item);
-                                        setProductDeleteIndex(index + 1);
-                                      }}
-                                    >
-                                      <DeleteIcon
-                                        style={{ color: "red" }}
-                                        fontSize="small"
-                                      />
-                                    </IconButton>
-                                    <IconButton
-                                      onClick={(e) => {
-                                        onDoubleClickRow(item);
-                                      }}
-                                    >
-                                      <EditIcon fontSize="small" />
-                                    </IconButton>
-                                  </TableCell>
+                                  <>
+                                    <TableCell align="center" nowrap="true">
+                                      {isIndexRow === index ? (
+                                        <Tooltip
+                                          placement="top"
+                                          title={t("save")}
+                                        >
+                                          <IconButton
+                                            size="small"
+                                            onClick={() => {
+                                              updateDataListProduct(item);
+                                            }}
+                                          >
+                                            <SaveIcon
+                                              style={{ color: "#066190" }}
+                                              fontSize="midlle"
+                                            />
+                                          </IconButton>
+                                        </Tooltip>
+                                      ) : (
+                                        <Tooltip
+                                          placement="top"
+                                          title={t("delete")}
+                                        >
+                                          <IconButton
+                                            size="small"
+                                            onClick={() => {
+                                              onRemove(item);
+                                              setProductDeleteIndex(index + 1);
+                                            }}
+                                          >
+                                            <DeleteIcon
+                                              style={{ color: "red" }}
+                                              fontSize="middle"
+                                            />
+                                          </IconButton>
+                                        </Tooltip>
+                                      )}
+                                    </TableCell>
+
+                                    <TableCell align="center" nowrap="true">
+                                      {isIndexRow === index ? (
+                                        <Tooltip
+                                          placement="top"
+                                          title={t("cancel")}
+                                        >
+                                          <IconButton
+                                            size="small"
+                                            onClick={() => {
+                                              if (process) return;
+                                              setIsIndexRow(null);
+                                            }}
+                                          >
+                                            <CancelIcon
+                                              style={{ color: "#732424" }}
+                                              fontSize="midlle"
+                                            />
+                                          </IconButton>
+                                        </Tooltip>
+                                      ) : (
+                                        <>
+                                          <Tooltip
+                                            placement="top"
+                                            title={t("update")}
+                                          >
+                                            <IconButton
+                                              size="small"
+                                              onClick={() => {
+                                                handleClickEdit(item, index);
+                                              }}
+                                            >
+                                              <BorderColorIcon fontSize="midlle" />
+                                            </IconButton>
+                                          </Tooltip>
+                                        </>
+                                      )}
+                                    </TableCell>
+                                  </>
                                 );
                               case "stt":
                                 return (
@@ -457,16 +613,69 @@ const EditImportInventory = ({}) => {
                                     {index + 1}
                                   </TableCell>
                                 );
-                              case "imp_tp":
+                              case "o_8":
                                 return (
                                   <TableCell
                                     nowrap="true"
                                     key={indexRow}
                                     align={col.align}
                                   >
-                                    {value === "1"
-                                      ? t("order.import.import_type_buy")
-                                      : t("order.import.import_type_selloff")}
+                                    {isIndexRow === index ? (
+                                      <NumberFormat
+                                        size={"small"}
+                                        className="inputNumber"
+                                        required
+                                        type="teft"
+                                        customInput={TextField}
+                                        autoComplete="off"
+                                        autoFocus={true}
+                                        margin="dense"
+                                        variant="outlined"
+                                        onFocus={handleFocus}
+                                        thousandSeparator={true}
+                                        onValueChange={(value) => {
+                                          handleChangeUpdate(
+                                            "qty",
+                                            value.floatValue
+                                          );
+                                        }}
+                                        value={productInfo.qty}
+                                      />
+                                    ) : (
+                                      glb_sv.formatValue(value, col["type"])
+                                    )}
+                                  </TableCell>
+                                );
+                              case "o_11":
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
+                                  >
+                                    {isIndexRow === index ? (
+                                      <NumberFormat
+                                        size={"small"}
+                                        className="inputNumber"
+                                        required
+                                        type="teft"
+                                        customInput={TextField}
+                                        autoComplete="off"
+                                        margin="dense"
+                                        variant="outlined"
+                                        onFocus={handleFocus}
+                                        thousandSeparator={true}
+                                        onValueChange={(value) => {
+                                          handleChangeUpdate(
+                                            "price",
+                                            value.floatValue
+                                          );
+                                        }}
+                                        value={productInfo.price}
+                                      />
+                                    ) : (
+                                      glb_sv.formatValue(value, col["type"])
+                                    )}
                                   </TableCell>
                                 );
                               default:
@@ -491,8 +700,8 @@ const EditImportInventory = ({}) => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item md={3} xs={12}>
-        <Card>
+      <Grid item md={3} xs={12} >
+        <Card className="h-100">
           <CardHeader title={t("order.import.invoice_info")} />
           <CardContent>
             <Grid container spacing={1}>
@@ -556,7 +765,7 @@ const EditImportInventory = ({}) => {
         </Card>
       </Grid>
 
-      <div className="" style={{ display: "none" }}>
+      <div className="dl-none">
         <Import_Inventory_Bill
           headerModal={ImportInventory}
           detailModal={dataSource}

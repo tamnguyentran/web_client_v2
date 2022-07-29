@@ -249,7 +249,7 @@ const ImportInventoryList = () => {
         <CardHeader
           title={
             <>
-              {t("order.importInventory.titleListvsvs")}
+              {t("order.importInventory.titleList")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}
@@ -263,7 +263,7 @@ const ImportInventoryList = () => {
               <caption
                 className={[
                   "text-center text-danger border-bottom",
-                  dataSource.length > 0 ? "d-none" : "",
+                  dataSource.length > 0 ? "dl-none" : "",
                 ].join(" ")}
               >
                 {t("lbl.emptyData")}

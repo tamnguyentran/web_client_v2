@@ -348,7 +348,7 @@ const ImportList = () => {
         <CardHeader
           title={
             <>
-              {t("order.import.titleList")}
+              {t("order.import.titleListe")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}
@@ -444,7 +444,7 @@ const ImportList = () => {
                                       item["o_3"] === "2" ? true : false
                                     }
                                     onClick={(e) => {
-                                      history.push("/page/order/edit-import", {
+                                      history.push("/page/order/ins-import", {
                                         id: item.o_1,
                                       });
                                     }}

@@ -81,13 +81,15 @@ const tableListEditColumn = [
     { field: 'o_4', title: 'order.import.prod_nm', show: true, disabled: false, minWidth: 100 },
     { field: 'o_5', title: 'order.import.lot_no', show: true, disabled: false, minWidth: 100 },
     { field: 'o_7', title: 'order.import.exp_dt', show: true, disabled: true, minWidth: 100, type: 'dated', align: 'center' },
-    { field: 'o_8', title: 'order.import.qty', show: true, disabled: true, minWidth: 100, type: 'currency', align: 'right' },
-    { field: 'o_10', title: 'order.import.unit_nm', show: true, disabled: false, minWidth: 100 },
-    { field: 'o_11', title: 'order.import.price', show: true, disabled: false, minWidth: 100, type: 'currency', align: 'right' },
+    { field: 'o_8', title: 'order.import.qty', show: true, disabled: true, minWidth: 100, type: 'currency', align: 'center' },
+    { field: 'o_10', title: 'order.import.unit_nm', show: true, disabled: false, minWidth: 100, align: 'center'},
+    { field: 'o_11', title: 'order.import.price', show: true, disabled: false, minWidth: 100, type: 'currency', align: 'center' },
     // { field: 'o_12', title: 'updateUser', show: false, disabled: false, minWidth: 100, type: 'date' },
     // { field: 'o_13', title: 'updateDate', show: false, disabled: false, minWidth: 100, type: 'date' },
-    { field: 'action', title: '', show: true, disabled: false, minWidth: 100, align: 'center' }
+    { field: 'action', title: 'order.export.action', show: true, disabled: true, minWidth: 100, align: 'center' }
+
 ]
+
 
 export {
     tableListAddColumn,

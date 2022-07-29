@@ -3,6 +3,7 @@ import "./Export.css";
 import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router";
 import TextImage from "../../../../components/TextImage";
 import Modal from "../../../../components/Modal/View";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
@@ -75,7 +76,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import BorderColorIcon from "@material-ui/icons/BorderColor";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import { ContactlessOutlined } from "@material-ui/icons";
+// import { ContactlessOutlined } from "@material-ui/icons";
 
 const serviceInfo = {
   GET_INVOICE_BY_ID: {
@@ -148,6 +149,8 @@ const theme = createTheme({
 });
 const InsExport = () => {
   const { t } = useTranslation();
+  const history = useHistory();
+  const id = history?.location?.state?.id || 0;
   const [Export, setExport] = useState({ ...invoiceExportModal });
   const [customerSelect, setCustomerSelect] = useState("");
   const [dataSource, setDataSource] = useState([]);
@@ -252,6 +255,17 @@ const InsExport = () => {
       searchModal.invent_yn
     );
   }, [dataSource, searchModal]);
+
+  useEffect(() => {
+    if (id !== 0) {
+      newInvoiceId.current = id
+      handleRefresh();
+      setOpenModalShowBill(false);
+      setInvoiceFlag(true);
+      setIsIndexRow(null);
+      setDisableUpdateInvoice(false);
+    }
+  }, []);
 
   useEffect(() => {
     getListInvoice(
@@ -987,7 +1001,6 @@ const InsExport = () => {
   };
 
   const showIconSort = () => {
-
     switch (sortColumn?.status) {
       case "DSC":
         return <ExpandLessIcon/>
@@ -1670,7 +1683,7 @@ const InsExport = () => {
           </Card>
           <Card
             className="list-product-bottom"
-            style={{height:'47% - 8px'}}
+            style={{height:'calc(47% - 8px)', position:'relative'}}
           >
             <CardHeader
               title={t("product.titleList")}
@@ -1715,7 +1728,7 @@ const InsExport = () => {
                 </div>
               }
             />
-            <CardContent style={{ height: "calc(35vh - 3px)", overflow: "auto" }}>
+            <CardContent style={{ maxHeight: "calc(35vh - 2px)", overflow: "auto" }}>
               <MuiThemeProvider theme={theme}>
                 <Grid container spacing={2}>
                   {listInventory.map((item, index) => {
@@ -1777,7 +1790,7 @@ const InsExport = () => {
                 </Grid>
               </MuiThemeProvider>
             </CardContent>
-            <CardActions disableSpacing>
+            <CardActions disableSpacing style={{position: "absolute", bottom: 0, width: "100%"}}>
               <div className="d-flex align-items-center">
                 <Chip
                   size="small"
@@ -1820,6 +1833,12 @@ const InsExport = () => {
                       >
                         <HistoryIcon
                           onClick={() => {
+                            dataHistoryListInvoiceRef.current = []
+                            getListInvoice(
+                              searchModalInvoice.start_dt, 
+                              searchModalInvoice.end_dt, 
+                              searchModalInvoice.last_id
+                            );
                             setOpenModalShowBill((pre) => !pre);
                           }}
                         />
@@ -2061,7 +2080,7 @@ const InsExport = () => {
           </Card>
         </Grid>
 
-        <div className="display-none">
+        <div className="dl-none">
           <Export_Bill
             headerModal={Export}
             detailModal={dataSource}

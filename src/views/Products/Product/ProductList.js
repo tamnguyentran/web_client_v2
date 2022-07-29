@@ -376,7 +376,7 @@ const ProductList = () => {
               <caption
                 className={[
                   "text-center text-danger border-bottom",
-                  dataSource.length > 0 ? "d-none" : "",
+                  dataSource.length > 0 ? "dl-none" : "",
                 ].join(" ")}
               >
                 {t("lbl.emptyData")}
@@ -388,7 +388,7 @@ const ProductList = () => {
                       nowrap="true"
                       className={[
                         "p-2 border-0",
-                        col.show ? "d-table-cell" : "d-none",
+                        col.show ? "d-table-cell" : "dl-none",
                       ].join(" ")}
                       key={col.field}
                     >

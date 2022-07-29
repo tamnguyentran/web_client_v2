@@ -1,6 +1,5 @@
 import React, { lazy } from 'react'
 import { Switch, Route, Redirect, useParams } from 'react-router-dom'
-import "./Product.css";
 const ProductGroup = lazy(() => import('./ProductGroup'))
 const Product = lazy(() => import('./Product'))
 

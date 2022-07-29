@@ -188,7 +188,6 @@ const ProductEdit = ({
   };
 
   const handleUpdate = async () => {
-    //console.log(await saveImageIntoServer());
     let result = {};
     try {
       result = await saveImageIntoServer();
@@ -597,7 +596,8 @@ const ProductEdit = ({
             <label htmlFor="profilePic">
               <Avatar
                 variant="square"
-                style={{ height: "150px", width: "150px", cursor: "pointer" }}
+                className="cursor-pointer"
+                style={{ height: "150px", width: "150px"}}
                 src={
                   imageUrl ||
                   `http://171.244.133.198/upload/product/${imgValue}`
@@ -611,8 +611,7 @@ const ProductEdit = ({
           </Grid>
         </CardContent>
         <CardActions
-          className="align-items-end"
-          style={{ justifyContent: "flex-end" }}
+          className="align-items-end justify-content-end"
         >
           <Button
             size="small"
@@ -630,7 +629,7 @@ const ProductEdit = ({
           </Button>
           <Button
             size="small"
-            onClick={() => handleUpdate()}
+            onClick={handleUpdate}
             variant="contained"
             disabled={checkValidate()}
             className={
