@@ -129,9 +129,11 @@ const LoginLayout = () => {
                 userSt: glb_sv.userSt,
                 address: glb_sv.pharAddr,
                 pharTele: glb_sv.pharTele,
-                auFlag: true,
+                authFlag: true,
             }
-            localStorage.setItem('userInfo', JSON.stringify(objAuthen))
+            //-- modify authen here
+            // localStorage.setItem('userInfo', JSON.stringify(objAuthen))
+            sessionStorage.setItem('userInfo', JSON.stringify(objAuthen))
             const msgss = CryptoJS.AES.encrypt(JSON.stringify(objAuthen), glb_sv.configInfo['0101X10']).toString()
             const secrInfo = CryptoJS.AES.encrypt(dataMessage.rows[1]['tk'], glb_sv.configInfo['0101X10']).toString()
             sessionStorage.setItem('0101X10', msgss)
