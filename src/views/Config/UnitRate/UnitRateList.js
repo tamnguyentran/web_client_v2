@@ -287,11 +287,7 @@ const UnitRateList = () => {
         >
           <Wrapper.WrapperHeader>
             <div>
-              <Breadcrumb />
-              <div className="mt-2 text-black">
-                Đây là trang giúp bạn tìm kiếm, thiết lập hệ số quy đổi đơn vị
-                cho sản phẩm
-              </div>
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, thiết lập hệ số quy đổi đơn vị cho sản phẩm" />
             </div>
             <div className="flex">
               <UnitRateAdd onRefresh={handleRefresh} />

@@ -35,6 +35,7 @@ export default function TextFieldCpn(props) {
     <FormControl variant="standard" className={className}>
       <div className="text-label-input">{label}</div>
       <TextAreaStyle
+        className="custom-input"
         rows={2}
         style={{ padding: "12px" }}
         placeholder={placeholder || label}

@@ -88,33 +88,39 @@ const LoginLayout = () => {
         sendRequest(serviceInfo.LOGIN, inputParam, handleResultLogin, true, handleTimeOut)
     }
 
-    const handleResultLogin = (reqInfoMap, message) => {
-        setProcess(false)
-        if (message['PROC_STATUS'] !== 1) {
-            // xử lý thất bại
-            SnackBarService.alert(message['PROC_MESSAGE'], true, message['PROC_STATUS'], 3000)
-            const cltSeqResult = message['REQUEST_SEQ']
-            glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap)
-            control_sv.clearReqInfoMapRequest(cltSeqResult)
-        } else if (message['PROC_DATA']) {
-            console.log('reqInfoMap, message-', reqInfoMap, message)
-            // đăng ký thành công
-            let dataMessage = message['PROC_DATA']
-            glb_sv.authFlag = true
-            glb_sv.userId = dataMessage.rows[0].o_6 || user.username.trim()
-            glb_sv.pharId = dataMessage.rows[0].o_1
-            glb_sv.branchId = dataMessage.rows[0].o_3
-            glb_sv.pharNm = dataMessage.rows[0].o_2
-            glb_sv.pharAddr = ''
-            glb_sv.branch_nm = dataMessage.rows[0].o_4
-            glb_sv.branch_add = ''
-            glb_sv.branch_phone = ''
-            glb_sv.logo_nm = ''
-            glb_sv.userEmail = dataMessage.rows[0].o_8
-            glb_sv.pharTele = dataMessage.rows[0].o_9
-            glb_sv.userNm = dataMessage.rows[0].o_5
-            glb_sv.userLev = dataMessage.rows[0].o_7
-            glb_sv.userSt = ''
+  const handleResultLogin = (reqInfoMap, message) => {
+    console.log(reqInfoMap, message)
+    setProcess(false);
+    if (message["PROC_STATUS"] !== 1) {
+      // xử lý thất bại
+      SnackBarService.alert(
+        message["PROC_MESSAGE"],
+        true,
+        message["PROC_STATUS"],
+        3000
+      );
+      const cltSeqResult = message["REQUEST_SEQ"];
+      glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
+      control_sv.clearReqInfoMapRequest(cltSeqResult);
+    } else if (message["PROC_DATA"]) {
+      console.log("reqInfoMap, message-", reqInfoMap, message);
+      // đăng ký thành công
+      let dataMessage = message["PROC_DATA"];
+      glb_sv.authFlag = true;
+      glb_sv.userId = dataMessage.rows[0].o_6 || user.username.trim();
+      glb_sv.pharId = dataMessage.rows[0].o_1;
+      glb_sv.branchId = dataMessage.rows[0].o_3;
+      glb_sv.pharNm = dataMessage.rows[0].o_2;
+      glb_sv.pharAddr = "";
+      glb_sv.branch_nm = dataMessage.rows[0].o_4;
+      glb_sv.branch_add = "";
+      glb_sv.branch_phone = "";
+      glb_sv.logo_nm = "";
+      glb_sv.userEmail = dataMessage.rows[0].o_8;
+      glb_sv.pharTele = dataMessage.rows[0].o_9;
+      glb_sv.userNm = dataMessage.rows[0].o_5;
+      glb_sv.userLev = dataMessage.rows[0].o_7;
+      glb_sv.userSt = "";
 
             const objAuthen = {
                 userId: glb_sv.userId,

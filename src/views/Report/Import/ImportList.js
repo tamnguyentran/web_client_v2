@@ -246,7 +246,6 @@ const ImportList = () => {
         <Wrapper.WrapperFilter isShowLayout={isShowLayout}>
           <div className="p-2">
             <div className="mb-4">
-              <TitleFilterCpn className="mb-2" label="Tìm kiếm" />
               <ImportSearch
                 process={searchProcess}
                 handleSearch={searchSubmit}
@@ -260,11 +259,7 @@ const ImportList = () => {
         >
           <Wrapper.WrapperHeader>
             <div>
-              <Breadcrumb />
-              <div className="mt-2 text-black">
-                Đây là trang giúp bạn tìm kiếm, thiết lập bảng báo giá cho sản
-                phẩm
-              </div>
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, thiết lập bảng báo giá cho sản phẩmd" />
             </div>
             <div className="flex">
               {/* <WarnTimeAdd onRefresh={handleRefresh} /> */}
@@ -359,77 +354,6 @@ const ImportList = () => {
             />
           </Wrapper.WrapperFooter>
         </Wrapper.WrapperTable>
-        {/* <PriceEdit
-          id={id}
-          shouldOpenModal={shouldOpenEditModal}
-          setShouldOpenModal={setShouldOpenEditModal}
-          onRefresh={handleRefresh}
-        /> */}
-        {/* <PriceRemove
-          name={name}
-          shouldOpenRemoveModal={shouldOpenRemoveModal}
-          setShouldOpenRemoveModal={setShouldOpenRemoveModal}
-          processing={processing}
-          handleDelete={handleDelete}
-        /> */}
-        {/* <Dialog
-          maxWidth="xs"
-          fullWidth={true}
-          TransitionProps={{
-            addEndListener: (node, done) => {
-              // use the css transitionend event to mark the finish of a transition
-              node.addEventListener("keypress", function (e) {
-                if (e.key === "Enter") {
-                  handleDelete();
-                }
-              });
-            },
-          }}
-          open={shouldOpenRemoveModal}
-          onClose={(e) => {
-            setShouldOpenRemoveModal(false);
-          }}
-        >
-          <Card>
-            <CardHeader title={t("config.price.titleRemove", { name: name })} />
-            <CardContent>{name}</CardContent>
-            <CardActions
-              className="align-items-end"
-              style={{ justifyContent: "flex-end" }}
-            >
-              <Button
-                size="small"
-                onClick={(e) => {
-                  if (processing) return;
-                  setShouldOpenRemoveModal(false);
-                }}
-                startIcon={<ExitToAppIcon />}
-                variant="contained"
-                disableElevation
-              >
-                {t("btn.close")} (Esc)
-              </Button>
-              <Button
-                className={processing ? "button-loading" : ""}
-                endIcon={processing && <LoopIcon />}
-                size="small"
-                onClick={handleDelete}
-                variant="contained"
-                color="secondary"
-                startIcon={<DeleteIcon />}
-              >
-                {t("btn.delete")} (f10)
-              </Button>
-            </CardActions>
-          </Card>
-        </Dialog> */}
-        {/* <StoreLimitRemove
-          name={name}
-          shouldOpenRemoveModal={shouldOpenRemoveModal}
-          setShouldOpenRemoveModal={setShouldOpenRemoveModal}
-          processing={processing}
-          handleDelete={handleDelete}
-        /> */}
       </div>
       {false && (
         <>

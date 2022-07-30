@@ -34,8 +34,8 @@ const SearchOne = ({
       />
       <button
         style={{
-          height: "32px",
-          width: "32px",
+          height: "var(--heightInput)",
+          width: "var(--heightInput)",
           border: "1px solid var(--gray4)",
           borderRadius: "4px",
           paddingRight: "5px",

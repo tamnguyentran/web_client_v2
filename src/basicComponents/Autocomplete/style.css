@@ -1,6 +1,6 @@
 .autocomplete-style .MuiAutocomplete-input {
   padding: 2px 4px !important;
-  font-size: 0.875rem !important;
+  font-size: var(--sizeInput) !important;
 }
 
 .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
@@ -14,7 +14,7 @@
   border: 1px solid rgba(0, 0, 0, 0.38);
 }
 .MuiAutocomplete-option {
-  font-size: 0.875rem !important;
+  font-size: var(--sizeInput) !important;
 }
 
 .autocomplete-style .MuiInputLabel-formControl {

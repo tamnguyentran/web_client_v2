@@ -403,17 +403,12 @@ const ProductList = () => {
         >
           <Wrapper.WrapperHeader>
             <div>
-              <Breadcrumb />
-              <div className="mt-2 text-black">
-                Đây là trang giúp bạn tìm kiếm thông tin sản phẩm mà nhà thuốc
-                đang kinh doanh theo các điều kiện lọc bên trái
-              </div>
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm thông tin sản phẩm mà nhà thuốc đang kinh doanh theo các điều kiện lọc bên trái" />
             </div>
             <div className="flex">
               <Button
-                style={{ height: "40px" }}
                 size="medium"
-                className="primary-bg text-white"
+                className="primary-bg text-white h-btn"
                 variant="contained"
                 onClick={() => {
                   history.push({

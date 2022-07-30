@@ -285,11 +285,7 @@ const WarnTimeList = () => {
         >
           <Wrapper.WrapperHeader>
             <div>
-              <Breadcrumb />
-              <div className="mt-2 text-black">
-                Đây là trang giúp bạn tìm kiếm, thiết lập cảnh báo hạn sử dụng
-                cho sản phẩm
-              </div>
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, thiết lập cảnh báo hạn sử dụng cho sản phẩm" />
             </div>
             <div className="flex">
               <WarnTimeAdd onRefresh={handleRefresh} />

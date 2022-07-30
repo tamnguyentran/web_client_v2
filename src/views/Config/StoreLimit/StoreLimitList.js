@@ -266,11 +266,7 @@ const StoreLimitList = () => {
         >
           <Wrapper.WrapperHeader>
             <div>
-              <Breadcrumb />
-              <div className="mt-2 text-black">
-                Đây là trang giúp bạn tìm kiếm, thiết lập hạn mức kho cho sản
-                phẩm
-              </div>
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, thiết lập hạn mức kho cho sản phẩm" />
             </div>
             <div className="flex">
               <StoreLimitAdd onRefresh={handleRefresh} />

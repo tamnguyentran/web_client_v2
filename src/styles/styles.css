@@ -7,12 +7,15 @@
   --gray2: #a0abbb;
   --gray3: #e7eaee;
   --gray4: #d0d5dd;
+  --gray5: #5e5d5d;
   --black: #64748b;
   --black2: #191d23;
   --white: #fefefe;
   --clrMain: #ffffff;
   --red: #fee2e2;
   --orange: #ffa15c;
+  --heightInput: 35px;
+  --sizeInput: 0.9rem;
 }
 
 /* html {
@@ -21,13 +24,13 @@
 
 @media only screen and (max-width: 600px) {
   html {
-    font-size: 60% !important;
+    font-size: 80% !important;
   }
 }
 
 @media only screen and (max-width: 1400px) {
   html {
-    font-size: 80% !important;
+    font-size: 97% !important;
   }
 }
 
@@ -611,7 +614,7 @@ div.MuiCardHeader-action
   height: 100%;
 }
 .w-100 {
-  width: 100%;
+  width: 100% !important;
 }
 
 .text-center {
@@ -782,7 +785,7 @@ td {
 
 .btn-custom {
   border: 1px solid var(--gray4);
-  height: 40px;
+  height: var(--heightInput);
   border-radius: 4px;
   background-color: var(--white);
   color: var(--black2);
@@ -805,7 +808,7 @@ td {
 }
 
 .text-label-input {
-  font-size: 0.875rem;
+  font-size: 0.938rem;
   padding-bottom: 3px;
   color: var(--black2);
 }
@@ -830,4 +833,29 @@ td {
 .table-list-layout {
   height: calc(100vh - 250px);
   font-family: var(--fontMain);
+}
+
+.date-picker-cpn .MuiOutlinedInput-inputMarginDense {
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+}
+
+.MuiInputBase-root.Mui-disabled,
+.MuiOutlinedInput-root {
+  height: var(--heightInput);
+  color: var(--gray5) !important;
+  font-size: var(--sizeInput);
+}
+
+.custom-input {
+  color: var(--gray5) !important;
+  font-size: var(--sizeInput);
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border: 1px solid rgba(0, 0, 0, 0.38) !important;
+}
+
+.h-btn {
+  height: var(--heightInput) !important;
 }

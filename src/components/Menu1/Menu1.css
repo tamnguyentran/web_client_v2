@@ -113,7 +113,8 @@
 
 .menu-dropdown .menu-dropbtn {
   font-size: 1rem;
-  font-weight: bold;
+  /* font-weight:900 !important; */
+  /* font-weight: bold; */
   border: none;
   outline: none;
   color: var(--greenPrimary2);
@@ -125,7 +126,7 @@
 
 .menu-navbar a:hover,
 .menu-dropdown:hover .menu-dropbtn {
-  background-color: var(--green3);
+  background-color: var(--gray3);
 }
 
 .menu-dropdown-content {
@@ -148,7 +149,7 @@
 }
 
 .menu-dropdown-content a:hover {
-  background-color: var(--green3);
+  background-color: var(--gray3);
 }
 
 .menu-dropdown:hover .menu-dropdown-content {

@@ -23,6 +23,7 @@ export default function TextFieldCpn(props) {
     onKeyPress = () => {},
     onFocus = () => {},
     inputRef,
+    name,
   } = props;
 
   return (
@@ -30,13 +31,14 @@ export default function TextFieldCpn(props) {
       <div className="text-label-input">{t(label)}</div>
       <input
         onFocus={onFocus}
-        className={`input-text-field ${classNameInput}`}
-        placeholder={t(placeholder || label)}
+        className={`input-text-field custom-input ${classNameInput}`}
+        placeholder={t(placeholder)}
         onChange={onChange}
         value={value}
         autoFocus={autoFocus}
         onKeyPress={onKeyPress}
         ref={inputRef}
+        name={name}
       />
     </FormControl>
   );

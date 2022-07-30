@@ -23,7 +23,6 @@ export default function AutocompleteCpn(props) {
   const {
     className = "",
     label = "",
-    placeholder = "",
     options = [],
     disabled = false,
     onChange = () => {},
@@ -44,7 +43,7 @@ export default function AutocompleteCpn(props) {
     >
       <div className="text-label-input">{label}</div>
       <Autocomplete
-        className="w-100 mb-3"
+        className="custom-input w-100"
         size={size}
         options={options}
         autoHighlight={true}
@@ -64,7 +63,6 @@ export default function AutocompleteCpn(props) {
             size="small"
             {...params}
             variant="outlined"
-            placeholder={placeholder || label}
           />
         )}
       />

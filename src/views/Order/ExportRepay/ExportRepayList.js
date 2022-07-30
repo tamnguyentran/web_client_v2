@@ -48,7 +48,6 @@ import { tableColumn, config } from "./Modal/ExportRepay.modal";
 import ExportRepaySearch from "./ExportRepaySearch";
 import Breadcrumb from "../../../components/Breadcrumb/View";
 
-
 const serviceInfo = {
   GET_ALL: {
     functionName: config["list"].functionName,
@@ -314,7 +313,7 @@ const ExportRepayList = () => {
   return (
     <>
       <Card className="mb-2">
-      <CardHeader
+        <CardHeader
           title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
         />
         <CardContent>
@@ -334,7 +333,7 @@ const ExportRepayList = () => {
         <CardHeader
           title={
             <>
-              {t("order.exportRepay.titleList")}
+              {t("order.exportRepay.titleListđbd")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}

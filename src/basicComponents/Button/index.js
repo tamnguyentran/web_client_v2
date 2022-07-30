@@ -5,6 +5,7 @@ import LoopIcon from "@material-ui/icons/Loop";
 import SaveIcon from "@material-ui/icons/Save";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import DeleteIcon from "@material-ui/icons/Delete";
+import SearchIcon from "@material-ui/icons/Search";
 import { ReactComponent as IC_SHAPE } from "../../asset/images/shape.svg";
 import { defaults } from "lodash";
 import "./style.css";
@@ -82,14 +83,21 @@ const ButtonGetMoreData = (props) => {
   } = props;
   return (
     <>
-      Hiển thị {displayRecords + "/" + totalRecords + " " + t("rowData")}
+      <div style={{ fontSize: "0.813rem" }}>
+        Hiển thị {displayRecords + "/" + totalRecords + " " + t("rowData")}
+      </div>
       <button
         onClick={onClick}
         disabled={disabled}
         className="btn-custom ml-3 mr-2"
-        style={{
-          background: displayRecords >= totalRecords && "var(--gray3)",
-        }}
+        style={
+          displayRecords >= totalRecords
+            ? {
+                background: "var(--gray3)",
+                color: "gray",
+              }
+            : {}
+        }
       >
         <IC_SHAPE className="pr-1" /> Lấy thêm dữ liệu{" "}
       </button>
@@ -97,4 +105,25 @@ const ButtonGetMoreData = (props) => {
   );
 };
 
-export { ButtonUpdate, ButtonDelete, ButtonClose, ButtonGetMoreData };
+const ButtonSearch = (props) => {
+  const { t } = useTranslation();
+  const { className = "", process = false, onClick = () => {} } = props;
+  return (
+    <Button
+      className={`w-100 ${className}`}
+      onClick={onClick}
+      variant="contained"
+    >
+      {process ? <LoopIcon className="button-loading" /> : <SearchIcon />}
+      {t("Tìm kiếm")}
+    </Button>
+  );
+};
+
+export {
+  ButtonUpdate,
+  ButtonDelete,
+  ButtonClose,
+  ButtonGetMoreData,
+  ButtonSearch,
+};

@@ -290,11 +290,7 @@ const PriceList = () => {
         >
           <Wrapper.WrapperHeader>
             <div>
-              <Breadcrumb />
-              <div className="mt-2 text-black">
-                Đây là trang giúp bạn tìm kiếm, thiết lập bảng báo giá cho sản
-                phẩm
-              </div>
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, thiết lập bảng báo giá cho sản phẩm" />
             </div>
             <div className="flex">
               <PriceAdd onRefresh={handleRefresh} />
