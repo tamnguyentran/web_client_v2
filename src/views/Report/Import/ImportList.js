@@ -259,7 +259,7 @@ const ImportList = () => {
         >
           <Wrapper.WrapperHeader>
             <div>
-              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, thiết lập bảng báo giá cho sản phẩmd" />
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, xem thông tin nhập mua của sản phẩm" />
             </div>
             <div className="flex">
               {/* <WarnTimeAdd onRefresh={handleRefresh} /> */}

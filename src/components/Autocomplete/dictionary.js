@@ -4,34 +4,29 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import SnackBarService from "../../utils/service/snackbar_service";
 import sendRequest from "../../utils/service/sendReq";
+import reqFunction from "../../utils/constan/functions";
 import glb_sv from "../../utils/service/global_service";
 import control_sv from "../../utils/service/control_services";
-import reqFunction from "../../utils/constan/functions";
 import { AutocompleteCpn } from "../../basicComponents";
 
 const serviceInfo = {
   DROPDOWN_LIST: {
     functionName: "drop_list",
-    reqFunct: reqFunction.PRODUCT_DROPDOWN_LIST,
+    reqFunct: reqFunction.DICTIONARY,
     biz: "common",
     object: "dropdown_list",
   },
 };
 
-const Product_Autocomplete = ({
-  onSelect = () => null,
+const Dictionary_AutoComplete = ({
+  diectionName,
+  onSelect,
   label,
   style,
   size,
   value,
-  productID = null,
-  onKeyPress = () => null,
   disabled = false,
-  autoFocus = false,
-  openOnFocus = false,
-  inputRef = null,
-  placeholder,
-  className,
+  placeholder = "",
 }) => {
   const { t } = useTranslation();
 
@@ -40,54 +35,25 @@ const Product_Autocomplete = ({
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    const inputParam = ["products", "%"];
+    const inputParam = [diectionName || "units", "%"];
     sendRequest(
       serviceInfo.DROPDOWN_LIST,
       inputParam,
-      resultProductDropDownList,
+      handleResultDictionnayDropDownList,
       true,
       handleTimeOut
     );
   }, []);
 
   useEffect(() => {
-    if (!!productID && productID !== 0) {
-      let item = dataSource.find((x) => x.o_1 === productID);
-      setValueSelect(item);
-      setInputValue(!!item ? item.o_2 : "");
-    } else if (value !== null || value !== undefined) {
-      let item = dataSource.find((x) => x.o_2 === value);
-      setValueSelect(item);
-      setInputValue(value);
-    } else {
-      setValueSelect({});
-      setInputValue("");
+    if (value !== null || value !== undefined) {
+      setValueSelect(dataSource.find((x) => x.o_2 === value));
     }
-  }, [productID, value, dataSource]);
+  }, [value, dataSource]);
 
-  // useEffect(() => {
-  //     if (!!value || value !== null || value !== undefined) {
-  //         let item = dataSource.find(x => x.o_2 === value)
-  //         setValueSelect(item)
-  //         setInputValue(value)
-  //     } else {
-  //         setValueSelect({})
-  //     }
-  // }, [value, dataSource])
-
-  // useEffect(() => {
-  //     if (!!productID && productID !== 0) {
-  //         let item = dataSource.find(x => x.o_1 === productID)
-  //         setValueSelect(item)
-  //         setInputValue(!!item ? item.o_2 : '')
-  //     } else {
-  //         setValueSelect({})
-  //         setInputValue('')
-  //     }
-  // }, [productID, dataSource])
-
-  const resultProductDropDownList = (reqInfoMap, message = {}) => {
+  const handleResultDictionnayDropDownList = (reqInfoMap, message) => {
     if (message["PROC_STATUS"] !== 1) {
+      // xử lý thất bại
       const cltSeqResult = message["REQUEST_SEQ"];
       glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
       control_sv.clearReqInfoMapRequest(cltSeqResult);
@@ -111,11 +77,8 @@ const Product_Autocomplete = ({
     onSelect(object);
   };
 
-  // console.log(value, inputValue);
-
   return (
     <AutocompleteCpn
-      className={className}
       label={label}
       options={dataSource}
       getOptionLabel={(option) => option?.o_2 || ""}
@@ -123,33 +86,24 @@ const Product_Autocomplete = ({
       value={valueSelect}
       onChange={onChange}
       onInputChange={handleChangeInput}
-      onKeyPress={onKeyPress}
       placeholder={placeholder}
-      autoFocus={autoFocus || (!!inputRef ? true : false)}
-      inputRef={inputRef}
-      // inputValue={inputValue}
+      inputValue={value}
     />
     // <Autocomplete
+    //   disabled={disabled}
     //   onChange={onChange}
     //   onInputChange={handleChangeInput}
-    //   onKeyPress={onKeyPress}
-    //   disabled={disabled}
     //   size={!!size ? size : "small"}
-    //   noOptionsText={t("noData")}
     //   id="combo-box-demo"
     //   options={dataSource}
     //   value={valueSelect}
-    //   // autoSelect={true}
-    //   autoHighlight={true}
-    //   autoComplete={true}
     //   getOptionLabel={(option) => option.o_2 || ""}
+    //   inputValue={value}
     //   style={style}
-    //   openOnFocus={openOnFocus}
     //   renderInput={(params) => (
     //     <TextField
-    //       inputRef={inputRef}
-    //       value={inputValue}
-    //       autoFocus={autoFocus || (!!inputRef ? true : false)}
+    //       style={{ fontSize: "10px" }}
+    //       placeholder={placeholder}
     //       {...params}
     //       label={!!label ? label : ""}
     //       variant="outlined"
@@ -159,4 +113,4 @@ const Product_Autocomplete = ({
   );
 };
 
-export default Product_Autocomplete;
+export default Dictionary_AutoComplete;

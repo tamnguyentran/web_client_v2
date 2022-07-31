@@ -31,6 +31,13 @@ import ExportExcel from "../../../components/ExportExcel";
 import DisplayColumn from "../../../components/DisplayColumn";
 import Breadcrumb from "../../../components/Breadcrumb/View";
 
+import {
+  TitleFilterCpn,
+  Wrapper,
+  IconButtonCpn,
+  ButtonCpn,
+} from "../../../basicComponents";
+
 const serviceInfo = {
   GET_ALL: {
     functionName: "inven_time",
@@ -48,6 +55,7 @@ const ImportInventoryList = () => {
   const [totalRecords, setTotalRecords] = useState(0);
   const [dataSource, setDataSource] = useState([]);
   const [searchProcess, setSearchProcess] = useState(false);
+  const [isShowLayout, setIsShowLayout] = useState(false);
 
   const dataSourceRef = useRef([]);
 
@@ -228,139 +236,258 @@ const ImportInventoryList = () => {
 
   return (
     <>
-      <Card className="mb-2">
-      <CardHeader
-          title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
-        />
-        <CardContent>
-          <ImportInventorySearch
-            process={searchProcess}
-            handleSearch={searchSubmit}
-          />
-        </CardContent>
-      </Card>
-      <ColumnCtrComp
-        anchorEl={anChorEl}
-        columns={tableColumn}
-        handleClose={onCloseColumn}
-        checkColumnChange={onChangeColumnView}
-      />
-      <Card>
-        <CardHeader
-          title={
-            <>
-              {t("order.importInventory.titleList")}
+      <div className="layout-page p-2">
+        <Wrapper.WrapperFilter isShowLayout={isShowLayout}>
+          <div className="p-2">
+            <div className="mb-4">
+              <ImportInventorySearch
+                process={searchProcess}
+                handleSearch={searchSubmit}
+              />
+            </div>
+          </div>
+        </Wrapper.WrapperFilter>
+        <Wrapper.WrapperTable
+          isShowLayout={isShowLayout}
+          setIsShowLayout={setIsShowLayout}
+        >
+          <Wrapper.WrapperHeader>
+            <div>
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, xem thông tin nhập tồn kho của sản phẩm" />
+            </div>
+            <div className="flex">
+              {/* <WarnTimeAdd onRefresh={handleRefresh} /> */}
+              &ensp;
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}
               />
-            </>
-          }
-        />
-        <CardContent>
-          <TableContainer className="tableContainer tableReport">
-            <Table stickyHeader>
-              <caption
-                className={[
-                  "text-center text-danger border-bottom",
-                  dataSource.length > 0 ? "dl-none" : "",
-                ].join(" ")}
-              >
-                {t("lbl.emptyData")}
-              </caption>
-              <TableHead>
-                <TableRow>
-                  {column.map((col) => (
-                    <TableCell
-                      nowrap="true"
-                      align={col.align}
-                      className={[
-                        "p-2 border-0",
-                        col.show ? "d-table-cell" : "d-none",
-                      ].join(" ")}
-                      key={col.field}
-                    >
-                      {t(col.title)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dataSource.map((item, index) => {
-                  return (
-                    <TableRow
-                      className="table-row-p8"
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={index}
-                    >
-                      {column.map((col, indexRow) => {
-                        let value = item[col.field];
-                        if (col.show) {
-                          switch (col.field) {
-                            case "stt":
-                              return (
-                                <TableCell
-                                  nowrap="true"
-                                  key={indexRow}
-                                  align={col.align}
-                                >
-                                  {index + 1}
-                                </TableCell>
-                              );
-                            default:
-                              return (
-                                <TableCell
-                                  nowrap="true"
-                                  key={indexRow}
-                                  align={col.align}
-                                >
-                                  {glb_sv.formatValue(value, col["type"])}
-                                </TableCell>
-                              );
+            </div>
+          </Wrapper.WrapperHeader>
+          <Wrapper.WrapperContent>
+            <TableContainer className="table-list-layout">
+              <Table stickyHeader>
+                <caption
+                  className={[
+                    "text-center text-danger border-bottom",
+                    dataSource.length > 0 && "dl-none",
+                  ].join(" ")}
+                >
+                  {t("lbl.emptyData")}
+                </caption>
+                <TableHead>
+                  <TableRow>
+                    {column.map((col) => (
+                      <TableCell
+                        nowrap="true"
+                        className={`p-2 text-uppercase text-black ${
+                          !col.show && "dl-none"
+                        }`}
+                        key={col.field}
+                      >
+                        {t(col.title)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dataSource.map((item, index) => {
+                    return (
+                      <TableRow
+                        className="table-row-p8"
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={index}
+                      >
+                        {column.map((col, indexRow) => {
+                          let value = item[col.field];
+                          if (col.show) {
+                            switch (col.field) {
+                              case "stt":
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
+                                  >
+                                    {index + 1}
+                                  </TableCell>
+                                );
+                              default:
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
+                                  >
+                                    {glb_sv.formatValue(value, col["type"])}
+                                  </TableCell>
+                                );
+                            }
                           }
-                        }
-                      })}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-        <CardActions>
-          <div className="d-flex align-items-center">
-            <Chip
-              size="small"
-              variant="outlined"
-              className="mr-1"
-              label={
-                dataSourceRef.current.length +
-                "/" +
-                totalRecords +
-                " " +
-                t("rowData")
-              }
-            />
-            <Chip
-              variant="outlined"
-              size="small"
-              className="mr-1"
-              deleteIcon={<FastForwardIcon />}
-              onDelete={() => null}
-              label={t("getMoreData")}
+                        })}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Wrapper.WrapperContent>
+          <Wrapper.WrapperFooter>
+            <ButtonCpn.ButtonGetMoreData
               onClick={getNextData}
+              totalRecords={totalRecords}
+              displayRecords={dataSourceRef.current.length}
               disabled={dataSourceRef.current.length >= totalRecords}
             />
             <ExportExcel
-              filename="report-import-inventory"
+              filename="Nhập tồn kho"
               data={dataCSV()}
               headers={headersCSV}
             />
-          </div>
-        </CardActions>
-      </Card>
+          </Wrapper.WrapperFooter>
+        </Wrapper.WrapperTable>
+      </div>
+      {false && (
+        <>
+          <Card className="mb-2">
+            <CardHeader
+              title={
+                <div className="flex aligh-item-center">{<Breadcrumb />}</div>
+              }
+            />
+            <CardContent>
+              <ImportInventorySearch
+                process={searchProcess}
+                handleSearch={searchSubmit}
+              />
+            </CardContent>
+          </Card>
+          <ColumnCtrComp
+            anchorEl={anChorEl}
+            columns={tableColumn}
+            handleClose={onCloseColumn}
+            checkColumnChange={onChangeColumnView}
+          />
+          <Card>
+            <CardHeader
+              title={
+                <>
+                  {t("order.importInventory.titleListvvv")}
+                  <DisplayColumn
+                    columns={tableColumn}
+                    handleCheckChange={onChangeColumnView}
+                  />
+                </>
+              }
+            />
+            <CardContent>
+              <TableContainer className="tableContainer tableReport">
+                <Table stickyHeader>
+                  <caption
+                    className={[
+                      "text-center text-danger border-bottom",
+                      dataSource.length > 0 ? "dl-none" : "",
+                    ].join(" ")}
+                  >
+                    {t("lbl.emptyData")}
+                  </caption>
+                  <TableHead>
+                    <TableRow>
+                      {column.map((col) => (
+                        <TableCell
+                          nowrap="true"
+                          align={col.align}
+                          className={[
+                            "p-2 border-0",
+                            col.show ? "d-table-cell" : "d-none",
+                          ].join(" ")}
+                          key={col.field}
+                        >
+                          {t(col.title)}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {dataSource.map((item, index) => {
+                      return (
+                        <TableRow
+                          className="table-row-p8"
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={index}
+                        >
+                          {column.map((col, indexRow) => {
+                            let value = item[col.field];
+                            if (col.show) {
+                              switch (col.field) {
+                                case "stt":
+                                  return (
+                                    <TableCell
+                                      nowrap="true"
+                                      key={indexRow}
+                                      align={col.align}
+                                    >
+                                      {index + 1}
+                                    </TableCell>
+                                  );
+                                default:
+                                  return (
+                                    <TableCell
+                                      nowrap="true"
+                                      key={indexRow}
+                                      align={col.align}
+                                    >
+                                      {glb_sv.formatValue(value, col["type"])}
+                                    </TableCell>
+                                  );
+                              }
+                            }
+                          })}
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+            <CardActions>
+              <div className="d-flex align-items-center">
+                <Chip
+                  size="small"
+                  variant="outlined"
+                  className="mr-1"
+                  label={
+                    dataSourceRef.current.length +
+                    "/" +
+                    totalRecords +
+                    " " +
+                    t("rowData")
+                  }
+                />
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  className="mr-1"
+                  deleteIcon={<FastForwardIcon />}
+                  onDelete={() => null}
+                  label={t("getMoreData")}
+                  onClick={getNextData}
+                  disabled={dataSourceRef.current.length >= totalRecords}
+                />
+                <ExportExcel
+                  filename="report-import-inventory"
+                  data={dataCSV()}
+                  headers={headersCSV}
+                />
+              </div>
+            </CardActions>
+          </Card>
+        </>
+      )}
     </>
   );
 };

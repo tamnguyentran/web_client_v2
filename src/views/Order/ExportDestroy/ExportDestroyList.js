@@ -49,7 +49,6 @@ import { tableColumn, config } from "./Modal/ExportDestroy.modal";
 import ExportDestroySearch from "./ExportDestroySearch";
 import Breadcrumb from "../../../components/Breadcrumb/View";
 
-
 const serviceInfo = {
   GET_ALL: {
     functionName: config["list"].functionName,
@@ -298,7 +297,7 @@ const ExportDestroyList = () => {
   return (
     <>
       <Card className="mb-2">
-      <CardHeader
+        <CardHeader
           title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
         />
         <CardContent>
@@ -318,7 +317,7 @@ const ExportDestroyList = () => {
         <CardHeader
           title={
             <>
-              {t("order.exportDestroy.titleList")}
+              {t("order.exportDestroy.titleListv")}
               <DisplayColumn
                 columns={tableColumn}
                 handleCheckChange={onChangeColumnView}

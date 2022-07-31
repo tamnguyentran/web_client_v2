@@ -121,7 +121,7 @@ const ImportSearch = ({ handleSearch, process = false }) => {
           <Supplier
             value={searchModal.supplier_nm || ""}
             size={"small"}
-            label={t("menu.supplier")}
+            label={t("Nhà cung ứng")}
             onSelect={handleSelectSupplier}
             onKeyPress={(key) => {
               if (key.which === 13) return handleSearch(searchModal);
@@ -140,6 +140,7 @@ const ImportSearch = ({ handleSearch, process = false }) => {
             <MenuItem value="2">{t("cancelled")}</MenuItem>
           </SelectCpn>
           <Product
+            className="mt-1"
             value={searchModal.product_nm || ""}
             size={"small"}
             label={t("menu.product")}

@@ -9,9 +9,14 @@ export default function SelectCpn(props) {
     label = "",
     name = "",
     children,
+    className = "",
   } = props;
   return (
-    <FormControl margin="dense" variant="outlined" className="w-100">
+    <FormControl
+      margin="dense"
+      variant="outlined"
+      className={`w-100 ${className}`}
+    >
       <div className="text-label-input">{label}</div>
       <Select
         className="custom-input"

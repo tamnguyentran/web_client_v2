@@ -266,7 +266,7 @@ const ExportRepayList = () => {
         >
           <Wrapper.WrapperHeader>
             <div>
-              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm thông tin xuất trả hàng cho sản phẩm" />
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm thông tin xuất trả hàng của sản phẩm" />
             </div>
             <div className="flex">
               {/* <WarnTimeAdd onRefresh={handleRefresh} /> */}
@@ -355,14 +355,14 @@ const ExportRepayList = () => {
               disabled={dataSourceRef.current.length >= totalRecords}
             />
             <ExportExcel
-              filename="Mốc cảnh báo trước HSD"
+              filename="Xuất trả hàng"
               data={dataCSV()}
               headers={headersCSV}
             />
           </Wrapper.WrapperFooter>
         </Wrapper.WrapperTable>
       </div>
-      {true && (
+      {false && (
         <>
           <Card className="mb-2">
             <CardHeader
