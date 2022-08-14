@@ -4,5 +4,6 @@ import Product from "./product";
 import Time from "./time";
 import Supplier from "./supplier";
 import Dictionary from "./dictionary";
+import AddCustomer from "./addCustomer"
 
-export { Unit, Product, Time, Supplier, Dictionary };
+export { Unit, Product, Time, Supplier, Dictionary, AddCustomer };

@@ -48,6 +48,16 @@ import { debounce, sortBy } from "lodash";
 import ListProductImport from "./ListProductImport";
 import InfoInvoice from "./InfoInvoice";
 
+import Breadcrumb from "../../../../components/Breadcrumb/View";
+
+import {
+  TitleFilterCpn,
+  Wrapper,
+  IconButtonCpn,
+  ButtonCpn,
+  TextFieldCpn,
+} from "../../../../basicComponents";
+
 const serviceInfo = {
   CREATE_INVOICE: {
     functionName: "insert",
@@ -114,7 +124,7 @@ const serviceInfo = {
 const ProductImport = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const id  = history?.location?.state?.id || 0;
+  const id = history?.location?.state?.id || 0;
   const [Import, setImport] = useState({ ...invoiceImportModal });
   const [supplierSelect, setSupplierSelect] = useState("");
   const [dataSource, setDataSource] = useState([]);
@@ -151,7 +161,7 @@ const ProductImport = () => {
   const dataWaitAdd = useRef([]);
   const newInvoiceId = useRef(-1);
   const dataSourceRef = useRef([]);
-  const dataRef = useRef([])
+  const dataRef = useRef([]);
   const importDataRef = useRef(invoiceImportModal);
   const totalProductCountAdded = useRef(0);
   const step1Ref = useRef(null);
@@ -218,7 +228,7 @@ const ProductImport = () => {
   useEffect(() => {
     if (id !== 0) {
       newInvoiceId.current = id;
-      handleRefresh()
+      handleRefresh();
       setOpenModalShowBill(false);
       setInvoiceFlag(true);
       setDisableUpdateInvoice(false);
@@ -256,9 +266,7 @@ const ProductImport = () => {
         dataHistoryListInvoiceRef.current =
           dataHistoryListInvoiceRef.current.concat(newData.rows);
         setDataHistoryListInvoice(dataHistoryListInvoiceRef.current);
-        if (
-          reqInfoMap.inputParam[2] === glb_sv.defaultValueSearch
-        ) {
+        if (reqInfoMap.inputParam[2] === glb_sv.defaultValueSearch) {
           setTotalRecordsListInvoice(newData.rowTotal);
         } else {
           setTotalRecordsListInvoice(
@@ -419,7 +427,7 @@ const ProductImport = () => {
         productObject.discount_per,
         productObject.vat_per,
       ];
-      console.log("inputParam",inputParam)
+      console.log("inputParam", inputParam);
       sendRequest(
         serviceInfo.ADD_PRODUCT_TO_INVOICE,
         inputParam,
@@ -721,7 +729,7 @@ const ProductImport = () => {
     } else if (message["PROC_DATA"]) {
       // xử lý thành công
       let newData = message["PROC_DATA"];
-      dataRef.current = newData.rows
+      dataRef.current = newData.rows;
       setDataSource(newData.rows);
     }
   };
@@ -972,375 +980,452 @@ const ProductImport = () => {
     );
   };
   return (
-    <Grid container spacing={1} className="h-100">
-      <Drawer
-        anchor="right"
-        open={openModalShowBill}
-        onClose={() => {
-          setOpenModalShowBill(false);
-        }}
-      >
-        <CardHeader
-          title={t("order.export.list_invoice")}
-          action={
-            <div
-              className="cursor-pointer"
-              onClick={() => {
-                setOpenModalShowBill(false);
-              }}
-            >
-              X
-            </div>
-          }
-        />
-        <List
-          style={{ minWidth: "270px", overflowY: "scroll", height: "auto" }}
-        >
-          {!dataHistoryListInvoice.length && (
-            <ListItem>
-              <div className="w-100">
-                <div className="text-center fz14">
-                  {t("order.export.no_invoice_for_the_day")}
-                </div>
+    <>
+      <div className="layout-page p-2">
+        <Wrapper.WrapperTable isShowLayout={true} hiddenIcon={true}>
+          <div
+            style={{ height: "80px" }}
+            className="flex justify-content-between p-2"
+          >
+            <div>
+              <div style={{ width: "70%" }}>
+                <TextFieldCpn />
               </div>
-            </ListItem>
-          )}
-          {dataHistoryListInvoice.map((data, index) => {
-            return (
-              <>
-                <ListItem
-                  button
-                  className="w-100"
-                  key={index}
+              <div className="mt-2 text-black fz14">
+                Bạn có thể tìm kiếm bằng cách nhập tên/mã SKU hoặc nhập/quét mã
+                vạch của sản phẩm
+              </div>
+            </div>
+            <div className="flex aligh-item-center">
+              <Button
+                style={{ height: "35px" }}
+                size="medium"
+                className="primary-bg text-white"
+                variant="contained"
+                onClick={() => {
+                  // setShouldOpenModal(true);
+                }}
+              >
+                {/* <IC_ADD className="pr-1" /> */}
+                <div>Thêm mới (F2)</div>
+              </Button>
+              {/* <ButtonCpn>
+              </ButtonCpn> */}
+              <div className="mr-4 ml-4">
+                <div>Hóa đơn 112</div>
+                <div>12:30:31 AM</div>
+              </div>
+              <div className="mr-4">
+                <div>Hóa đơn 112</div>
+                <div>12:30:31 AM</div>
+              </div>
+              <div className="mr-4">
+                <div>Hóa đơn 112</div>
+                <div>12:30:31 AM</div>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              height: "calc(100% - 80px)",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Wrapper.WrapperTable hiddenIcon={true}>bdbd</Wrapper.WrapperTable>
+            <Wrapper.WrapperFilter>
+              <div
+                className="pt-2 pb-2 pl-2 pr-2"
+                style={{
+                  background: "gray",
+                  alignContent: "flex-end",
+                  textAlign: "right",
+                }}
+              >
+                Hóa đơn bán lẻ
+              </div>
+              <div className="p-2">
+                <TextFieldCpn
+                  label="Mã hoá đơn"
+                  placeholder="Nhập tay hoặc tự sinh"
+                />
+              </div>
+            </Wrapper.WrapperFilter>
+          </div>
+        </Wrapper.WrapperTable>
+      </div>
+      {true && (
+        <Grid container spacing={1} className="h-100">
+          <Drawer
+            anchor="right"
+            open={openModalShowBill}
+            onClose={() => {
+              setOpenModalShowBill(false);
+            }}
+          >
+            <CardHeader
+              title={t("order.export.list_invoice")}
+              action={
+                <div
+                  className="cursor-pointer"
                   onClick={() => {
-                    newInvoiceId.current = data.o_1;
-                    handleRefresh();
                     setOpenModalShowBill(false);
-                    setInvoiceFlag(true);
-                    setDisableUpdateInvoice(false);
                   }}
                 >
+                  X
+                </div>
+              }
+            />
+            <List
+              style={{ minWidth: "270px", overflowY: "scroll", height: "auto" }}
+            >
+              {!dataHistoryListInvoice.length && (
+                <ListItem>
                   <div className="w-100">
-                    <div className="fz12">
-                      <div className="fz14 font-weight-500"></div>
-                      <div>
-                        <span className="weight-title">
-                          {t("order.export.invoice_no_hd")}
-                        </span>
-                        <span>: {data.o_2}</span>
-                      </div>
-                      <div className="flex">
-                        <span className="weight-title">
-                          {t("order.export.bill_invoice")}
-                        </span>
-                        <span>
-                          : {glb_sv.formatValue(data.o_13, "currency")}
-                        </span>
-                      </div>
-                      <div className="flex">
-                        <span className="weight-title">
-                          {t("order.export.cust_nm_v")}
-                        </span>
-                        <span>: {data.o_5}</span>
-                      </div>
-                      <div>
-                        <span className="weight-title">
-                          {t("order.export.time_export")}
-                        </span>
-                        <span>
-                          :{" "}
-                          {moment(data.o_18, "DDMMYYYYHHmmss").format(
-                            "DD/MM/YYYY HH:mm:ss"
-                          )}
-                        </span>
-                      </div>
+                    <div className="text-center fz14">
+                      {t("order.export.no_invoice_for_the_day")}
                     </div>
                   </div>
                 </ListItem>
-                <Divider component="li" />
-              </>
-            );
-          })}
-          <ListItem>
-            <div className="d-flex align-items-center justify-content-between">
-              <Chip
-                size="small"
-                variant="outlined"
-                className="mr-1"
-                label={
-                  dataHistoryListInvoiceRef.current.length +
-                  "/" +
-                  totalRecordsListInvoice +
-                  " " +
-                  t("Hóa đơn")
-                }
-              />
-              <Chip
-                variant="outlined"
-                size="small"
-                className="mr-1"
-                deleteIcon={<FastForwardIcon />}
-                onDelete={() => null}
-                color="primary"
-                label={t("getMoreData")}
-                onClick={getNextDataListInvoice}
-                disabled={
-                  dataHistoryListInvoiceRef.current.length >=
-                  totalRecordsListInvoice
-                }
-              />
-            </div>
-          </ListItem>
-        </List>
-      </Drawer>
-      <Grid item md={9} xs={12}>
-        <AddProduct
-          saveProcess={saveProcess}
-          resetFlag={resetFormAddFlag}
-          onAddProduct={handleAddProduct}
-          style={{ height: "160px" }}
-        />
-        <Card style={{ height: "calc(100% - 168px)" }}>
-          <CardHeader title={t("order.import.productImportList")} />
-          <CardContent className="insImportTable">
-            <div className="flex justify-content-between aligh-item-center mb-1">
-              <div className="flex aligh-item-center">
-                <TextField
-                  style={{ width: "300px" }}
-                  size={"small"}
-                  label={t("search_btn")}
-                  variant="outlined"
-                  onChange={handleFilterProduct}
+              )}
+              {dataHistoryListInvoice.map((data, index) => {
+                return (
+                  <>
+                    <ListItem
+                      button
+                      className="w-100"
+                      key={index}
+                      onClick={() => {
+                        newInvoiceId.current = data.o_1;
+                        handleRefresh();
+                        setOpenModalShowBill(false);
+                        setInvoiceFlag(true);
+                        setDisableUpdateInvoice(false);
+                      }}
+                    >
+                      <div className="w-100">
+                        <div className="fz12">
+                          <div className="fz14 font-weight-500"></div>
+                          <div>
+                            <span className="weight-title">
+                              {t("order.export.invoice_no_hd")}
+                            </span>
+                            <span>: {data.o_2}</span>
+                          </div>
+                          <div className="flex">
+                            <span className="weight-title">
+                              {t("order.export.bill_invoice")}
+                            </span>
+                            <span>
+                              : {glb_sv.formatValue(data.o_13, "currency")}
+                            </span>
+                          </div>
+                          <div className="flex">
+                            <span className="weight-title">
+                              {t("order.export.cust_nm_v")}
+                            </span>
+                            <span>: {data.o_5}</span>
+                          </div>
+                          <div>
+                            <span className="weight-title">
+                              {t("order.export.time_export")}
+                            </span>
+                            <span>
+                              :{" "}
+                              {moment(data.o_18, "DDMMYYYYHHmmss").format(
+                                "DD/MM/YYYY HH:mm:ss"
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </ListItem>
+                    <Divider component="li" />
+                  </>
+                );
+              })}
+              <ListItem>
+                <div className="d-flex align-items-center justify-content-between">
+                  <Chip
+                    size="small"
+                    variant="outlined"
+                    className="mr-1"
+                    label={
+                      dataHistoryListInvoiceRef.current.length +
+                      "/" +
+                      totalRecordsListInvoice +
+                      " " +
+                      t("Hóa đơn")
+                    }
+                  />
+                  <Chip
+                    variant="outlined"
+                    size="small"
+                    className="mr-1"
+                    deleteIcon={<FastForwardIcon />}
+                    onDelete={() => null}
+                    color="primary"
+                    label={t("getMoreData")}
+                    onClick={getNextDataListInvoice}
+                    disabled={
+                      dataHistoryListInvoiceRef.current.length >=
+                      totalRecordsListInvoice
+                    }
+                  />
+                </div>
+              </ListItem>
+            </List>
+          </Drawer>
+          <Grid item md={9} xs={12}>
+            <AddProduct
+              saveProcess={saveProcess}
+              resetFlag={resetFormAddFlag}
+              onAddProduct={handleAddProduct}
+              style={{ height: "160px" }}
+            />
+            <Card style={{ height: "calc(100% - 168px)" }}>
+              <CardHeader title={t("order.import.productImportListbbb")} />
+              <CardContent className="insImportTable">
+                <div className="flex justify-content-between aligh-item-center mb-1">
+                  <div className="flex aligh-item-center">
+                    <TextField
+                      style={{ width: "300px" }}
+                      size={"small"}
+                      label={t("search_btn")}
+                      variant="outlined"
+                      onChange={handleFilterProduct}
+                    />
+                  </div>
+                  <div>
+                    <ExportExcel
+                      filename={`import_${Import.invoice_no}`}
+                      data={dataCSV()}
+                      headers={headersCSV}
+                      style={{ backgroundColor: "#00A248", color: "#066190" }}
+                    />
+                    <DisplayColumn
+                      style={{ backgroundColor: "#066190", color: "#fff" }}
+                      columns={column}
+                      handleCheckChange={onChangeColumnView}
+                    />
+                  </div>
+                </div>
+                <ListProductImport
+                  column={column}
+                  handleClickEdit={handleClickEdit}
+                  isIndexRow={isIndexRow}
+                  setIsIndexRow={setIsIndexRow}
+                  updateDataListProduct={updateDataListProduct}
+                  onRemove={onRemove}
+                  setProductDeleteIndex={setProductDeleteIndex}
+                  handleChangeType={handleChangeType}
+                  handleChangeUpdate={handleChangeUpdate}
+                  dataSource={dataSource}
+                  handleClickSortColum={handleClickSortColum}
+                  sortColumn={sortColumn}
+                  showIconSort={showIconSort}
+                  productInfo={productInfo}
+                  step2Ref={step2Ref}
+                  step3Ref={step3Ref}
                 />
-              </div>
-              <div>
-                <ExportExcel
-                  filename={`import_${Import.invoice_no}`}
-                  data={dataCSV()}
-                  headers={headersCSV}
-                  style={{ backgroundColor: "#00A248", color: "#066190" }}
-                />
-                <DisplayColumn
-                  style={{ backgroundColor: "#066190", color: "#fff" }}
-                  columns={column}
-                  handleCheckChange={onChangeColumnView}
-                />
-              </div>
-            </div>
-            <ListProductImport
-              column={column}
-              handleClickEdit={handleClickEdit}
-              isIndexRow={isIndexRow}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item md={3} xs={12}>
+            <InfoInvoice
+              setOpenModalShowBill={setOpenModalShowBill}
+              setImport={setImport}
+              invoiceImportModal={invoiceImportModal}
+              setDataSource={setDataSource}
+              setInvoiceFlag={setInvoiceFlag}
+              setSupplierSelect={setSupplierSelect}
               setIsIndexRow={setIsIndexRow}
-              updateDataListProduct={updateDataListProduct}
-              onRemove={onRemove}
-              setProductDeleteIndex={setProductDeleteIndex}
-              handleChangeType={handleChangeType}
-              handleChangeUpdate={handleChangeUpdate}
-              dataSource={dataSource}
-              handleClickSortColum={handleClickSortColum}
-              sortColumn={sortColumn}
-              showIconSort={showIconSort}
-              productInfo={productInfo}
+              invoiceFlag={invoiceFlag}
+              handleChange={handleChange}
+              supplierSelect={supplierSelect}
+              handleSelectSupplier={handleSelectSupplier}
+              step1Ref={step1Ref}
               step2Ref={step2Ref}
               step3Ref={step3Ref}
+              Import={Import}
+              handleCreateSupplier={handleCreateSupplier}
+              handleDateChange={handleDateChange}
+              handleUpdateInvoice={handleUpdateInvoice}
+              paymentInfo={paymentInfo}
+              handleAmountChange={handleAmountChange}
+              checkValidate={checkValidate()}
+              handlePrint={handlePrint}
             />
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item md={3} xs={12}>
-        <InfoInvoice
-          setOpenModalShowBill={setOpenModalShowBill}
-          setImport={setImport}
-          invoiceImportModal={invoiceImportModal}
-          setDataSource={setDataSource}
-          setInvoiceFlag={setInvoiceFlag}
-          setSupplierSelect={setSupplierSelect}
-          setIsIndexRow={setIsIndexRow}
-          invoiceFlag={invoiceFlag}
-          handleChange={handleChange}
-          supplierSelect={supplierSelect}
-          handleSelectSupplier={handleSelectSupplier}
-          step1Ref={step1Ref}
-          step2Ref={step2Ref}
-          step3Ref={step3Ref}
-          Import={Import}
-          handleCreateSupplier={handleCreateSupplier}
-          handleDateChange={handleDateChange}
-          handleUpdateInvoice={handleUpdateInvoice}
-          paymentInfo={paymentInfo}
-          handleAmountChange={handleAmountChange}
-          checkValidate={checkValidate()}
-          handlePrint={handlePrint}
-        />
-      </Grid>
-      <div className="dl-none">
-        <Import_Bill
-          headerModal={Import}
-          detailModal={dataSource}
-          componentRef={componentPrint}
-        />
-      </div>
-
-      <Dialog
-        fullWidth={true}
-        maxWidth="md"
-        open={shouldOpenPaymentModal}
-        onClose={(e) => {
-          setShouldOpenPaymentModal(false);
-        }}
-      >
-        <CardHeader title={t("settlement.payment_transfer")} />
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid item xs>
-              <TextField
-                disabled={Import.payment_type === "1"}
-                required={Import.payment_type === "2"}
-                fullWidth={true}
-                margin="dense"
-                autoComplete="off"
-                label={t("report.bank_transf_acc_number")}
-                onChange={handleChange}
-                value={Import.bank_transf_acc_number || ""}
-                name="bank_transf_acc_number"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs>
-              <TextField
-                disabled={Import.payment_type === "1"}
-                fullWidth={true}
-                margin="dense"
-                required={Import.payment_type === "2"}
-                autoComplete="off"
-                label={t("report.bank_transf_acc_name")}
-                onChange={handleChange}
-                value={Import.bank_transf_acc_name || ""}
-                name="bank_transf_acc_name"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs>
-              <Dictionary
-                value={Import.bank_transf_name_s || ""}
-                disabled={Import.payment_type === "1"}
-                required={Import.payment_type === "2"}
-                diectionName="bank_cd"
-                onSelect={handleSelectTransfBank}
-                label={t("report.bank_transf_name")}
-                style={{ marginTop: 8, marginBottom: 4, width: "100%" }}
-              />
-            </Grid>
           </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs>
-              <TextField
-                disabled={Import.payment_type === "1"}
-                required={Import.payment_type === "2"}
-                fullWidth={true}
-                margin="dense"
-                autoComplete="off"
-                label={t("report.bank_recei_acc_number")}
-                onChange={handleChange}
-                value={Import.bank_recei_acc_number || ""}
-                name="bank_recei_acc_number"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs>
-              <TextField
-                disabled={Import.payment_type === "1"}
-                required={Import.payment_type === "2"}
-                fullWidth={true}
-                margin="dense"
-                autoComplete="off"
-                label={t("report.bank_recei_acc_name")}
-                onChange={handleChange}
-                value={Import.bank_recei_acc_name || ""}
-                name="bank_recei_acc_name"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs>
-              <Dictionary
-                value={Import.bank_recei_name_s || ""}
-                disabled={Import.payment_type === "1"}
-                required={Import.payment_type === "2"}
-                diectionName="bank_cd"
-                onSelect={handleSelectReceiBank}
-                label={t("report.bank_recei_name")}
-                style={{ marginTop: 8, marginBottom: 4, width: "100%" }}
-              />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Dialog>
+          <div className="dl-none">
+            <Import_Bill
+              headerModal={Import}
+              detailModal={dataSource}
+              componentRef={componentPrint}
+            />
+          </div>
 
-      {/* modal delete */}
-      <Dialog
-        maxWidth="xs"
-        fullWidth={true}
-        TransitionProps={{
-          addEndListener: (node, done) => {
-            // use the css transitionend event to mark the finish of a transition
-            node.addEventListener("keypress", function (e) {
-              if (e.key === "Enter") {
-                handleDelete();
-              }
-            });
-          },
-        }}
-        open={shouldOpenDeleteModal}
-        onClose={(e) => {
-          setShouldOpenDeleteModal(false);
-        }}
-      >
-        <Card>
-          <CardHeader title={t("order.import.productDelete")} />
-          <CardContent>
-            <Grid container>
-              {productDeleteModal.o_6 +
-                " - " +
-                t("order.import.qty") +
-                ": " +
-                productDeleteModal.o_10 +
-                " " +
-                productDeleteModal.o_12 +
-                " (" +
-                t("stt") +
-                " " +
-                productDeleteIndex +
-                ")"}
-            </Grid>
-          </CardContent>
-          <CardActions className="align-items-end justify-content-end">
-            <Button
-              size="small"
-              onClick={(e) => {
-                setShouldOpenDeleteModal(false);
-              }}
-              startIcon={<ExitToAppIcon />}
-              variant="contained"
-              disableElevation
-            >
-              {t("btn.close")} (Esc)
-            </Button>
-            <Button
-              className={deleteProcess ? "button-loading" : ""}
-              endIcon={deleteProcess && <LoopIcon />}
-              size="small"
-              onClick={handleDelete}
-              variant="contained"
-              color="secondary"
-              startIcon={!deleteProcess && <DeleteIcon />}
-            >
-              {t("btn.delete")} (f10)
-            </Button>
-          </CardActions>
-        </Card>
-      </Dialog>
-    </Grid>
+          <Dialog
+            fullWidth={true}
+            maxWidth="md"
+            open={shouldOpenPaymentModal}
+            onClose={(e) => {
+              setShouldOpenPaymentModal(false);
+            }}
+          >
+            <CardHeader title={t("settlement.payment_transfer")} />
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item xs>
+                  <TextField
+                    disabled={Import.payment_type === "1"}
+                    required={Import.payment_type === "2"}
+                    fullWidth={true}
+                    margin="dense"
+                    autoComplete="off"
+                    label={t("report.bank_transf_acc_number")}
+                    onChange={handleChange}
+                    value={Import.bank_transf_acc_number || ""}
+                    name="bank_transf_acc_number"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs>
+                  <TextField
+                    disabled={Import.payment_type === "1"}
+                    fullWidth={true}
+                    margin="dense"
+                    required={Import.payment_type === "2"}
+                    autoComplete="off"
+                    label={t("report.bank_transf_acc_name")}
+                    onChange={handleChange}
+                    value={Import.bank_transf_acc_name || ""}
+                    name="bank_transf_acc_name"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs>
+                  <Dictionary
+                    value={Import.bank_transf_name_s || ""}
+                    disabled={Import.payment_type === "1"}
+                    required={Import.payment_type === "2"}
+                    directionName="bank_cd"
+                    onSelect={handleSelectTransfBank}
+                    label={t("report.bank_transf_name")}
+                    style={{ marginTop: 8, marginBottom: 4, width: "100%" }}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={2}>
+                <Grid item xs>
+                  <TextField
+                    disabled={Import.payment_type === "1"}
+                    required={Import.payment_type === "2"}
+                    fullWidth={true}
+                    margin="dense"
+                    autoComplete="off"
+                    label={t("report.bank_recei_acc_number")}
+                    onChange={handleChange}
+                    value={Import.bank_recei_acc_number || ""}
+                    name="bank_recei_acc_number"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs>
+                  <TextField
+                    disabled={Import.payment_type === "1"}
+                    required={Import.payment_type === "2"}
+                    fullWidth={true}
+                    margin="dense"
+                    autoComplete="off"
+                    label={t("report.bank_recei_acc_name")}
+                    onChange={handleChange}
+                    value={Import.bank_recei_acc_name || ""}
+                    name="bank_recei_acc_name"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs>
+                  <Dictionary
+                    value={Import.bank_recei_name_s || ""}
+                    disabled={Import.payment_type === "1"}
+                    required={Import.payment_type === "2"}
+                    directionName="bank_cd"
+                    onSelect={handleSelectReceiBank}
+                    label={t("report.bank_recei_name")}
+                    style={{ marginTop: 8, marginBottom: 4, width: "100%" }}
+                  />
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Dialog>
+
+          {/* modal delete */}
+          <Dialog
+            maxWidth="xs"
+            fullWidth={true}
+            TransitionProps={{
+              addEndListener: (node, done) => {
+                // use the css transitionend event to mark the finish of a transition
+                node.addEventListener("keypress", function (e) {
+                  if (e.key === "Enter") {
+                    handleDelete();
+                  }
+                });
+              },
+            }}
+            open={shouldOpenDeleteModal}
+            onClose={(e) => {
+              setShouldOpenDeleteModal(false);
+            }}
+          >
+            <Card>
+              <CardHeader title={t("order.import.productDelete")} />
+              <CardContent>
+                <Grid container>
+                  {productDeleteModal.o_6 +
+                    " - " +
+                    t("order.import.qty") +
+                    ": " +
+                    productDeleteModal.o_10 +
+                    " " +
+                    productDeleteModal.o_12 +
+                    " (" +
+                    t("stt") +
+                    " " +
+                    productDeleteIndex +
+                    ")"}
+                </Grid>
+              </CardContent>
+              <CardActions className="align-items-end justify-content-end">
+                <Button
+                  size="small"
+                  onClick={(e) => {
+                    setShouldOpenDeleteModal(false);
+                  }}
+                  startIcon={<ExitToAppIcon />}
+                  variant="contained"
+                  disableElevation
+                >
+                  {t("btn.close")} (Esc)
+                </Button>
+                <Button
+                  className={deleteProcess ? "button-loading" : ""}
+                  endIcon={deleteProcess && <LoopIcon />}
+                  size="small"
+                  onClick={handleDelete}
+                  variant="contained"
+                  color="secondary"
+                  startIcon={!deleteProcess && <DeleteIcon />}
+                >
+                  {t("btn.delete")} (f10)
+                </Button>
+              </CardActions>
+            </Card>
+          </Dialog>
+        </Grid>
+      )}
+    </>
   );
 };
 

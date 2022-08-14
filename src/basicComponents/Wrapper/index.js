@@ -4,9 +4,9 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 const WrapperFilter = (props) => {
-  const { children, isShowLayout = false } = props;
+  const { children, isShowLayout = false, style = {} } = props;
   return (
-    <div className={`wrapper-filter ${isShowLayout && "dl-none"}`}>
+    <div style={style} className={`wrapper-filter ${isShowLayout && "dl-none"}`}>
       {children}
     </div>
   );
@@ -15,11 +15,11 @@ const WrapperFilter = (props) => {
 const stylesIcon = { margin: "3px", color: "var(--white)" };
 
 const WrapperTable = (props) => {
-  const { children, isShowLayout = false, setIsShowLayout } = props;
+  const { children, isShowLayout = false, setIsShowLayout, hiddenIcon = false, style = {} } = props;
   return (
-    <div className={`wrapper-table ${isShowLayout && "w-100"}`}>
+    <div style={style} className={`wrapper-table ${isShowLayout && "w-100"}`}>
       <div
-        className="btn-show-layout"
+        className={`btn-show-layout ${hiddenIcon && "dl-none "}`}
         onClick={() => {
           setIsShowLayout((pre) => !pre);
         }}

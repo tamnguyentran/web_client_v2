@@ -96,7 +96,7 @@ const CollectSalesSearch = ({ handleSearch, process = false }) => {
             name="invoice_no"
           />
           <Dictionary
-            diectionName="customers"
+            directionName="customers"
             value={searchModal.customer_nm || ""}
             size={"small"}
             label={t("menu.customer")}

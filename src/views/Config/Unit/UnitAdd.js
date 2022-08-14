@@ -159,7 +159,7 @@ const UnitAdd = ({ onRefresh }) => {
         {t("btn.add")} (F2)
       </Button> */}
       <Button
-        style={{ height: "40px" }}
+        style={{ height: "35px" }}
         size="medium"
         className="primary-bg text-white"
         variant="contained"

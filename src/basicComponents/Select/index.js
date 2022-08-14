@@ -13,7 +13,6 @@ export default function SelectCpn(props) {
   } = props;
   return (
     <FormControl
-      margin="dense"
       variant="outlined"
       className={`w-100 ${className}`}
     >

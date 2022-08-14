@@ -23,7 +23,7 @@ const SearchOne = ({
     setSearchValue(e.target.value);
   };
   return (
-    <div className="flex aligh-item-end">
+    <div className="flex align-item-end">
       <TextFieldCpn
         label={label}
         search={true}

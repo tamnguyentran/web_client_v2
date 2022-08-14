@@ -55,7 +55,7 @@ const InventorySearch = ({ handleSearch, process = false }) => {
         <div className="mb-4">
           <TitleFilterCpn className="mb-2" label="Lọc theo thông tin" />
           <Dictionary
-            diectionName="groups"
+            directionName="groups"
             value={searchModal.group_nm || ""}
             size={"small"}
             label={t("menu.productGroup")}
@@ -88,7 +88,7 @@ const InventorySearch = ({ handleSearch, process = false }) => {
         <Grid container spacing={2}>
           <Grid item xs={3}>
             <Dictionary_Autocomplete
-              diectionName="groups"
+              directionName="groups"
               value={searchModal.group_nm || ""}
               style={{ marginTop: 8, marginBottom: 4, width: "100%" }}
               size={"small"}

@@ -95,6 +95,18 @@ const tableListAddColumn1 = [
         { field: 'o_12', title: 'order.export.vat_per',tootip: 'order.export.vat_per', show: true, disabled: true, minWidth: 100, align: 'center' },
         { field: 'action', title: 'order.export.action', show: true, disabled: true, minWidth: 100, align: 'center' },
     ]
+
+    const tableListAddColumn2 = [
+        { field: 'stt', title: 'STT',tootip: 'STT', show: true, disabled: true, minWidth: 100, align: 'center' },
+        // { field: 'o_4', title: 'MÃ SP/SKU', tootip: 'MÃ SP/SKU', show: true, disabled: false, minWidth: 100, align: 'center' },
+        { field: 'o_3', title: 'LOẠI HÌNH XUẤT', tootip: 'LOẠI HÌNH XUẤT', show: true, disabled: false, minWidth: 100, align: 'center' },
+        { field: 'o_5', title: 'TÊN SP',tootip: 'TÊN SP', show: true, disabled: false, minWidth: 100, align: 'center' },
+        { field: 'o_6', title: 'SỐ LÔ',tootip: 'SỐ LÔ', show: true, disabled: true, minWidth: 100, align: 'center' },
+        { field: 'o_8', title: 'SỐ LƯỢNG',tootip: 'SỐ LƯỢNG', show: true, disabled: true, minWidth: 100, align: 'center',type: 'currency' },
+        { field: 'o_10', title: 'ĐƠN VỊ',tootip: 'ĐƠN VỊ', show: true, disabled: true, minWidth: 200, align: 'center' },
+        { field: 'o_11', title: 'GIÁ',tootip: 'GIÁ', show: true, disabled: true, minWidth: 100, align: 'center', type: 'currency'},
+        { field: 'action', title: 'HÀNH ĐỘNG',tootip: 'HÀNH ĐỘNG', show: true, disabled: false, minWidth: 100, align: 'center' },
+    ]
     //test
 const tableListEditColumn = [
     { field: 'stt', title: 'stt', show: true, disabled: true, minWidth: 100, align: 'center' },
@@ -122,7 +134,8 @@ const invoiceExportModal = {
     invoice_vat: 0,
     invoice_settl: 0,
     payment_amount: 0,
-    note: ''
+    note: '',
+    discount_tp:"1"
 }
 
 const searchDefaultModal = {
@@ -141,11 +154,8 @@ const searchDefaultModalInvoice = {
 }
 
 const defaultDataUpdateProduct = {
-    expType: "1",
     expQty: 1,
     expPrice: 0,
-    expDisCount: 0,
-    expVAT: 0
 }
 
 export {
@@ -158,5 +168,6 @@ export {
     tableColumn,
     config,
     defaultDataUpdateProduct,
-    searchDefaultModalInvoice
+    searchDefaultModalInvoice,
+    tableListAddColumn2
 }

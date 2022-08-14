@@ -19,7 +19,7 @@ const serviceInfo = {
 };
 
 const Dictionary_AutoComplete = ({
-  diectionName,
+  directionName,
   onSelect,
   label,
   style,
@@ -28,6 +28,7 @@ const Dictionary_AutoComplete = ({
   disabled = false,
   placeholder = "",
 }) => {
+  console.log(placeholder)
   const { t } = useTranslation();
 
   const [dataSource, setDataSource] = useState([]);
@@ -35,7 +36,7 @@ const Dictionary_AutoComplete = ({
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    const inputParam = [diectionName || "units", "%"];
+    const inputParam = [directionName || "units", "%"];
     sendRequest(
       serviceInfo.DROPDOWN_LIST,
       inputParam,

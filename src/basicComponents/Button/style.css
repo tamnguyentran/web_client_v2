@@ -1,5 +1,5 @@
 .btn-update-delete-cpn {
-  height: 40px !important;
+  height: var(--heightInput) !important;
   font-size: 0.875rem !important;
   font-weight: normal !important;
   padding: 6px 9px !important;

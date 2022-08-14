@@ -81,8 +81,10 @@ class globalService {
         }
 
         this.getlang = () => {
+            console.log("vhshvsh")
             let lang = sessionStorage.getItem('Lang')
             if (lang === null || lang === undefined) lang = 'vn'
+            console.log(lang)
             return lang
         }
 
@@ -210,10 +212,11 @@ class globalService {
         }
 
         this.formatValue = (value, type) => {
+            console.log(value)
             switch (type) {
                 case 'number':
                     var number = new Intl.NumberFormat()
-                    return number.format(value)
+                    return typeof value === "number" ? number.format(value) : Number(value.replace(/[^0-9.-]+/g,""));
                 case 'currency':
                     var number = new Intl.NumberFormat()
                     return number.format(value)

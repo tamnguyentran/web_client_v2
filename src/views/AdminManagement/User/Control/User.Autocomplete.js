@@ -85,9 +85,9 @@ const User_Autocomplete = ({ onSelect = () => null, label = '', style = {}, size
             size={!!size ? size : 'small'}
             noOptionsText={t('noData')}
             id="combo-box-demo"
-            options={dataSource}
+            options={dataSource || []}
             value={valueSelect}
-            getOptionLabel={(option) => option.o_2 || ''}
+            getOptionLabel={(option) => option?.o_2 || ''}
             style={style}
             renderInput={(params) => <TextField inputRef={inputRef} value={inputValue} {...params} label={!!label ? label : ''} variant="outlined" />}
         />

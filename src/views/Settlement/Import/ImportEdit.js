@@ -322,7 +322,7 @@ const SettlementEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) 
                                 value={settlement.bank_nm_s || ''}
                                 disabled={settlement.settl_tp === '1'}
                                 required={settlement.settl_tp === '2'}
-                                diectionName="bank_cd"
+                                directionName="bank_cd"
                                 onSelect={handleSelectTransfBank}
                                 label={t('report.bank_transf_name')}
                                 style={{ marginTop: 8, marginBottom: 4, width: '100%' }}
@@ -373,7 +373,7 @@ const SettlementEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) 
                                 value={settlement.bank_nm_r || ''}
                                 disabled={settlement.settl_tp === '1'}
                                 required={settlement.settl_tp === '2'}
-                                diectionName="bank_cd"
+                                directionName="bank_cd"
                                 onSelect={handleSelectReceiBank}
                                 label={t('report.bank_recei_name')}
                                 style={{ marginTop: 8, marginBottom: 4, width: '100%' }}

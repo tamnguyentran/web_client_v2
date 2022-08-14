@@ -33,6 +33,11 @@
     font-size: 97% !important;
   }
 }
+@media only screen and (max-height: 700px) {
+  html {
+    font-size: 75% !important;
+  }
+}
 
 /* @font-face {
   font-family: "Manrope";
@@ -579,12 +584,16 @@ div.MuiCardHeader-action
   display: none !important;
 }
 
-.aligh-item-center {
+.align-item-center {
   align-items: center;
 }
 
-.aligh-item-end {
+.align-item-end {
   align-items: flex-end;
+}
+
+.align-item-start {
+  align-items: flex-start;
 }
 
 /* #info-inventory > .list-product-inventory {
@@ -741,6 +750,9 @@ div.MuiCardHeader-action
 .gray2-bg {
   background-color: var(--gray2) !important;
 }
+.text-gray2{
+  color: var(--gray2) !important;
+}
 .gray3-bg {
   background-color: var(--gray3) !important;
 }
@@ -764,6 +776,10 @@ div.MuiCardHeader-action
   color: var(--orange) !important;
 }
 
+.black-bg {
+  background-color: var(--black) !important;
+}
+
 .white-bg {
   background-color: var(--white) !important;
 }
@@ -785,7 +801,7 @@ td {
 
 .btn-custom {
   border: 1px solid var(--gray4);
-  height: var(--heightInput);
+  height: var(--heightInput) !important;
   border-radius: 4px;
   background-color: var(--white);
   color: var(--black2);
@@ -857,5 +873,15 @@ td {
 }
 
 .h-btn {
+  height: var(--heightInput) !important;
+}
+
+.border-none{
+  border: none !important;
+}
+.outline-none{
+  outline: none !important;
+}
+.height-btn{
   height: var(--heightInput) !important;
 }

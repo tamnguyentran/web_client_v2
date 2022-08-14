@@ -24,6 +24,8 @@ export default function TextFieldCpn(props) {
     onFocus = () => {},
     inputRef,
     name,
+    disabled = false,
+    align = "left"
   } = props;
 
   return (
@@ -39,6 +41,8 @@ export default function TextFieldCpn(props) {
         onKeyPress={onKeyPress}
         ref={inputRef}
         name={name}
+        disabled={disabled}
+        style={{textAlign:align}}
       />
     </FormControl>
   );

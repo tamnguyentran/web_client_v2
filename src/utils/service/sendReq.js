@@ -12,6 +12,7 @@ const sendRequest = (
     onTimeout = () => null,
     waitTime
 ) => {
+    console.log("inputParams",inputParams)
     console.log('serviceInfo',serviceInfo)
     //- luôn kiểm tra trạng thái socket kết nối tới server trước
     if (!socket_sv.getSocketStat()) {

@@ -1,51 +1,5 @@
-#search-product >.list-product-inventory {
-    overflow-y: hidden;
-    width: 100%;
-    max-width: 300px;
-    background: rgb(255, 255, 255);
-    position: absolute !important;
-    z-index: 100;
-    max-height: 40vh;
-    box-shadow: rgb(64 60 67 / 16%) 0px 2px 5px 1px !important;
-    visibility: visible;
-}
 
-#search-product>.list-product-inventory:hover {
-    overflow-y: auto !important;
-}
 
-.custom-avatar{
-    height: 70px !important;
-    width: 70px !important;
-    margin-right: 10px !important;
-}
-
-.tableContainer {
-    max-height: calc(100vh - 270px) !important;
-    border-left: 1px solid #e0e0e0;
-    border-right: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.tableContainer .MuiOutlinedInput-inputMarginDense {
-    padding-top: 8.5px !important;
-    padding-bottom: 8.5px !important;
-}
-
-.list-product-bottom > .MuiCardHeader-root{
-    padding: 0 1rem !important;
-}
-
-.list-product-bottom .MuiAutocomplete-inputRoot .MuiAutocomplete-input{
-    font-size: 12px !important;
-}
-
-.status-select{
-    margin-bottom: 4px !important;
-    background: #fff ;
-    border-radius: 5px !important;
-    font-size: 12px !important;
-}
 
 .show-info-bottom{
     height: 55px !important;
@@ -57,6 +11,9 @@
     margin-right: 5px !important;
 }
 
-.export.tableContainer {
-    height: calc(50vh - 100px) !important;
+.item-receipt{
+    white-space: nowrap; 
+  width: 100px; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }

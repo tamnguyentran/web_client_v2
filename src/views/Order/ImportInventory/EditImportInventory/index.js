@@ -455,7 +455,7 @@ const EditImportInventory = ({}) => {
           resetFlag={resetFormAddFlag}
         />
         <Card style={{ height: "calc(100% - 168px)" }}>
-          <CardHeader title={t("order.import.productImportList")} />
+          <CardHeader title={t("order.import.productImportListvvv")} />
           <CardContent className="insImportTable">
             <div className="flex justify-content-between aligh-item-center mb-1">
               <div className="flex aligh-item-center">

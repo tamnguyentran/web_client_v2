@@ -355,7 +355,7 @@ const CustomerEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) =>
                         <Grid item xs={6} sm={3}>
                             <Dictionary
                                 value={Customer.o_14}
-                                diectionName="bank_cd"
+                                directionName="bank_cd"
                                 onSelect={handleSelectBank}
                                 label={t('partner.supplier.bank_cd')}
                                 style={{ marginTop: 8, marginBottom: 4, width: '100%' }}

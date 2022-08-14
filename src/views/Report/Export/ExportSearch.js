@@ -105,7 +105,7 @@ const ExportSearch = ({ handleSearch, process = false }) => {
         <div className="mb-4">
           <TitleFilterCpn className="mb-2" label="Lọc theo thông tin" />
           <Dictionary
-            diectionName="customers"
+            directionName="customers"
             value={searchModal.customer_nm || ""}
             size={"small"}
             label={t("menu.customer")}
@@ -198,7 +198,7 @@ const ExportSearch = ({ handleSearch, process = false }) => {
             </Grid>
             <Grid item xs>
               <Dictionary_Autocomplete
-                diectionName="customers"
+                directionName="customers"
                 value={searchModal.customer_nm || ""}
                 style={{ marginTop: 8, marginBottom: 4, width: "100%" }}
                 size={"small"}

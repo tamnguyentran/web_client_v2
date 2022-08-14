@@ -34,6 +34,18 @@ export default function AutocompleteCpn(props) {
     autoFocus = false,
     inputRef,
     inputValue = "",
+    placeholder = "",
+    renderInput = (params) => (
+      <TextField
+        inputRef={inputRef}
+        value={inputValue}
+        autoFocus={autoFocus}
+        size="small"
+        {...params}
+        variant="outlined"
+        placeholder={placeholder}
+      />
+    )
   } = props;
 
   return (
@@ -55,16 +67,7 @@ export default function AutocompleteCpn(props) {
         onInputChange={onInputChange}
         onKeyPress={onKeyPress}
         value={value}
-        renderInput={(params) => (
-          <TextField
-            inputRef={inputRef}
-            value={inputValue}
-            autoFocus={autoFocus}
-            size="small"
-            {...params}
-            variant="outlined"
-          />
-        )}
+        renderInput={renderInput}
       />
     </FormControl>
   );

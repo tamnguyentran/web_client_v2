@@ -82,16 +82,16 @@ import { useHistory } from "react-router-dom";
 
 const serviceInfo = {
   GET_ALL: {
-    functionName: config["list"].functionName,
-    reqFunct: config["list"].reqFunct,
-    biz: config.biz,
-    object: config.object,
+    functionName: "get_all",
+    reqFunct: reqFunction.PRODUCT_LIST,
+    biz: "common",
+    object: "products",
   },
   DELETE: {
-    functionName: config["delete"].functionName,
-    reqFunct: config["delete"].reqFunct,
-    biz: config.biz,
-    object: config.object,
+    functionName: "delete",
+    reqFunct: reqFunction.PRODUCT_DELETE,
+    biz: "common",
+    object: "products",
   },
   LOCK: {
     functionName: "blocking",

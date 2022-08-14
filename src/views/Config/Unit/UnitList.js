@@ -32,7 +32,7 @@ import {
   IconButtonCpn,
   ButtonCpn,
 } from "../../../basicComponents";
-// import Breadcrumb from "../../../components/Breadcrumb/View";
+
 
 const serviceInfo = {
   GET_ALL: {
@@ -359,24 +359,6 @@ const UnitList = () => {
               displayRecords={dataSourceRef.current.length}
               disabled={dataSourceRef.current.length >= totalRecords}
             />
-            {/* Hiển thị{" "}
-            {dataSourceRef.current.length +
-              "/" +
-              totalRecords +
-              " " +
-              t("rowData")}
-            <button
-              onClick={getNextData}
-              disabled={dataSourceRef.current.length >= totalRecords}
-              className="btn-custom ml-3 mr-2"
-              style={{
-                background:
-                  dataSourceRef.current.length >= totalRecords &&
-                  "var(--gray3)",
-              }}
-            >
-              <IC_SHAPE className="pr-1" /> Lấy thêm dữ liệu{" "}
-            </button> */}
             <ExportExcel
               filename="unit"
               data={dataCSV()}

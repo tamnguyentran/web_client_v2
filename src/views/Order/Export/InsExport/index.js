@@ -706,7 +706,7 @@ const InsExport = ({}) => {
       </Grid>
       <Grid item md={3} xs={12}>
         <Card>
-          <CardHeader title={t("order.export.invoice_info")} />
+          <CardHeader title={t("order.export.invoice_infovv")} />
           <CardContent>
             <Grid container spacing={1}>
               <FormControlLabel
