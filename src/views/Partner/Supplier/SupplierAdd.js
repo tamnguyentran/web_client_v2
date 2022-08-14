@@ -374,7 +374,7 @@ const SupplierAdd = ({ onRefresh }) => {
               </Grid>
               <Grid item xs={6} sm={4}>
                 <Dictionary
-                  diectionName="bank_cd"
+                  directionName="bank_cd"
                   onSelect={handleSelectBank}
                   label={t("partner.supplier.bank_cd")}
                   style={{ marginTop: 8, marginBottom: 4, width: "100%" }}
