@@ -16,6 +16,7 @@ import {
   List,
   ListItem,
   Chip,
+  MenuItem,
 } from "@material-ui/core";
 import LoopIcon from "@material-ui/icons/Loop";
 
@@ -49,13 +50,25 @@ import ListProductImport from "./ListProductImport";
 import InfoInvoice from "./InfoInvoice";
 
 import Breadcrumb from "../../../../components/Breadcrumb/View";
+import { ReactComponent as IC_ADD } from "../../../../asset/images/add.svg";
+import { ReactComponent as IC_TICK } from "../../../../asset/images/tick.svg";
+import { ReactComponent as IC_PRINT } from "../../../../asset/images/print.svg";
+import {
+  Unit,
+  Product,
+  AddCustomer,
+  Supplier,
+  AddSupplier,
+} from "../../../../components/Autocomplete";
 
 import {
-  TitleFilterCpn,
   Wrapper,
-  IconButtonCpn,
   ButtonCpn,
   TextFieldCpn,
+  DatePickerCpn,
+  TextAreaCpn,
+  SelectCpn,
+  CheckBoxCpn,
 } from "../../../../basicComponents";
 
 const serviceInfo = {
@@ -188,31 +201,45 @@ const ProductImport = () => {
   }, []);
   useEffect(() => {
     const newData = { ...paymentInfo };
+    // newData["invoice_val"] =
+    //   dataSource.reduce(function (acc, obj) {
+    //     return acc + Math.round(obj.o_10 * obj.o_13);
+    //   }, 0) || 0;
     newData["invoice_val"] =
       dataSource.reduce(function (acc, obj) {
         return acc + Math.round(obj.o_10 * obj.o_13);
       }, 0) || 0;
-    newData["invoice_discount"] =
-      dataSource.reduce(function (acc, obj) {
-        return acc + Math.round((obj.o_15 / 100) * newData.invoice_val);
-      }, 0) || 0;
-    newData["invoice_vat"] =
-      dataSource.reduce(function (acc, obj) {
-        return (
-          acc +
-          Math.round(
-            (obj.o_14 / 100) *
-              Math.round(newData.invoice_val * (1 - obj.o_15 / 100))
-          )
-        );
-      }, 0) || 0;
+
+      newData["discount_val"] =
+      Import.discount_tp === "1"
+        ? Import.discount_val
+        : (newData["invoice_val"] * Import.discount_val) / 100;
     newData["invoice_needpay"] =
-      newData.invoice_val - newData.invoice_discount + newData.invoice_vat || 0;
+      newData.invoice_val - newData.discount_val || 0;
+    // setExport((prevState) => {
+    //   return { ...prevState, ...{ payment_amount: newData.invoice_needpay } };
+    // });
     setPaymentInfo(newData);
-    setImport((prevState) => {
-      return { ...prevState, ...{ payment_amount: newData.invoice_needpay } };
-    });
-  }, [dataSource]);
+    // newData["discount_val"] =
+    //   dataSource.reduce(function (acc, obj) {
+    //     return acc + Math.round((obj.o_15 / 100) * newData.invoice_val);
+    //   }, 0) || 0;
+    // newData["invoice_vat"] =
+    //   dataSource.reduce(function (acc, obj) {
+    //     return (
+    //       acc +
+    //       Math.round(
+    //         (obj.o_14 / 100) *
+    //           Math.round(newData.invoice_val * (1 - obj.o_15 / 100))
+    //       )
+    //     );
+    //   }, 0) || 0;
+    // newData["invoice_needpay"] = newData.invoice_val || 0;
+    // setPaymentInfo(newData);
+    // setImport((prevState) => {
+    //   return { ...prevState, ...{ payment_amount: newData.invoice_needpay } };
+    // });
+  }, [dataSource,Import.discount_tp, Import.discount_val]);
 
   useEffect(() => {
     dataHistoryListInvoiceRef.current = [];
@@ -241,9 +268,9 @@ const ProductImport = () => {
     };
   }, []);
 
-  const getListBill = (startdate, endDate, last_id, id_status, vender_nm) => {
+  const getListBill = (startDate, endDate, last_id, id_status, vender_nm) => {
     // setSearchProcess(true)
-    const inputParam = [startdate, endDate, last_id, id_status, vender_nm];
+    const inputParam = [startDate, endDate, last_id, id_status, vender_nm];
     sendRequest(
       serviceInfo.GET_ALL_BILL,
       inputParam,
@@ -278,7 +305,6 @@ const ProductImport = () => {
       } else {
         dataHistoryListInvoiceRef.current = [];
         setDataHistoryListInvoice([]);
-        // setTotalRecords(0)
       }
     }
   };
@@ -352,7 +378,14 @@ const ProductImport = () => {
     setImport(newImport);
   };
 
+  const handleChangeCodeBill = (e) => {
+    const { name, value } = e.target;
+    setImport((pre) => ({ ...pre, [`${name}`]: value }));
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    setImport((pre) => ({ ...pre, [`${name}`]: value }));
     if (e.target.name === "note") {
       if (
         importRef.current?.note !== e.target.value ||
@@ -380,11 +413,17 @@ const ProductImport = () => {
     }
   };
 
-  const handleAmountChange = (value) => {
-    const newImport = { ...Import };
-    newImport["payment_amount"] = Number(value.value);
-    importDataRef.current = newImport;
-    setImport(newImport);
+  const handleAmountChange = (e) => {
+    // const newImport = { ...Import };
+    // newImport["payment_amount"] = Number(value.value);
+    // importDataRef.current = newImport;
+    // setImport(newImport);
+    const { value, name } = e.target;
+    if (value === "") return setImport((pre) => ({ ...pre, [`${name}`]: 0 }));
+    setImport((pre) => ({
+      ...pre,
+      [`${name}`]: glb_sv.formatValue(value, "number"),
+    }));
   };
 
   const handleSelectTransfBank = (obj) => {
@@ -423,11 +462,10 @@ const ProductImport = () => {
         moment(productObject.exp_dt).format("YYYYMMDD"),
         productObject.qty,
         productObject.unit_id,
-        productObject.price,
-        productObject.discount_per,
-        productObject.vat_per,
+        Number(productObject.price) || 0,
+        0,
+        0,
       ];
-      console.log("inputParam", inputParam);
       sendRequest(
         serviceInfo.ADD_PRODUCT_TO_INVOICE,
         inputParam,
@@ -484,8 +522,7 @@ const ProductImport = () => {
     if (
       invoiceFlag &&
       !!Import.supplier &&
-      !!Import.order_dt &&
-      disableUpdateInvoice
+      !!Import.order_dt
     ) {
       return false;
     }
@@ -499,24 +536,26 @@ const ProductImport = () => {
       return;
     }
     if (!Import.payment_type || Import.payment_amount < 0) return;
-    if (
-      Import.payment_type === "2" &&
-      (!Import.bank_transf_acc_name ||
-        !Import.bank_transf_acc_number ||
-        !Import.bank_transf_name ||
-        !Import.bank_recei_acc_name ||
-        !Import.bank_recei_acc_number ||
-        !Import.bank_recei_name)
-    )
-      return;
+    // if (
+    //   Import.payment_type === "2" &&
+    //   (!Import.bank_transf_acc_name ||
+    //     !Import.bank_transf_acc_number ||
+    //     !Import.bank_transf_name ||
+    //     !Import.bank_recei_acc_name ||
+    //     !Import.bank_recei_acc_number ||
+    //     !Import.bank_recei_name)
+    // )
+    //   return;
     //bắn event tạo invoice
     const inputParam = [
       !!Import.invoice_no ? Import.invoice_no : "AUTO",
       Import.supplier,
       moment(Import.order_dt).format("YYYYMMDD"),
-      Import.person_s,
-      Import.person_r,
-      Import.note,
+      "",
+      "",
+      "1",
+      0,
+      "",
     ];
     sendRequest(
       serviceInfo.CREATE_INVOICE,
@@ -546,10 +585,13 @@ const ProductImport = () => {
       Import.invoice_id,
       Import.supplier,
       moment(Import.order_dt).format("YYYYMMDD"),
-      Import.person_s,
-      Import.person_r,
-      Import.note,
+      "",
+      "",
+      Import.discount_tp || "1",
+      Import?.discount_val || 0,
+      "",
     ];
+
     sendRequest(
       serviceInfo.UPDATE_INVOICE,
       inputParam,
@@ -613,6 +655,7 @@ const ProductImport = () => {
       message["PROC_STATUS"],
       3000
     );
+    setSaveProcess(false);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       const cltSeqResult = message["REQUEST_SEQ"];
@@ -643,7 +686,7 @@ const ProductImport = () => {
               moment(item.exp_dt).format("YYYYMMDD"),
               item.qty,
               item.unit_id,
-              item.price,
+              glb_sv.formatValue(item.price || 0, "number"),
               item.discount_per,
               item.vat_per,
             ];
@@ -703,20 +746,22 @@ const ProductImport = () => {
         supplier: newData.rows[0].o_4,
         supplier_nm: newData.rows[0].o_5,
         order_dt: moment(newData.rows[0].o_6, "YYYYMMDD").toString(),
-        person_s: newData.rows[0].o_8,
-        person_r: newData.rows[0].o_9,
-        cancel_reason: newData.rows[0].o_10,
-        note: newData.rows[0].o_11,
-        invoice_val: newData.rows[0].o_13,
-        invoice_discount: newData.rows[0].o_14,
-        invoice_vat: newData.rows[0].o_15,
-        invoice_settl: newData.rows[0].o_16,
+        person_s: newData.rows[0].o_10,
+        person_r: newData.rows[0].o_11,
+        cancel_reason: newData.rows[0].o_12,
+        note: newData.rows[0].o_13,
+        invoice_val: newData.rows[0].o_15,
+        // discount_val: newData.rows[0].o_16,
+        invoice_vat: newData.rows[0].o_17,
+        invoice_settl: newData.rows[0].o_18,
+        discount_tp: newData.rows[0].o_8,
+        discount_val: newData.rows[0].o_9,
+        payment_amount:0
       };
       importRef.current["note"] = newData.rows[0].o_11;
       importRef.current["supplierSelect"] = newData.rows[0].o_5;
       setImport(dataImport);
       setSupplierSelect(newData.rows[0].o_5);
-      setIsIndexRow(null);
     }
   };
 
@@ -729,8 +774,13 @@ const ProductImport = () => {
     } else if (message["PROC_DATA"]) {
       // xử lý thành công
       let newData = message["PROC_DATA"];
-      dataRef.current = newData.rows;
-      setDataSource(newData.rows);
+      dataRef.current = newData.rows || [];
+      setDataSource(newData.rows || []);
+      let convertData = message["PROC_DATA"].rows.map((item) => ({
+        expPrice: item.o_13,
+        expQty: item.o_10,
+      }));
+      setProductInfo(convertData);
     }
   };
 
@@ -786,7 +836,7 @@ const ProductImport = () => {
     { label: t("order.import.order_dt"), key: "order_dt" },
     { label: t("order.import.note"), key: "note" },
     { label: t("order.import.invoice_val"), key: "invoice_val" },
-    { label: t("order.import.invoice_discount"), key: "invoice_discount" },
+    { label: t("order.import.discount_val"), key: "discount_val" },
     { label: t("order.import.invoice_vat"), key: "invoice_vat" },
   ];
 
@@ -814,7 +864,7 @@ const ProductImport = () => {
         ? moment(Import.order_dt).format("DD/MM/YYYY")
         : "";
       item["invoice_val"] = Import.invoice_val;
-      item["invoice_discount"] = Import.invoice_discount;
+      item["discount_val"] = Import.discount_val;
       item["invoice_vat"] = Import.invoice_vat;
       item["note"] = Import.note;
       return item;
@@ -863,17 +913,17 @@ const ProductImport = () => {
     }
   };
 
-  const handleClickEdit = (item, index) => {
-    setIsIndexRow(index);
-    setProductInfo({
-      ...productInfo,
-      expType: item.o_3,
-      expQty: item.o_10,
-      expPrice: item.o_13,
-      expDisCount: item.o_14,
-      expVAT: item.o_15,
-    });
-  };
+  // const handleClickEdit = (item, index) => {
+  //   setIsIndexRow(index);
+  //   setProductInfo({
+  //     ...productInfo,
+  //     expType: item.o_3,
+  //     expQty: item.o_10,
+  //     expPrice: item.o_13,
+  //     expDisCount: item.o_14,
+  //     expVAT: item.o_15,
+  //   });
+  // };
 
   const handleChangeUpdate = (inputKey, inputValue) => {
     const newProductInfo = { ...productInfo };
@@ -902,38 +952,32 @@ const ProductImport = () => {
     }
   };
 
-  const updateDataListProduct = (rowData) => {
-    if (!rowData) {
-      SnackBarService.alert(t("wrongData"), true, "error", 3000);
-      return;
-    }
-    if (
-      productInfo.expPrice < 0 ||
-      productInfo.expQty <= 0 ||
-      productInfo.expVAT < 0 ||
-      productInfo.expVAT > 100 ||
-      productInfo.expDisCount < 0 ||
-      productInfo.expDisCount > 100
-    )
-      return;
-    // setProcess(true)
-    const inputParam = [
-      newInvoiceId.current,
-      rowData.o_1,
-      productInfo.expType,
-      productInfo.expQty,
-      productInfo.expPrice,
-      productInfo.expDisCount,
-      productInfo.expVAT,
-    ];
-    sendRequest(
-      serviceInfo.UPDATE_PRODUCT_TO_INVOICE,
-      inputParam,
-      handleResultUpdateProduct,
-      true,
-      handleTimeOut
-    );
-  };
+  const updateDataListProduct = useCallback(
+    debounce((qty, price, item) => {
+      if (!item.o_1) {
+        SnackBarService.alert(t("wrongData"), true, "error", 3000);
+        return;
+      }
+      if (price < 0 || qty < 1) return;
+      const inputParam = [
+        newInvoiceId.current,
+        item.o_1, // ID dòng dữ liệu
+        item.o_3, // Mã loại hình nhập
+        qty, // Số lượng
+        price, // Giá
+        0,
+        0,
+      ];
+      sendRequest(
+        serviceInfo.UPDATE_PRODUCT_TO_INVOICE,
+        inputParam,
+        handleResultUpdateProduct,
+        true,
+        handleTimeOut
+      );
+    }, 800),
+    []
+  );
 
   const handleResultUpdateProduct = (reqInfoMap, message) => {
     if (message["PROC_STATUS"] !== 1) {
@@ -943,7 +987,6 @@ const ProductImport = () => {
       control_sv.clearReqInfoMapRequest(cltSeqResult);
     } else if (message["PROC_DATA"]) {
       handleRefresh();
-      setIsIndexRow(null);
     }
   };
 
@@ -979,82 +1022,316 @@ const ProductImport = () => {
       searchModalInvoice.vender_nm
     );
   };
+
+  const handleChangeInvoiceDiscount = (e) => {
+    const { value, name } = e.target;
+    if (value === "") return setImport((pre) => ({ ...pre, [`${name}`]: 0 }));
+    if (Import?.discount_tp === "1") {
+      setImport((pre) => ({
+        ...pre,
+        [`${name}`]: glb_sv.formatValue(value, "number"),
+      }));
+    } else if (
+      Import?.discount_tp === "2" &&
+      glb_sv.formatValue(value, "number") > 0 &&
+      glb_sv.formatValue(value, "number") <= 100
+    ) {
+      setImport((pre) => ({
+        ...pre,
+        [`${name}`]: glb_sv.formatValue(value, "number"),
+      }));
+    }
+  };
+
+  const handleChangeDiscount = (e) => {
+    const { value, name } = e.target;
+    setImport((pre) => ({ ...pre, [`${name}`]: value, discount_val: 0 }));
+  };
+
   return (
     <>
       <div className="layout-page p-2">
         <Wrapper.WrapperTable isShowLayout={true} hiddenIcon={true}>
-          <div
-            style={{ height: "80px" }}
-            className="flex justify-content-between p-2"
-          >
+          <Wrapper.WrapperHeader>
             <div>
-              <div style={{ width: "70%" }}>
-                <TextFieldCpn />
-              </div>
-              <div className="mt-2 text-black fz14">
-                Bạn có thể tìm kiếm bằng cách nhập tên/mã SKU hoặc nhập/quét mã
-                vạch của sản phẩm
-              </div>
+              <Breadcrumb description="Đây là trang giúp bạn nhập hàng cho nhà thuốc" />
             </div>
-            <div className="flex aligh-item-center">
+            <div className="flex align-item-center justify-content-end">
               <Button
-                style={{ height: "35px" }}
                 size="medium"
-                className="primary-bg text-white"
+                className="height-btn primary-bg text-white"
                 variant="contained"
                 onClick={() => {
-                  // setShouldOpenModal(true);
+                  setImport({ ...invoiceImportModal });
+                  setDataSource([]);
+                  setInvoiceFlag(false);
+                  setSupplierSelect("");
                 }}
               >
-                {/* <IC_ADD className="pr-1" /> */}
-                <div>Thêm mới (F2)</div>
+                <IC_ADD />
+                <div>H.Đ mới</div>
               </Button>
-              {/* <ButtonCpn>
-              </ButtonCpn> */}
-              <div className="mr-4 ml-4">
-                <div>Hóa đơn 112</div>
-                <div>12:30:31 AM</div>
-              </div>
-              <div className="mr-4">
-                <div>Hóa đơn 112</div>
-                <div>12:30:31 AM</div>
-              </div>
-              <div className="mr-4">
-                <div>Hóa đơn 112</div>
-                <div>12:30:31 AM</div>
+              <div
+                className="flex cursor-pointer"
+                style={{
+                  overflowX: "auto",
+                  maxWidth: `${
+                    dataHistoryListInvoice.length <= 4
+                      ? 100 * dataHistoryListInvoice.length + "px"
+                      : "400px"
+                  }`,
+                }}
+              >
+                {dataHistoryListInvoice.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="mr-2 ml-2"
+                      onClick={() => {
+                        newInvoiceId.current = item.o_1;
+                        handleRefresh();
+                        setOpenModalShowBill(false);
+                        setInvoiceFlag(true);
+                        setIsIndexRow(null);
+                        setDisableUpdateInvoice(false);
+                      }}
+                    >
+                      <div className="fz15 text-center text-black2 item-receipt">
+                        H.Đơn {item.o_2}
+                      </div>
+                      <div className="fz15 text-green2">
+                        {moment(item.o_7, "YYYYMMDD").format("DD/MM/YYYY")}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-          </div>
+          </Wrapper.WrapperHeader>
           <div
-            style={{
-              height: "calc(100% - 80px)",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
+            style={{ height: "calc(100% - 80px)" }}
+            className="flex justify-content-between"
           >
-            <Wrapper.WrapperTable hiddenIcon={true}>bdbd</Wrapper.WrapperTable>
-            <Wrapper.WrapperFilter>
-              <div
-                className="pt-2 pb-2 pl-2 pr-2"
-                style={{
-                  background: "gray",
-                  alignContent: "flex-end",
-                  textAlign: "right",
-                }}
-              >
-                Hóa đơn bán lẻ
+            <Wrapper.WrapperTable
+              hiddenIcon={true}
+              style={{ width: "calc(100% - 22% - 8px)", minWidth: "800px" }}
+            >
+              <AddProduct
+                saveProcess={saveProcess}
+                resetFlag={resetFormAddFlag}
+                onAddProduct={handleAddProduct}
+                style={{ height: "160px" }}
+              />
+              <ListProductImport
+                column={column}
+                // handleClickEdit={handleClickEdit}
+                isIndexRow={isIndexRow}
+                setIsIndexRow={setIsIndexRow}
+                updateDataListProduct={updateDataListProduct}
+                onRemove={onRemove}
+                setProductDeleteIndex={setProductDeleteIndex}
+                handleChangeType={handleChangeType}
+                handleChangeUpdate={handleChangeUpdate}
+                dataSource={dataSource}
+                handleClickSortColum={handleClickSortColum}
+                sortColumn={sortColumn}
+                showIconSort={showIconSort}
+                productInfo={productInfo}
+                setProductInfo={setProductInfo}
+                step2Ref={step2Ref}
+                step3Ref={step3Ref}
+              />
+            </Wrapper.WrapperTable>
+            <Wrapper.WrapperFilter style={{ width: "22%" }}>
+              <div className="pt-2 pb-2 pl-2 pr-2 gray3-bg align-items-center text-right">
+                Thông tin hóa đơn
               </div>
               <div className="p-2">
                 <TextFieldCpn
-                  label="Mã hoá đơn"
+                  label="Số hoá đơn"
                   placeholder="Nhập tay hoặc tự sinh"
+                disabled={invoiceFlag}
+                className="uppercaseInput"
+                onChange={handleChangeCodeBill}
+                value={Import.invoice_no || ""}
+                name="invoice_no"
                 />
+                <AddSupplier
+                  // autoFocus={true}
+                  value={supplierSelect || ""}
+                  size={"small"}
+                  onSelect={handleSelectSupplier}
+                  onCreate={handleCreateSupplier}
+                  inputRef={step1Ref}
+                  label={"Nhà cung ứng (*)"}
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      step2Ref.current.focus();
+                    }
+                  }}
+                />
+                <DatePickerCpn
+                  className="mt-1"
+                  label="Ngày nhập hàng (*)"
+                  format="dd/MM/yyyy"
+                />
+                <div className="flex align-items-end">
+                  <div className="mr-2" style={{ width: "50%" }}>
+                    <SelectCpn
+                      value={Import.discount_tp}
+                      onChange={handleChangeDiscount}
+                      name="discount_tp"
+                      label="Loại CK"
+                    >
+                      <MenuItem value="1">{t("Tiền mặt")}</MenuItem>
+                      <MenuItem value="2">{t("% Hóa đơn")}</MenuItem>
+                    </SelectCpn>
+                  </div>
+                  <div style={{ width: "50%" }}>
+                    <TextFieldCpn
+                      value={glb_sv.formatValue(
+                        Import.discount_val || 0,
+                        "number"
+                      )}
+                      label={" "}
+                      name="discount_val"
+                      onChange={handleChangeInvoiceDiscount}
+                      disabled={!Import?.discount_tp}
+                    />
+                  </div>
+                </div>
+                <TextFieldCpn
+                  value={glb_sv.formatValue(
+                    Import.invoice_val || 0,
+                    "currency"
+                  )}
+                  align="right"
+                  className="mt-1"
+                  label={t("Giá trị HĐ")}
+                  disabled={true}
+                />
+                <TextFieldCpn
+                  value={glb_sv.formatValue(
+                    Math.round(paymentInfo.invoice_needpay) || 0,
+                    "currency"
+                  )}
+                  align="right"
+                  className="mt-1"
+                  label={t("Thành tiền")}
+                  disabled={true}
+                />
+                <TextFieldCpn
+                  align="right"
+                  className="mt-1"
+                  label={t("Nhà thuốc trả")}
+                  name="payment_amount"
+                  value={glb_sv.formatValue(Import.payment_amount, "number")}
+                  onChange={handleAmountChange}
+                  disabled = {Import.invoice_val === 0}
+                />
+                <TextFieldCpn
+                  align="right"
+                  className="mt-1"
+                  label={t("Tiền thừa")}
+                  value={glb_sv.formatValue(
+                    Import.payment_amount - paymentInfo.invoice_needpay > 0
+                      ? Import.payment_amount - paymentInfo.invoice_needpay
+                      : 0,
+                    "number"
+                  )}
+                  disabled={true}
+                />
+                <div className="flex justify-content-between mt-4">
+                  <Button
+                    onClick={handlePrint}
+                    disabled={!invoiceFlag}
+                    className={invoiceFlag ? "black-bg text-white" : ""}
+                    id="buttonPrint"
+                    size="small"
+                    variant="contained"
+                    style={{
+                      height: "var(--heightInput)",
+                      width: "22%",
+                    }}
+                  >
+                    <IC_PRINT />
+                  </Button>
+                  <Button
+                    style={{ height: "var(--heightInput)", width: "75%" }}
+                    size="medium"
+                    variant="contained"
+                    onClick={handleUpdateInvoice}
+                    disabled={checkValidate()}
+                    className={
+                      checkValidate() === false
+                        ? updateProcess
+                          ? "bg-success text-white"
+                          : "primary-bg text-white"
+                        : ""
+                    }
+                  >
+                    {updateProcess ? (
+                      <LoopIcon className="button-loading" />
+                    ) : (
+                      <IC_TICK className="pr-1" />
+                    )}
+                    <div>Thanh toán</div>
+                  </Button>
+                </div>
               </div>
             </Wrapper.WrapperFilter>
           </div>
         </Wrapper.WrapperTable>
+        <Dialog
+          maxWidth="xs"
+          fullWidth={true}
+          TransitionProps={{
+            addEndListener: (node, done) => {
+              node.addEventListener("keypress", function (e) {
+                if (e.key === "Enter") {
+                  handleDelete();
+                }
+              });
+            },
+          }}
+          open={shouldOpenDeleteModal}
+          onClose={(e) => {
+            setShouldOpenDeleteModal(false);
+          }}
+        >
+          <Card>
+            <CardHeader
+              className="card-header"
+              title={t("Xác nhận xóa sản phẩm ?")}
+            />
+            <CardContent>
+              <Grid container>
+                {productDeleteModal.o_6 +
+                  " - " +
+                  t("Số lượng xuất") +
+                  ": " +
+                  productDeleteModal.o_10 +
+                  " " +
+                  productDeleteModal.o_12}
+              </Grid>
+            </CardContent>
+            <CardActions className="align-items-end justify-content-end">
+              <ButtonCpn.ButtonClose
+                process={deleteProcess}
+                onClick={(e) => {
+                  setShouldOpenDeleteModal(false);
+                }}
+              />
+              <ButtonCpn.ButtonDelete
+                onClick={handleDelete}
+                disabled={deleteProcess}
+                process={deleteProcess}
+              />
+            </CardActions>
+          </Card>
+        </Dialog>
       </div>
-      {true && (
+      {false && (
         <Grid container spacing={1} className="h-100">
           <Drawer
             anchor="right"
@@ -1212,7 +1489,7 @@ const ProductImport = () => {
                 </div>
                 <ListProductImport
                   column={column}
-                  handleClickEdit={handleClickEdit}
+                  // handleClickEdit={handleClickEdit}
                   isIndexRow={isIndexRow}
                   setIsIndexRow={setIsIndexRow}
                   updateDataListProduct={updateDataListProduct}

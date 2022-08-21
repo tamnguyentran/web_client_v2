@@ -2,7 +2,6 @@ import reqFunction from '../../../../utils/constan/functions';
 
 const tableColumn = [
     { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
-    { field: 'action', title: 'lbl.action', show: true, disabled: true, minWidth: 100 },
     { field: 'o_2', title: 'partner.customer.cust_nm_v', show: true, disabled: true, minWidth: 200 },
     // { field: 'o_3', title: 'partner.customer.cust_nm_e', show: true, disabled: false, minWidth: 200 },
     // { field: 'o_4', title: 'partner.customer.cust_nm_short', show: true, disabled: false, minWidth: 100 },
@@ -23,6 +22,8 @@ const tableColumn = [
     { field: 'o_22', title: 'partner.customer.default_yn', show: false, disabled: false, minWidth: 300 },
     { field: 'o_20', title: 'updateUser', show: true, disabled: false, minWidth: 100 },
     { field: 'o_21', title: 'updateDate', show: true, disabled: false, minWidth: 100, type: 'date' },
+    { field: 'action', title: 'lbl.action', show: true, disabled: true, minWidth: 100 },
+
     // { field: 'o_11', title: 'partner.unit.titleBranch', show: true, disabled: false, minWidth: 100 }
 ]
 

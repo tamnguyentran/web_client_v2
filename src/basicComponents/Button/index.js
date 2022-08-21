@@ -17,9 +17,11 @@ const ButtonUpdate = (props) => {
     disabled = false,
     process,
     title = "Cập nhập (F3)",
+    style = {}
   } = props;
   return (
     <Button
+      style={style}
       size="medium"
       className={`btn-update-delete-cpn ${
         disabled ? "gray3-bg" : "primary-bg text-white"

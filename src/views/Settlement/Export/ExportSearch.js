@@ -7,6 +7,14 @@ import { Grid, Button } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import LoopIcon from '@material-ui/icons/Loop'
 
+import {
+    TitleFilterCpn,
+    Wrapper,
+    IconButtonCpn,
+    ButtonCpn,
+    DatePickerCpn
+  } from "../../../basicComponents";
+
 const ExportSearch = ({ handleSearch, process = false }) => {
     const { t } = useTranslation()
 
@@ -29,7 +37,7 @@ const ExportSearch = ({ handleSearch, process = false }) => {
 
     return (
         <>
-            <Grid container spacing={2}>
+            {/* <Grid container spacing={2}>
                 <Grid item xs={3}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
@@ -78,7 +86,27 @@ const ExportSearch = ({ handleSearch, process = false }) => {
                         {t('search_btn')}
                     </Button>
                 </Grid>
-            </Grid>
+            </Grid> */}
+            <div className="mb-4">
+          <TitleFilterCpn className="mb-2" label="Lọc theo thời gian" />
+          <DatePickerCpn
+            label="Ngày bắt đầu"
+            className="mb-1"
+            value={searchModal.start_dt}
+            onChange={handleStartDateChange}
+            onKeyPress={(key) => {
+              if (key.which === 13) return handleSearch(searchModal);
+            }}
+          />
+          <DatePickerCpn
+            label="Ngày kết thúc"
+            value={searchModal.end_dt}
+            onChange={handleEndDateChange}
+            onKeyPress={(key) => {
+              if (key.which === 13) return handleSearch(searchModal);
+            }}
+          />
+        </div>
         </>
     )
 }

@@ -15,6 +15,7 @@
 }
 
 .wrapper-header {
+  /* height: 80px; */
   padding: 10px 15px;
   background: var(--clrMain);
   border-bottom: 2px solid var(--gray3);

@@ -7,14 +7,15 @@ import SaveIcon from '@material-ui/icons/Save'
 import CheckIcon from '@material-ui/icons/Check'
 import DeleteIcon from '@material-ui/icons/Delete'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import SnackBarService from '../../../../utils/service/snackbar_service'
-import sendRequest from '../../../../utils/service/sendReq'
-import reqFunction from '../../../../utils/constan/functions'
-import { requestInfo } from '../../../../utils/models/requestInfo'
-import glb_sv from '../../../../utils/service/global_service'
-import control_sv from '../../../../utils/service/control_services'
-import socket_sv from '../../../../utils/service/socket_service'
-import { defaultModalAdd } from '../Modal/Supplier.modal'
+import SnackBarService from '../../utils/service/snackbar_service'
+import sendRequest from '../../utils/service/sendReq'
+import reqFunction from '../../utils/constan/functions'
+import { requestInfo } from '../../utils/models/requestInfo'
+import glb_sv from '../../utils/service/global_service'
+import control_sv from '../../utils/service/control_services'
+import socket_sv from '../../utils/service/socket_service'
+import { defaultModalAdd } from "../Autocomplete/Modal/addSupplier.modal";
+import { AutocompleteCpn } from "../../basicComponents";
 
 const serviceInfo = {
     DROPDOWN_LIST: {
@@ -178,21 +179,18 @@ const SupplierAdd_Autocomplete = ({
 
     return (
         <>
-            <Autocomplete
-                disableClearable
+            <AutocompleteCpn
+            label={label}
                 disabled={disabled}
                 onChange={onChange}
                 onInputChange={handleChangeInput}
                 onKeyPress={onKeyPress}
-                size={!!size ? size : 'small'}
-                id="combo-box-demo"
                 options={dataSource}
                 value={valueSelect}
                 // autoSelect={true}
                 autoHighlight={true}
                 autoComplete={true}
                 getOptionLabel={(option) => option.o_2 || ''}
-                style={{ marginTop: 8, marginBottom: 4, width: '100%' }}
                 renderInput={(params) => {
                     let newParams = {
                         ...params,
@@ -202,6 +200,7 @@ const SupplierAdd_Autocomplete = ({
                                 startAdornment: (
                                     <Tooltip title={t('partner.supplier.titleQuickAdd')} aria-label="add">
                                         <AddCircleIcon
+                                        className="cursor-pointer"
                                             style={{ color: 'green' }}
                                             onClick={() => setShouldOpenModal(true)}
                                         />
@@ -215,18 +214,11 @@ const SupplierAdd_Autocomplete = ({
                             {...newParams}
                             inputRef={inputRef}
                             autoFocus={autoFocus}
-                            label={!!label ? label : ''}
                             variant="outlined"
                         />
                     )
                 }}
             />
-            {/* {!disabled &&
-                <Tooltip title={t('partner.supplier.titleQuickAdd')} aria-label="add">
-                    <AddCircleIcon style={{ width: '20%', color: 'green' }} onClick={() => setShouldOpenModal(true)} />
-                </Tooltip>
-            } */}
-
             <Dialog
                 fullWidth={true}
                 maxWidth="sm"

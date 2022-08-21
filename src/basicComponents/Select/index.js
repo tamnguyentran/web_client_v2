@@ -10,6 +10,7 @@ export default function SelectCpn(props) {
     name = "",
     children,
     className = "",
+    onClose
   } = props;
   return (
     <FormControl
@@ -23,6 +24,7 @@ export default function SelectCpn(props) {
         onChange={onChange}
         onKeyPress={onKeyPress}
         name={name}
+        onClose={onClose}
       >
         {children}
       </Select>

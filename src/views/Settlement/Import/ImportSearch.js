@@ -7,6 +7,14 @@ import moment from 'moment'
 import SearchIcon from '@material-ui/icons/Search'
 import LoopIcon from '@material-ui/icons/Loop'
 
+import {
+    TextFieldCpn,
+    TitleFilterCpn,
+    SelectCpn,
+    DatePickerCpn,
+    ButtonCpn,
+  } from "../../../basicComponents";
+
 const ImportSearch = ({ handleSearch, process = false }) => {
     const { t } = useTranslation()
 
@@ -39,8 +47,8 @@ const ImportSearch = ({ handleSearch, process = false }) => {
     }
 
     return (
-        <>
-            <Grid container spacing={2}>
+      <>
+        {/* <Grid container spacing={2}>
                 <Grid item xs={3}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
@@ -89,9 +97,29 @@ const ImportSearch = ({ handleSearch, process = false }) => {
                         {t('search_btn')}
                     </Button>
                 </Grid>
-            </Grid>
-        </>
-    )
+            </Grid> */}
+        <div className="mb-4">
+          <TitleFilterCpn className="mb-2" label="Lọc theo thời gian" />
+          <DatePickerCpn
+            label="Ngày bắt đầu"
+            className="mb-1"
+            value={searchModal.start_dt}
+            onChange={handleStartDateChange}
+            onKeyPress={(key) => {
+              if (key.which === 13) return handleSearch(searchModal);
+            }}
+          />
+          <DatePickerCpn
+            label="Ngày kết thúc"
+            value={searchModal.end_dt}
+            onChange={handleEndDateChange}
+            onKeyPress={(key) => {
+              if (key.which === 13) return handleSearch(searchModal);
+            }}
+          />
+        </div>
+      </>
+    );
 }
 
 export default ImportSearch

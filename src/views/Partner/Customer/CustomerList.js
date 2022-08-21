@@ -51,6 +51,13 @@ import DisplayColumn from "../../../components/DisplayColumn";
 import AddIcon from "@material-ui/icons/Add";
 import Breadcrumb from "../../../components/Breadcrumb/View";
 
+import {
+  TitleFilterCpn,
+  Wrapper,
+  IconButtonCpn,
+  ButtonCpn,
+} from "../../../basicComponents";
+
 
 const serviceInfo = {
   GET_ALL: {
@@ -81,6 +88,7 @@ const CustomerList = () => {
   const [name, setName] = useState("");
   const [processing, setProcessing] = useState(false);
   const [searchProcess, setSearchProcess] = useState(false);
+  const [isShowLayout, setIsShowLayout] = useState(false);
 
   const dataSourceRef = useRef([]);
   const searchRef = useRef("");
@@ -284,6 +292,139 @@ const CustomerList = () => {
 
   return (
     <>
+     <div className="layout-page p-2">
+        <Wrapper.WrapperFilter isShowLayout={isShowLayout}>
+          <div className="p-2">
+            <div className="mb-4">
+              {/* <ImportSearch
+                process={searchProcess}
+                handleSearch={searchSubmit}
+              /> */}
+            </div>
+          </div>
+        </Wrapper.WrapperFilter>
+        <Wrapper.WrapperTable
+          isShowLayout={isShowLayout}
+          setIsShowLayout={setIsShowLayout}
+        >
+          <Wrapper.WrapperHeader>
+            <div>
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, xem thông đơn nhập hàng của sản phẩm" />
+            </div>
+            <div className="flex">
+              {/* <WarnTimeAdd onRefresh={handleRefresh} /> */}
+              &ensp;
+              <DisplayColumn
+                columns={tableColumn}
+                handleCheckChange={onChangeColumnView}
+              />
+            </div>
+          </Wrapper.WrapperHeader>
+          <Wrapper.WrapperContent>
+            <TableContainer className="table-list-layout">
+              <Table stickyHeader>
+                <caption
+                  className={[
+                    "text-center text-danger border-bottom",
+                    dataSource.length > 0 && "dl-none",
+                  ].join(" ")}
+                >
+                  {t("lbl.emptyData")}
+                </caption>
+                <TableHead>
+                  <TableRow>
+                    {column.map((col) => (
+                      <TableCell
+                        nowrap="true"
+                        className={`p-2 text-uppercase text-black ${
+                          !col.show && "dl-none"
+                        }`}
+                        key={col.field}
+                      >
+                        {t(col.title)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dataSource.map((item, index) => {
+                    return (
+                      <TableRow
+                        className="table-row-p8"
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={index}
+                      >
+                        {column.map((col, indexRow) => {
+                          let value = item[col.field];
+                          if (col.show) {
+                            switch (col.field) {
+                              case "stt":
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
+                                  >
+                                    {index + 1}
+                                  </TableCell>
+                                );
+                                case "action":
+                                  return (
+                                    <TableCell
+                                      nowrap="true"
+                                      key={indexRow}
+                                      align={col.align}
+                                    >
+                                      <IconButtonCpn.IconButtonEdit
+                                        onClick={() => {
+                                          onEdit(item);
+                                        }}
+                                      />
+                                      <IconButtonCpn.IconButtonTrash
+                                        onClick={() => {
+                                          onRemove(item);
+                                        }}
+                                      />
+                                    </TableCell>
+                                  );
+                              default:
+                                return (
+                                  <TableCell
+                                    nowrap="true"
+                                    key={indexRow}
+                                    align={col.align}
+                                  >
+                                    {glb_sv.formatValue(value, col["type"])}
+                                  </TableCell>
+                                );
+                            }
+                          }
+                        })}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Wrapper.WrapperContent>
+          <Wrapper.WrapperFooter>
+            <ButtonCpn.ButtonGetMoreData
+              onClick={getNextData}
+              totalRecords={totalRecords}
+              displayRecords={dataSourceRef.current.length}
+              disabled={dataSourceRef.current.length >= totalRecords}
+            />
+            <ExportExcel
+              filename="Thanh toán nhập hàng"
+              data={dataCSV()}
+              headers={headersCSV}
+            />
+          </Wrapper.WrapperFooter>
+        </Wrapper.WrapperTable>
+      </div>
+     {false && <>
       <Card className="mb-2">
       <CardHeader
           title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}
@@ -458,13 +599,12 @@ const CustomerList = () => {
         </CardActions>
       </Card>
 
-      {/* modal delete */}
+     
       <Dialog
         maxWidth="xs"
         fullWidth={true}
         TransitionProps={{
           addEndListener: (node, done) => {
-            // use the css transitionend event to mark the finish of a transition
             node.addEventListener("keypress", function (e) {
               if (e.key === "Enter") {
                 handleDelete();
@@ -512,13 +652,14 @@ const CustomerList = () => {
         </Card>
       </Dialog>
 
-      {/* modal edit */}
+     
       <CustomerEdit
         id={id}
         shouldOpenModal={shouldOpenEditModal}
         setShouldOpenModal={setShouldOpenEditModal}
         onRefresh={handleRefresh}
       />
+     </>}
     </>
   );
 };

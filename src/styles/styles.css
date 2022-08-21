@@ -885,3 +885,14 @@ td {
 .height-btn{
   height: var(--heightInput) !important;
 }
+
+.w-50{
+  width: 50%;
+}
+
+.item-receipt{
+  white-space: nowrap; 
+width: 100px; 
+overflow: hidden;
+text-overflow: ellipsis; 
+}

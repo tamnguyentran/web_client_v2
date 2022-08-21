@@ -212,7 +212,6 @@ class globalService {
         }
 
         this.formatValue = (value, type) => {
-            console.log(value)
             switch (type) {
                 case 'number':
                     var number = new Intl.NumberFormat()

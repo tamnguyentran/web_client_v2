@@ -247,36 +247,21 @@ const InsExport = () => {
   }, []);
   useEffect(() => {
     const newData = { ...paymentInfo };
-    console.log(newData);
     newData["invoice_val"] =
       dataSource.reduce(function (acc, obj) {
         return acc + Math.round(obj.o_8 * obj.o_11);
       }, 0) || 0;
-    // newData["invoice_discount"] =
-    //   Export.discount_tp === "1"
-    //     ? (dataSource.reduce(function (acc, obj) {
-    //         return acc + newData.invoice_val;
-    //       }, 0) || 0)
-    //     : (dataSource.reduce(function (acc, obj) {
-    //         return acc + Math.round((obj.o_12 / 100) * newData.invoice_val);
-    //       }, 0) || 0);
-
-    //       console.log(newData["invoice_discount"])
     newData["invoice_discount"] =
       Export.discount_tp === "1"
         ? Export.invoice_discount
         : (newData["invoice_val"] * Export.invoice_discount) / 100;
     newData["invoice_needpay"] =
       newData.invoice_val - newData.invoice_discount || 0;
-    console.log(newData.invoice_val, newData.invoice_discount);
-    console.log(newData["invoice_needpay"]);
     // setExport((prevState) => {
     //   return { ...prevState, ...{ payment_amount: newData.invoice_needpay } };
     // });
     setPaymentInfo(newData);
   }, [dataSource, Export.discount_tp, Export.invoice_discount]);
-
-  console.log(dataSource, Export);
 
   useEffect(() => {
     dataSourceRef.current = [];
@@ -365,9 +350,7 @@ const InsExport = () => {
     return result;
   };
   const getListInvoice = (start_dt, end_dt, last_id) => {
-    // const inputParam = [start_dt, end_dt, last_id];
-    const inputParam = ["20220809", "20220809", last_id];
-
+    const inputParam = [start_dt, end_dt, last_id];
     sendRequest(
       serviceInfo.GET_ALL_LIST_INVOICE,
       inputParam,
@@ -376,9 +359,7 @@ const InsExport = () => {
       handleTimeOut
     );
   };
-
   const handleResultGetAllListInvoice = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
@@ -423,7 +404,6 @@ const InsExport = () => {
   };
 
   const handleResultGetAll = (reqInfoMap, message) => {
-    console.log("reqInfoMap, message", reqInfoMap, message);
     // setSearchProcess(false);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
@@ -526,11 +506,10 @@ const InsExport = () => {
   };
 
   const handleResultSearchInput = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message);
     if (message["PROC_STATUS"] !== 1) {
       handleCallApiFail(reqInfoMap, message);
     } else if (message["PROC_DATA"]) {
-      setListInventoryProduct(message["PROC_DATA"].rows);
+      setListInventoryProduct(message["PROC_DATA"].rows || []);
     }
   };
 
@@ -542,7 +521,6 @@ const InsExport = () => {
     setListInventoryProduct([]);
     setDataSearchInput("");
     if (
-      !Export.staff_exp ||
       !Export.customer_id ||
       !Export.order_dt
       // !Export.invoice_discount ||
@@ -550,7 +528,7 @@ const InsExport = () => {
     ) {
       SnackBarService.alert(
         t(
-          "Khách hàng, ngày xuất hàng, Tên nhân viên nhập"
+          "Khách hàng, ngày xuất hàng là bắt buộc chọn"
         ),
         true,
         4,
@@ -558,7 +536,6 @@ const InsExport = () => {
       );
       return;
     } else if (!invoiceFlag) {
-      console.log("trần văn côn");
       handleCreateInvoice();
       return;
     } else {
@@ -576,10 +553,9 @@ const InsExport = () => {
             dataWaitAdd.current.o_14
           ) || expPrice
         ), // Giá bán
-        5, // Phần trăm chiết khấu
+        0, // Phần trăm chiết khấu
         0, // Phần trăm VAT
       ];
-      console.log("inputParam---", inputParam);
       sendRequest(
         serviceInfo.ADD_PRODUCT_TO_INVOICE,
         inputParam,
@@ -591,7 +567,6 @@ const InsExport = () => {
   };
 
   const handleResultAddProductToInvoice = (reqInfoMap, message) => {
-    console.log("reqInfoMap, message--", reqInfoMap, message);
     SnackBarService.alert(
       message["PROC_MESSAGE"],
       true,
@@ -651,7 +626,6 @@ const InsExport = () => {
   const handleAmountChange = (e) => {
     const { value, name } = e.target;
     if (value === "") return setExport((pre) => ({ ...pre, [`${name}`]: 0 }));
-    // if(!(value.match(/^[0-9]+$/))) return
     setExport((pre) => ({
       ...pre,
       [`${name}`]: glb_sv.formatValue(value, "number"),
@@ -660,7 +634,6 @@ const InsExport = () => {
 
   const handleCreateInvoice = () => {
     if (
-      !Export.staff_exp ||
       !Export.customer_id ||
       !Export.order_dt
       // !Export.invoice_discount ||
@@ -668,7 +641,7 @@ const InsExport = () => {
     ) {
       SnackBarService.alert(
         t(
-          "Khách hàng, ngày xuất hàng, Tên nhân viên nhập"
+          "Khách hàng, ngày xuất hàng là bắt buộc chọn"
         ),
         true,
         4,
@@ -681,12 +654,11 @@ const InsExport = () => {
       !!Export.invoice_no.trim() ? Export.invoice_no.trim() : "AUTO",
       Export.customer_id,
       moment(Export.order_dt).format("YYYYMMDD"),
-      Export.staff_exp,
+      "",
       Export?.discount_tp || "1",
       Export?.invoice_discount || 0,
       "",
     ];
-    console.log(inputParam, glb_sv);
     sendRequest(
       serviceInfo.CREATE_INVOICE,
       inputParam,
@@ -697,7 +669,6 @@ const InsExport = () => {
   };
 
   const handleResultCreateInvoice = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message);
     // SnackBarService.alert(
     //   message["PROC_MESSAGE"],
     //   true,
@@ -722,6 +693,12 @@ const InsExport = () => {
           true,
           handleTimeOut
         );
+        dataHistoryListInvoiceRef.current = []
+        getListInvoice(
+          searchModalInvoice.start_dt,
+          searchModalInvoice.end_dt,
+          searchModalInvoice.last_id
+        );
 
         if (Object.keys(dataWaitAdd.current).length != 0) {
           const inputParam = [
@@ -742,7 +719,6 @@ const InsExport = () => {
             Export.invoice_discount || 0, // Phần trăm chiết khấu (0 default)
             0, // Phần trăm VAT (0 default)
           ];
-          console.log("inputParam--", inputParam, dataWaitAdd);
           sendRequest(
             serviceInfo.ADD_PRODUCT_TO_INVOICE,
             inputParam,
@@ -773,7 +749,6 @@ const InsExport = () => {
   };
 
   const handleGetAllProductByInvoiceID = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
@@ -790,7 +765,6 @@ const InsExport = () => {
   };
 
   const handleResultGetInvoiceByID = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message);
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
@@ -815,7 +789,6 @@ const InsExport = () => {
       exportRef.current["note"] = newData.rows[0].o_12;
       exportRef.current["customerSelect"] = newData.rows[0].o_5;
 
-      console.log(dataExport, newData);
       // list hóa đơn
       setCustomerSelect(newData.rows[0].o_5);
       setExport(dataExport);
@@ -823,7 +796,6 @@ const InsExport = () => {
   };
 
   const handleResultUpdateProduct = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message);
     SnackBarService.alert(
       message["PROC_MESSAGE"],
       true,
@@ -866,7 +838,6 @@ const InsExport = () => {
         0,
         0,
       ];
-      console.log(inputParam);
       sendRequest(
         serviceInfo.UPDATE_PRODUCT_TO_INVOICE,
         inputParam,
@@ -1013,7 +984,6 @@ const InsExport = () => {
   };
 
   const handleShowModalPrice = (dataProduct) => {
-    console.log(dataProduct);
     dataWaitAdd.current = dataProduct;
     setTypeSale("1");
     setDisableUpdateInvoice(false);
@@ -1047,13 +1017,13 @@ const InsExport = () => {
     if (
       !!Export.customer_id &&
       !!Export.order_dt &&
-      invoiceFlag &&
-      disableUpdateInvoice
+      invoiceFlag
     ) {
       return false;
     }
     return true;
   };
+
 
   const handleUpdateInvoice = () => {
     if (!Export.invoice_id && !invoiceFlag) {
@@ -1074,8 +1044,11 @@ const InsExport = () => {
       Export.invoice_id,
       Export.customer_id,
       moment(Export.order_dt).format("YYYYMMDD"),
-      Export.staff_exp,
-      Export.note,
+      // Export.staff_exp,
+      "",
+      Export?.discount_tp || "1",
+      Export?.invoice_discount || 0,
+      ""
     ];
     sendRequest(
       serviceInfo.UPDATE_INVOICE,
@@ -1218,6 +1191,8 @@ const InsExport = () => {
     }
   };
 
+  console.log(dataHistoryListInvoice)
+
   return (
     <>
       <div className="layout-page p-2">
@@ -1230,7 +1205,11 @@ const InsExport = () => {
               <div className="flex align-item-end">
                 {isScan ? (
                   <div style={{ width: "50%" }}>
-                    <TextFieldCpn placeholder="Nhập tay" />
+                    <TextFieldCpn
+                      placeholder="Nhập tay"
+                      onChange={handleSearchInput}
+                      value={dataSearchInput}
+                    />
                     <List
                       className={`list-product-inventory ${
                         !listInventoryProduct.length && "dl-none"
@@ -1308,7 +1287,9 @@ const InsExport = () => {
                     </List>
                   </div>
                 ) : (
-                  <TextFieldCpn placeholder="Vét mã vạch" />
+                  <div style={{ width: "50%" }}>
+                    <TextFieldCpn placeholder="Vét mã vạch" />
+                  </div>
                 )}
                 <button
                   style={{
@@ -1350,12 +1331,11 @@ const InsExport = () => {
             <div className="flex align-item-center justify-content-end">
               <Button
                 style={{
-                  height: "35px",
                   paddingLeft: "5px",
                   paddingRight: "7px",
                 }}
                 size="medium"
-                className="mr-3 primary-bg text-white"
+                className="height-btn primary-bg text-white"
                 variant="contained"
                 onClick={() => {
                   setExport({ ...invoiceExportModal });
@@ -1368,7 +1348,7 @@ const InsExport = () => {
                 <div>H.Đ mới</div>
               </Button>
               <div
-                className="flex"
+                className="flex ml-2"
                 style={{
                   overflowX: "auto",
                   maxWidth: `${
@@ -1379,7 +1359,7 @@ const InsExport = () => {
                 }}
               >
                 {dataHistoryListInvoice.map((item, index) => {
-                  console.log(item);
+                  console.log(item)
                   return (
                     <div
                       key={index}
@@ -1469,7 +1449,6 @@ const InsExport = () => {
                       </TableHead>
                       <TableBody>
                         {dataSource.map((item, index) => {
-                          console.log(item);
                           return (
                             <TableRow
                               hover
@@ -1478,7 +1457,6 @@ const InsExport = () => {
                               key={index}
                             >
                               {column.map((col, indexRow) => {
-                                console.log(item);
                                 let value = item[col.field];
                                 if (col.show) {
                                   switch (col.field) {
@@ -1494,44 +1472,6 @@ const InsExport = () => {
                                                 onRemove(item);
                                               }}
                                             />
-                                            {/* {isIndexRow === index ? (
-                                              <Tooltip
-                                                placement="top"
-                                                title={t("save")}
-                                              >
-                                                <IconButton
-                                                  size="small"
-                                                  onClick={() => {
-                                                    updateDataListProduct(item);
-                                                  }}
-                                                >
-                                                  <SaveIcon
-                                                    style={{ color: "#066190" }}
-                                                    fontSize="midlle"
-                                                  />
-                                                </IconButton>
-                                              </Tooltip>
-                                            ) : (
-                                              <Tooltip
-                                                placement="top"
-                                                title={t("delete")}
-                                              >
-                                                <IconButton
-                                                  size="small"
-                                                  onClick={() => {
-                                                    onRemove(item);
-                                                    setProductDeleteIndex(
-                                                      index + 1
-                                                    );
-                                                  }}
-                                                >
-                                                  <DeleteIcon
-                                                    style={{ color: "red" }}
-                                                    fontSize="middle"
-                                                  />
-                                                </IconButton>
-                                              </Tooltip>
-                                            )} */}
                                           </TableCell>
                                         </>
                                       );
@@ -1823,19 +1763,8 @@ const InsExport = () => {
             </Wrapper.WrapperTable>
             <Wrapper.WrapperFilter style={{ width: "22%", overflowY: "auto" }}>
               <div
-                className="pr-2"
-                style={{
-                  background: "#E7EAEE",
-                  alignContent: "flex-end",
-                  textAlign: "right",
-                  alignItems: "center",
-                }}
+                className="pr-2 gray3-bg align-items-center text-right"
               >
-                {/* <Switch
-                  checked={invoiceType}
-                  onChange={(e) => setInvoiceType(e.target.checked)}
-                  inputProps={{ "aria-label": "controlled" }}
-                />{" "} */}
                 <Checkbox
                   className="text-green2"
                   checked={invoiceType}
@@ -1844,18 +1773,17 @@ const InsExport = () => {
                 {invoiceType ? "H.Đ bán lẻ" : "H.Đ bán sỉ"} ?
               </div>
               <div className="p-2">
-                <TextFieldCpn
+                {/* <TextFieldCpn
                   label="Tên nhân viên nhập (*)"
                   placeholder="Bắt buộc nhập"
                   onChange={handleChangeBill}
                   name="staff_exp"
                   value={Export.staff_exp}
-                />
+                /> */}
                 <TextFieldCpn
-                  label="Mã hoá đơn"
+                  label="Số hoá đơn"
                   placeholder="Nhập tay hoặc tự sinh"
                   disabled={invoiceFlag}
-                  // Mã hóa đơn
                   onChange={handleChangeBill}
                   value={Export.invoice_no || ""}
                   name="invoice_no"
@@ -1873,25 +1801,18 @@ const InsExport = () => {
                 />
                 <DatePickerCpn
                   className="mt-1"
-                  label="Ngày xuất hàng (*)"
+                  label="Ngày xuất bán (*)"
                   format="dd/MM/yyyy"
                   value={Export.order_dt}
                   onChange={handleDateChange}
                 />
-                {/* <TextAreaCpn
-                  className="w-100 mt-2"
-                  label={t("order.export.note")}
-                  onChange={handleChangeBill}
-                  value={Export.note || ""}
-                  name="note"
-                /> */}
                 <div className="flex align-items-end">
                   <div className="mr-2" style={{ width: "50%" }}>
                     <SelectCpn
                       value={Export.discount_tp}
                       onChange={handleChangeDiscount}
                       name="discount_tp"
-                      label="Loại CK (*)"
+                      label="Loại CK"
                     >
                       <MenuItem value="1">{t("Tiền mặt")}</MenuItem>
                       <MenuItem value="2">{t("% Hóa đơn")}</MenuItem>
@@ -1911,17 +1832,17 @@ const InsExport = () => {
                   </div>
                 </div>
                 <TextFieldCpn
-                align="right"
+                  align="right"
                   className="mt-1"
                   value={glb_sv.formatValue(
                     Export.invoice_val || 0,
                     "currency"
                   )}
-                  label={t("Giá trị hóa đơn")}
+                  label={t("Giá trị HĐ")}
                   disabled={true}
                 />
                 <TextFieldCpn
-                align="right"
+                  align="right"
                   className="mt-1"
                   value={glb_sv.formatValue(
                     paymentInfo.invoice_needpay || 0,
@@ -1931,7 +1852,7 @@ const InsExport = () => {
                   disabled={true}
                 />
                 <TextFieldCpn
-                align="right"
+                  align="right"
                   className="mt-1"
                   value={glb_sv.formatValue(Export.payment_amount, "number")}
                   label={t("Khách trả")}
@@ -1939,7 +1860,7 @@ const InsExport = () => {
                   onChange={handleAmountChange}
                 />
                 <TextFieldCpn
-                align="right"
+                  align="right"
                   className="mt-1"
                   label={t("Tiền thừa")}
                   value={glb_sv.formatValue(
@@ -1959,22 +1880,31 @@ const InsExport = () => {
                     size="small"
                     variant="contained"
                     style={{
-                      height: "35px",
+                      height: "var(--heightInput)",
                       width: "22%",
                     }}
                   >
                     <IC_PRINT />
                   </Button>
                   <Button
-                    style={{ height: "35px", width: "75%" }}
+                    style={{ height: "var(--heightInput)", width: "75%" }}
                     size="medium"
-                    className="primary-bg text-white"
                     variant="contained"
-                    onClick={() => {
-                      // setShouldOpenModal(true);
-                    }}
+                    onClick={handleUpdateInvoice}
+                    disabled={checkValidate()}
+                    className={
+                      checkValidate() === false
+                        ? updateProcess
+                          ? "bg-success text-white"
+                          : "primary-bg text-white"
+                        : ""
+                    }
                   >
-                    <IC_TICK className="pr-1" />
+                    {updateProcess ? (
+                      <LoopIcon className="button-loading" />
+                    ) : (
+                      <IC_TICK className="pr-1" />
+                    )}
                     <div>Thanh toán</div>
                   </Button>
                 </div>
@@ -2007,7 +1937,10 @@ const InsExport = () => {
           }}
         >
           <Card>
-            <CardHeader className="card-header" title={t("Xác nhận xóa sản phẩm ?")} />
+            <CardHeader
+              className="card-header"
+              title={t("Xác nhận xóa sản phẩm ?")}
+            />
             <CardContent>
               <Grid container>
                 {productDeleteModal.o_5 +
@@ -2016,22 +1949,21 @@ const InsExport = () => {
                   ": " +
                   productDeleteModal.o_8 +
                   " " +
-                  productDeleteModal.o_10
-                 }
+                  productDeleteModal.o_10}
               </Grid>
             </CardContent>
             <CardActions className="align-items-end justify-content-end">
               <ButtonCpn.ButtonClose
-            process={deleteProcess}
-            onClick={(e) => {
-              setShouldOpenDeleteModal(false);
-            }}
-          />
-          <ButtonCpn.ButtonDelete
-            onClick={handleDelete}
-            disabled={deleteProcess}
-            process={deleteProcess}
-          />
+                process={deleteProcess}
+                onClick={(e) => {
+                  setShouldOpenDeleteModal(false);
+                }}
+              />
+              <ButtonCpn.ButtonDelete
+                onClick={handleDelete}
+                disabled={deleteProcess}
+                process={deleteProcess}
+              />
             </CardActions>
           </Card>
         </Dialog>

@@ -42,6 +42,7 @@ import { tableColumn, config } from "./Modal/ExportRepay.modal";
 import ExportRepaySearch from "./ExportRepaySearch";
 import ExportRepayEdit from "./ExportRepayEdit";
 import Breadcrumb from "../../../components/Breadcrumb/View";
+// import ImportPaymentSearch from "./ImportPaymentSearch";
 
 
 import {
@@ -296,10 +297,10 @@ const ExportRepayList = () => {
         <Wrapper.WrapperFilter isShowLayout={isShowLayout}>
           <div className="p-2">
             <div className="mb-4">
-              {/* <ImportPaymentSearch
+              <ExportRepaySearch
                 process={searchProcess}
                 handleSearch={searchSubmit}
-              /> */}
+              />
             </div>
           </div>
         </Wrapper.WrapperFilter>

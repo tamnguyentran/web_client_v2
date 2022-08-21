@@ -106,21 +106,21 @@ const invoiceImportModal = {
     bank_recei_name: null,
     bank_recei_name_s: '',
     bank_recei_acc_name: '',
-    bank_recei_acc_number: ''
+    bank_recei_acc_number: '',
+    discount_tp: "1",
+    discount_val: 0
 }
 
 const tableListAddColumn = [
-    { field: 'stt', title: 'stt',tootip: 'stt', show: true, disabled: true, minWidth: 100, align: 'center' },
-    { field: 'o_4',title: 'order.import.imp_tp_nm', tootip: 'order.import.imp_tp_nm', show: true, disabled: false, minWidth: 100, align: 'center' },
-    { field: 'o_6',title: 'order.import.name_product', tootip: 'order.import.prod_nm', show: false, disabled: false, minWidth: 100, align: 'center' },
-    { field: 'o_7',title: 'order.import.lot_no', tootip: 'order.import.lot_no', show: true, disabled: true, minWidth: 100, className: 'uppercase', align: 'center' },
-    { field: 'o_9',title: 'order.import.HSD', tootip: 'order.import.exp_dt', show: false, disabled: false, minWidth: 100, type: 'dated', align: 'right', align: 'center' },
-    { field: 'o_10',title: 'order.import.import_quantity', tootip: 'order.import.qty', show: true, disabled: true, minWidth: 100, align: 'center', type: 'currency' },
-    { field: 'o_12',title: 'order.import.unit', tootip: 'order.import.unit_nm', show: true, disabled: true, minWidth: 100, align: 'center' },
-    { field: 'o_13',title: 'order.import.price', tootip: 'order.import.price', show: true, disabled: true, minWidth: 100, align: 'center', type: 'currency' },
-    { field: 'o_15',title: '%CK', tootip: 'order.import.discount_per', show: false, disabled: false, minWidth: 100, align: 'center' },
-    { field: 'o_14',title: 'order.import.vat_per', tootip: 'order.import.vat_per', show: true, disabled: true, minWidth: 100, align: 'center' },
-    { field: 'action', title: 'Hành động', show: true, disabled: true, minWidth: 100, align: 'center' },
+    { field: 'stt', title: 'STT',tootip: 'STT', show: true, disabled: true, minWidth: 100, align: 'center' },
+    { field: 'o_4',title: 'LOẠI NHẬP', tootip: 'LOẠI NHẬP', show: true, disabled: false, minWidth: 100, align: 'center' },
+    { field: 'o_6',title: 'TÊN SP', tootip: 'TÊN SẢN PHẨM', show: false, disabled: false, minWidth: 100, align: 'center' },
+    { field: 'o_7',title: 'SỐ LÔ', tootip: 'SỐ LÔ', show: true, disabled: true, minWidth: 100, className: 'uppercase', align: 'center' },
+    { field: 'o_9',title: 'HSD', tootip: 'HẠN SỬ DỤNG', show: false, disabled: false, minWidth: 100, type: 'dated', align: 'right', align: 'center' },
+    { field: 'o_10',title: 'SL NHẬP', tootip: 'SỐ LƯỢNG NHẬP', show: true, disabled: true, minWidth: 100, align: 'center', type: 'currency' },
+    { field: 'o_12',title: 'ĐV TÍNH', tootip: 'ĐƠN VỊ TÍNH', show: true, disabled: true, minWidth: 100, align: 'center' },
+    { field: 'o_13',title: 'GIÁ NHẬP', tootip: 'GIÁ NHẬP', show: true, disabled: true, minWidth: 100, align: 'center', type: 'currency' },
+    { field: 'action', title: 'XÓA', show: true, disabled: true, minWidth: 100, align: 'center' },
 ]
 
 const tableListEditColumn = [
@@ -143,16 +143,13 @@ const searchDefaultModalInvoice = {
     start_dt: moment().subtract(1, 'months').format('YYYYMMDD'),
     end_dt: moment().format('YYYYMMDD'),
     last_id: 999999999999,
-    id_status: 1,
+    id_status: "1",
     vender_nm: '%',
 }
 
 const defaultDataUpdateProduct = {
-    expType: "1",
     expQty: 1,
-    expPrice: 0,
-    expDisCount: 0,
-    expVAT: 0
+    expPrice: 0
 }
 
 export {
