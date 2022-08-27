@@ -178,6 +178,7 @@ const WarnTimeEdit = ({
     >
       <Card>
         <CardHeader
+          className="card-header"
           title={t("config.warnTime.titleEdit", { name: warnTime?.o_3 })}
         />
         <CardContent>

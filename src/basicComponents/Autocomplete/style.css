@@ -1,6 +1,7 @@
 .autocomplete-style .MuiAutocomplete-input {
   padding: 2px 4px !important;
   font-size: var(--sizeInput) !important;
+  text-transform: uppercase !important;
 }
 
 .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {

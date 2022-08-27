@@ -18,13 +18,14 @@ import {
   ButtonCpn,
 } from "../../../basicComponents";
 import { Dictionary } from "../../../components/Autocomplete";
+import glb_sv from "../../../utils/service/global_service";
 
 const CollectSalesSearch = ({ handleSearch, process = false }) => {
   const { t } = useTranslation();
 
   const [searchModal, setSearchModal] = useState({
-    start_dt: moment().subtract(1, "month").toString(),
-    end_dt: moment().toString(),
+    start_dt: glb_sv.startDay,
+    end_dt: glb_sv.endDay,
     customer_nm: "",
     customer_id: null,
     invoice_no: "",
@@ -87,7 +88,7 @@ const CollectSalesSearch = ({ handleSearch, process = false }) => {
           <TitleFilterCpn className="mb-2" label="Lọc theo thông tin" />
           <TextFieldCpn
             className="mb-1"
-            label="Mã hoá đơn"
+            label="Số hoá đơn"
             onChange={handleChange}
             onKeyPress={(key) => {
               if (key.which === 13) return handleSearch(searchModal);

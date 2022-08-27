@@ -36,8 +36,8 @@ const WrapperTable = (props) => {
 };
 
 const WrapperHeader = (props) => {
-  const { children } = props;
-  return <div className="wrapper-header">{children}</div>;
+  const { children, className="" } = props;
+  return <div className={`wrapper-header ${className}`}>{children}</div>;
 };
 const WrapperContent = (props) => {
   const { children } = props;

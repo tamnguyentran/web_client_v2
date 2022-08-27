@@ -1,7 +1,7 @@
 import reqFunction from "../../../../utils/constan/functions";
 
 const tableColumn = [
-  { field: "stt", title: "STT", show: true, disabled: true, minWidth: 100 },
+  { field: "stt", title: "STT", show: true, disabled: true, minWidth: 100, align: "center" },
   {
     field: "o_3",
     title: "menu.product",
@@ -23,7 +23,7 @@ const tableColumn = [
     disabled: true,
     minWidth: 100,
     type: "number",
-    align: "center",
+    align: "right",
   },
   {
     field: "o_8",
@@ -46,6 +46,7 @@ const tableColumn = [
     disabled: false,
     minWidth: 100,
     type: "date",
+    align: "center"
   },
   {
     field: "o_11",
@@ -60,6 +61,7 @@ const tableColumn = [
     show: true,
     disabled: true,
     minWidth: 100,
+    align: "center"
   },
 ];
 

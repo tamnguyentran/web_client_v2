@@ -257,9 +257,8 @@ const PriceAdd = ({ onRefresh }) => {
   return (
     <>
       <Button
-        style={{ height: "40px" }}
         size="medium"
-        className="primary-bg text-white"
+        className="primary-bg text-white h-btn"
         variant="contained"
         onClick={() => {
           setShouldOpenModal(true);

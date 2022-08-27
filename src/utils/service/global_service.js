@@ -56,6 +56,9 @@ class globalService {
         this.oldVersion = 'v1.0'
         this.newVersion = 'v1.3'
 
+        this.startDay = moment().subtract(1, "month").toString()
+        this.endDay = moment().toString()
+
         // -------------------------------
         this.setReqInfoMapValue = (key = 0, valObj = new requestInfo()) => {
             this.reqInfoMap.set(key, valObj)

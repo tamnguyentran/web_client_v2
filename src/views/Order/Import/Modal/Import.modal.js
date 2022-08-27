@@ -1,5 +1,6 @@
 import moment from 'moment';
 import reqFunction from '../../../../utils/constan/functions';
+import glb_sv from "../../../../utils/service/global_service";
 
 const tableColumn = [
     { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
@@ -86,7 +87,7 @@ const tableProductInvoiceViewColumn = [
 
 const invoiceImportModal = {
     invoice_id: null,
-    order_dt: moment().toString(),
+    order_dt: glb_sv.endDay,
     supplier: null,
     supplier_nm: '',
     invoice_no: '',
@@ -114,7 +115,7 @@ const invoiceImportModal = {
 const tableListAddColumn = [
     { field: 'stt', title: 'STT',tootip: 'STT', show: true, disabled: true, minWidth: 100, align: 'center' },
     { field: 'o_4',title: 'LOẠI NHẬP', tootip: 'LOẠI NHẬP', show: true, disabled: false, minWidth: 100, align: 'center' },
-    { field: 'o_6',title: 'TÊN SP', tootip: 'TÊN SẢN PHẨM', show: false, disabled: false, minWidth: 100, align: 'center' },
+    { field: 'o_6',title: 'TÊN SP', tootip: 'TÊN SẢN PHẨM', show: true, disabled: false, minWidth: 100, align: 'center' },
     { field: 'o_7',title: 'SỐ LÔ', tootip: 'SỐ LÔ', show: true, disabled: true, minWidth: 100, className: 'uppercase', align: 'center' },
     { field: 'o_9',title: 'HSD', tootip: 'HẠN SỬ DỤNG', show: false, disabled: false, minWidth: 100, type: 'dated', align: 'right', align: 'center' },
     { field: 'o_10',title: 'SL NHẬP', tootip: 'SỐ LƯỢNG NHẬP', show: true, disabled: true, minWidth: 100, align: 'center', type: 'currency' },
@@ -140,7 +141,7 @@ const tableListEditColumn = [
 ]
 
 const searchDefaultModalInvoice = {
-    start_dt: moment().subtract(1, 'months').format('YYYYMMDD'),
+    start_dt: moment().subtract(1, 'days').format('YYYYMMDD'),
     end_dt: moment().format('YYYYMMDD'),
     last_id: 999999999999,
     id_status: "1",

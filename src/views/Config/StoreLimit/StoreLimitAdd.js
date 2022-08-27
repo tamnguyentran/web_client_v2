@@ -212,9 +212,8 @@ const StoreLimitAdd = ({ onRefresh }) => {
   return (
     <>
       <Button
-        style={{ height: "40px" }}
         size="medium"
-        className="primary-bg text-white"
+        className="primary-bg text-white h-btn"
         variant="contained"
         onClick={() => {
           setShouldOpenModal(true);
@@ -308,7 +307,6 @@ const StoreLimitAdd = ({ onRefresh }) => {
                     "currency"
                   )}
                   onFocus={(e) => e.target.select()}
-                  inputRef={step3Ref}
                   onKeyPress={(event) => {
                     if (event.key === "Enter") {
                       step4Ref.current.focus();

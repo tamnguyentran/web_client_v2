@@ -5,15 +5,17 @@ import {
 } from "@material-ui/pickers";
 import moment from "moment";
 import DateFnsUtils from "@date-io/date-fns";
+import glb_sv from "../../utils/service/global_service";
 
 export default function DatePicker(props) {
   const {
     label = "",
-    value = moment().subtract(1, "month").toString(),
+    value = glb_sv.startDay,
     onChange = () => {},
     onKeyPress = () => {},
     format = "dd/MM/yyyy",
     className = "",
+    disabled = false
   } = props;
   return (
     <div className={`date-picker-cpn ${className}`}>
@@ -34,6 +36,7 @@ export default function DatePicker(props) {
           KeyboardButtonProps={{
             "aria-label": "change date",
           }}
+          disabled={disabled}
         />
       </MuiPickersUtilsProvider>
     </div>

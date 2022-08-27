@@ -38,7 +38,7 @@ export default function AutocompleteCpn(props) {
     renderInput = (params) => (
       <TextField
         inputRef={inputRef}
-        value={inputValue}
+        value={value}
         autoFocus={autoFocus}
         size="small"
         {...params}

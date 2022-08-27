@@ -262,7 +262,6 @@ const ImportList = () => {
               <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, xem thông tin nhập mua của sản phẩm" />
             </div>
             <div className="flex">
-              {/* <WarnTimeAdd onRefresh={handleRefresh} /> */}
               &ensp;
               <DisplayColumn
                 columns={tableColumn}
@@ -290,6 +289,7 @@ const ImportList = () => {
                           !col.show && "dl-none"
                         }`}
                         key={col.field}
+                        align={col.align}
                       >
                         {t(col.title)}
                       </TableCell>

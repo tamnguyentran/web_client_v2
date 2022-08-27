@@ -23,9 +23,7 @@ import { ReactComponent as IC_REDUCED } from "../../../../../asset/images/reduce
 import glb_sv from "../../../../../utils/service/global_service";
 import NumberFormat from "react-number-format";
 import { useTranslation } from "react-i18next";
-import {
-  IconButtonCpn, 
-} from "../../../../../basicComponents";
+import { IconButtonCpn } from "../../../../../basicComponents";
 const ListProductImport = (props) => {
   const { t } = useTranslation();
   const {
@@ -49,7 +47,7 @@ const ListProductImport = (props) => {
   } = props;
 
   const handleChangeQtyProductInvoice = (type, item, index, valueQty) => {
-    console.log(type, item, index, valueQty);
+    let tempQty = productInfo[index].expQty;
     if (type === "change") {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expQty: valueQty };
@@ -62,56 +60,43 @@ const ListProductImport = (props) => {
         pre[index] = { ...pre[index], expQty: pre[index].expQty + 1 };
         return [...pre];
       });
-      return updateDataListProduct(
-        productInfo[index].expQty + 1,
-        item.o_13,
-        item
-      );
+      tempQty++;
+      return updateDataListProduct(tempQty, item.o_13, item);
     } else if (productInfo[index].expQty > 1) {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expQty: pre[index].expQty - 1 };
         return [...pre];
       });
-      return updateDataListProduct(
-        productInfo[index].expQty - 1,
-        item.o_13,
-        item
-      );
-    } else {
-      return updateDataListProduct(1, item.o_13, item);
+      tempQty--;
+      return updateDataListProduct(tempQty, item.o_13, item);
     }
+    return updateDataListProduct(1, item.o_13, item);
   };
 
   const handleChangePriceProductInvoice = (type, item, index, valuePrice) => {
+    let tempPrice = productInfo[index].expPrice;
     if (type === "change") {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expPrice: valuePrice };
         return [...pre];
       });
       return updateDataListProduct(item.o_10, valuePrice, item);
-    }else if (type === "increase") {
+    } else if (type === "increase") {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expPrice: pre[index].expPrice + 1000 };
         return [...pre];
       });
-      return updateDataListProduct(
-        item.o_10,
-        productInfo[index].expPrice + 1000,
-        item
-      );
+      tempPrice = tempPrice + 1000;
+      return updateDataListProduct(item.o_10, tempPrice, item);
     } else if (productInfo[index].expPrice > 1000) {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expPrice: pre[index].expPrice - 1000 };
         return [...pre];
       });
-      return updateDataListProduct(
-        item.o_10,
-        productInfo[index].expPrice - 1000,
-        item
-      );
+      tempPrice = tempPrice - 1000;
+      return updateDataListProduct(item.o_10, tempPrice, item);
     }
-    return updateDataListProduct(item.o_10, 1, item);
-    
+    return updateDataListProduct(item.o_10, tempPrice, item);
   };
 
   return (
@@ -163,7 +148,6 @@ const ListProductImport = (props) => {
         </TableHead>
         <TableBody>
           {dataSource.map((item, index) => {
-            console.log(item);
             return (
               <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                 {column.map((col, indexRow) => {
@@ -183,16 +167,13 @@ const ListProductImport = (props) => {
                       case "action":
                         return (
                           <>
-                          <TableCell
-                                            align="center"
-                                            nowrap="true"
-                                          >
-                                            <IconButtonCpn.IconButtonTrash
-                                              onClick={() => {
-                                                onRemove(item);
-                                              }}
-                                            />
-                                          </TableCell>
+                            <TableCell align="center" nowrap="true">
+                              <IconButtonCpn.IconButtonTrash
+                                onClick={() => {
+                                  onRemove(item);
+                                }}
+                              />
+                            </TableCell>
                             {/* <TableCell align="center" nowrap="true">
                                 {isIndexRow === index ? (
                                   <Tooltip
@@ -326,42 +307,28 @@ const ListProductImport = (props) => {
                             </div>
                           </TableCell>
                         );
+                      case "o_7":
+                        return (
+                          <TableCell
+                            nowrap="true"
+                            key={indexRow}
+                            align={col.align}
+                          >
+                            <div>{value}</div>
+                            <div className="fz11">
+                              HSD:{" "}
+                              {glb_sv.formatDate(
+                                item.o_8,
+                                "YYYYMMDD",
+                                "DD/MM/YYYY"
+                              )}
+                            </div>
+                          </TableCell>
+                        );
 
                       case "o_13":
                         return (
                           <TableCell align="center" nowrap="true">
-                            {/* {isIndexRow === index ? (
-                                <NumberFormat
-                                  inputRef={step2Ref}
-                                  className="inputNumber"
-                                  required
-                                  customInput={TextField}
-                                  autoComplete="off"
-                                  margin="dense"
-                                  type="text"
-                                  variant="outlined"
-                                  value={productInfo.expPrice}
-                                  thousandSeparator={true}
-                                  disabled={
-                                    productInfo.expType === "1"
-                                      ? false
-                                      : true
-                                  }
-                                  onValueChange={(value) => {
-                                    handleChangeUpdate(
-                                      "expPrice",
-                                      value.floatValue
-                                    );
-                                  }}
-                                  onKeyPress={(event) => {
-                                    if (event.key === "Tab") {
-                                      step3Ref.current.focus();
-                                    }
-                                  }}
-                                />
-                              ) : (
-                                glb_sv.formatValue(item.o_13, col["type"])
-                              )} */}
                             {item.o_3 === "1" ? (
                               <div className="flex justify-content-center align-items-center">
                                 <IC_ADD
@@ -413,79 +380,6 @@ const ListProductImport = (props) => {
                             )}
                           </TableCell>
                         );
-
-                      case "o_14":
-                        return (
-                          <TableCell align="center" nowrap="true">
-                            {/* {isIndexRow === index ? (
-                                <NumberFormat
-                                  inputRef={step3Ref}
-                                  className="inputNumber"
-                                  required
-                                  customInput={TextField}
-                                  autoComplete="off"
-                                  margin="dense"
-                                  type="text"
-                                  variant="outlined"
-                                  value={productInfo.expDisCount}
-                                  disabled={
-                                    productInfo.expType === "1"
-                                      ? false
-                                      : true
-                                  }
-                                  onValueChange={(value) => {
-                                    handleChangeUpdate(
-                                      "expDisCount",
-                                      value.floatValue
-                                    );
-                                  }}
-                                  onKeyPress={(event) => {
-                                    if (event.key === "Tab") {
-                                      // step4Ref.current.focus();
-                                    }
-                                  }}
-                                />
-                              ) : (
-                                item.o_14
-                              )} */}
-                          </TableCell>
-                        );
-                      case "o_15":
-                        return (
-                          <TableCell
-                            align="center"
-                            nowrap="true"
-                            style={{ minWidth: "100px" }}
-                          >
-                            {/* {isIndexRow === index ? (
-                                <NumberFormat
-                                  // inputRef={step4Ref}
-                                  className="inputNumber"
-                                  required
-                                  customInput={TextField}
-                                  autoComplete="off"
-                                  margin="dense"
-                                  type="text"
-                                  value={productInfo.expVAT}
-                                  disabled={
-                                    productInfo.expType === "1"
-                                      ? false
-                                      : true
-                                  }
-                                  variant="outlined"
-                                  onValueChange={(value) => {
-                                    handleChangeUpdate(
-                                      "expVAT",
-                                      value.floatValue
-                                    );
-                                  }}
-                                />
-                              ) : (
-                                item.o_15
-                              )} */}
-                          </TableCell>
-                        );
-
                       default:
                         return (
                           <TableCell

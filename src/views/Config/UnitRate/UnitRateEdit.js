@@ -236,7 +236,7 @@ const UnitRateEdit = ({
             </Grid>
             <Grid item xs={6} sm={4}>
               <TextFieldCpn
-                label={t("SL quy đổi ra ĐV nhỏ nhất (*)")}
+                label={t("Số lượng quy đổi (*)")}
                 onChange={handleChange}
                 onFocus={(e) => e.target.select()}
                 inputRef={step1Ref}

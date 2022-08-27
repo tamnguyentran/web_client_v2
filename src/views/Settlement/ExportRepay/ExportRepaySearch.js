@@ -12,7 +12,7 @@
 
 //     const [searchModal, setSearchModal] = useState({
 //         start_dt: moment().subtract(1, 'months').toString(),
-//         end_dt: moment().toString(),
+//         end_dt: glb_sv.endDay,
 //     })
 
 //     const handleStartDateChange = (date) => {
@@ -93,6 +93,8 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import moment from 'moment'
 import SearchIcon from '@material-ui/icons/Search'
 import LoopIcon from '@material-ui/icons/Loop'
+import glb_sv from "../../../utils/service/global_service";
+
 
 import {
     TextFieldCpn,
@@ -102,12 +104,13 @@ import {
     ButtonCpn,
   } from "../../../basicComponents";
 
+
 const ImportSearch = ({ handleSearch, process = false }) => {
     const { t } = useTranslation()
 
     const [searchModal, setSearchModal] = useState({
         start_dt: moment().subtract(1, 'months').toString(),
-        end_dt: moment().toString(),
+        end_dt: glb_sv.endDay,
     })
     const [isExpanded, setIsExpanded] = useState(true)
 

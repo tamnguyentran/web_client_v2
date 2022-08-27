@@ -256,7 +256,6 @@ const ImportInventoryList = () => {
               <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, xem thông tin nhập tồn kho của sản phẩm" />
             </div>
             <div className="flex">
-              {/* <WarnTimeAdd onRefresh={handleRefresh} /> */}
               &ensp;
               <DisplayColumn
                 columns={tableColumn}
@@ -284,6 +283,7 @@ const ImportInventoryList = () => {
                           !col.show && "dl-none"
                         }`}
                         key={col.field}
+                        align={col.align}
                       >
                         {t(col.title)}
                       </TableCell>

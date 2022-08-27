@@ -190,9 +190,8 @@ const WarnTimeAdd = ({ onRefresh }) => {
         Thêm mới (F2)
       </Button> */}
       <Button
-        style={{ height: "40px" }}
         size="medium"
-        className="primary-bg text-white"
+        className="primary-bg text-white h-btn"
         variant="contained"
         onClick={() => {
           setShouldOpenModal(true);

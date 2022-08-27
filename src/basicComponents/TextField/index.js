@@ -25,7 +25,8 @@ export default function TextFieldCpn(props) {
     inputRef,
     name,
     disabled = false,
-    align = "left"
+    align = "left",
+    upperCase = "text-uppercase"
   } = props;
 
   return (
@@ -33,7 +34,7 @@ export default function TextFieldCpn(props) {
       <div className="text-label-input">{t(label)}</div>
       <input
         onFocus={onFocus}
-        className={`input-text-field custom-input ${classNameInput}`}
+        className={`input-text-field custom-input ${upperCase} ${classNameInput}`}
         placeholder={t(placeholder)}
         onChange={onChange}
         value={value}

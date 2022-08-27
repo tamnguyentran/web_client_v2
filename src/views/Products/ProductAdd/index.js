@@ -121,7 +121,7 @@ const ProductAdd = () => {
                 </Grid>
                 <Grid item xs={12} sm={6} md>
                   <TextFieldCpn
-                    label="SL quy đổi ra đv nhỏ nhất (*)"
+                    label="Số lượng quy đổi (*)"
                     className="mb-3"
                   />
                 </Grid>

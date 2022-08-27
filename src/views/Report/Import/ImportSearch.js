@@ -22,6 +22,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import LoopIcon from "@material-ui/icons/Loop";
 
 import { Supplier } from "../../../components/Autocomplete";
+import glb_sv from "../../../utils/service/global_service";
+
 import {
   TextFieldCpn,
   TitleFilterCpn,
@@ -34,8 +36,8 @@ const ImportSearch = ({ handleSearch, process = false }) => {
   const { t } = useTranslation();
 
   const [searchModal, setSearchModal] = useState({
-    start_dt: moment().subtract(1, "month").toString(),
-    end_dt: moment().toString(),
+    start_dt: glb_sv.startDay,
+    end_dt: glb_sv.endDay,
     supplier_nm: "",
     supplier_id: null,
     invoice_no: "",
@@ -108,16 +110,6 @@ const ImportSearch = ({ handleSearch, process = false }) => {
         </div>
         <div className="mb-4">
           <TitleFilterCpn className="mb-2" label="Lọc theo thông tin" />
-          <TextFieldCpn
-            className="mb-1"
-            label="Mã hoá đơn"
-            onChange={handleChange}
-            onKeyPress={(key) => {
-              if (key.which === 13) return handleSearch(searchModal);
-            }}
-            value={searchModal.invoice_no}
-            name="invoice_no"
-          />
           <Supplier
             value={searchModal.supplier_nm || ""}
             size={"small"}
@@ -127,18 +119,6 @@ const ImportSearch = ({ handleSearch, process = false }) => {
               if (key.which === 13) return handleSearch(searchModal);
             }}
           />
-          <SelectCpn
-            label={t("Trạng thái hợp đồng")}
-            value={searchModal.invoice_status || "1"}
-            onChange={handleChange}
-            onKeyPress={(key) => {
-              if (key.which === 13) return handleSearch(searchModal);
-            }}
-            name="invoice_status"
-          >
-            <MenuItem value="1">{t("normal")}</MenuItem>
-            <MenuItem value="2">{t("cancelled")}</MenuItem>
-          </SelectCpn>
           <Product
             className="mt-1"
             value={searchModal.product_nm || ""}
@@ -149,6 +129,28 @@ const ImportSearch = ({ handleSearch, process = false }) => {
               if (key.which === 13) return handleSearch(searchModal);
             }}
           />
+          <TextFieldCpn
+            className="mb-1"
+            label="Mã hoá đơn"
+            onChange={handleChange}
+            onKeyPress={(key) => {
+              if (key.which === 13) return handleSearch(searchModal);
+            }}
+            value={searchModal.invoice_no}
+            name="invoice_no"
+          />
+          <SelectCpn
+            label={t("Trạng thái hóa đơn")}
+            value={searchModal.invoice_status || "1"}
+            onChange={handleChange}
+            onKeyPress={(key) => {
+              if (key.which === 13) return handleSearch(searchModal);
+            }}
+            name="invoice_status"
+          >
+            <MenuItem value="1">{t("normal")}</MenuItem>
+            <MenuItem value="2">{t("cancelled")}</MenuItem>
+          </SelectCpn>
         </div>
         <div className="mt-2">
           <ButtonCpn.ButtonSearch

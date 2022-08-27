@@ -26,13 +26,14 @@ import {
   ButtonCpn,
 } from "../../../basicComponents";
 import { Unit, Product } from "../../../components/Autocomplete";
+import glb_sv from "../../../utils/service/global_service";
 
 const ExportDestroySearch = ({ handleSearch, process = false }) => {
   const { t } = useTranslation();
 
   const [searchModal, setSearchModal] = useState({
-    start_dt: moment().subtract(1, "month").toString(),
-    end_dt: moment().toString(),
+    start_dt: glb_sv.startDay,
+    end_dt: glb_sv.endDay,
     supplier_nm: "",
     supplier_id: null,
     invoice_no: "",
@@ -103,16 +104,18 @@ const ExportDestroySearch = ({ handleSearch, process = false }) => {
         </div>
         <div className="mb-4">
           <TitleFilterCpn className="mb-2" label="Lọc theo thông tin" />
-          <TextFieldCpn
-            label="Mã hoá đơn"
-            onChange={handleChange}
+          <Product
+            className="mb-1"
+            value={searchModal.product_nm || ""}
+            size={"small"}
+            label={t("menu.product")}
+            onSelect={handleSelectProduct}
             onKeyPress={(key) => {
               if (key.which === 13) return handleSearch(searchModal);
             }}
-            value={searchModal.invoice_no}
-            name="invoice_no"
           />
           <SelectCpn
+            className="mb-1"
             label={t("Lý do huỷ")}
             value={searchModal.reason_tp || "%"}
             onChange={handleChange}
@@ -129,8 +132,18 @@ const ExportDestroySearch = ({ handleSearch, process = false }) => {
             </MenuItem>
             <MenuItem value="4">{t("Lý do khác")}</MenuItem>
           </SelectCpn>
+          <TextFieldCpn
+            className="mb-1"
+            label="Số hoá đơn"
+            onChange={handleChange}
+            onKeyPress={(key) => {
+              if (key.which === 13) return handleSearch(searchModal);
+            }}
+            value={searchModal.invoice_no}
+            name="invoice_no"
+          />
           <SelectCpn
-            label={t("Trạng thái hợp đồng")}
+            label={t("Trạng thái hóa đơn")}
             value={searchModal.invoice_status || "1"}
             onChange={handleChange}
             onKeyPress={(key) => {
@@ -141,16 +154,6 @@ const ExportDestroySearch = ({ handleSearch, process = false }) => {
             <MenuItem value="1">{t("normal")}</MenuItem>
             <MenuItem value="2">{t("cancelled")}</MenuItem>
           </SelectCpn>
-          <Product
-            className="mt-1"
-            value={searchModal.product_nm || ""}
-            size={"small"}
-            label={t("menu.product")}
-            onSelect={handleSelectProduct}
-            onKeyPress={(key) => {
-              if (key.which === 13) return handleSearch(searchModal);
-            }}
-          />
         </div>
         <div className="mt-2">
           <ButtonCpn.ButtonSearch

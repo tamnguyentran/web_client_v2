@@ -1,7 +1,7 @@
 import moment from "moment";
 
 const tableColumn = [
-  { field: "stt", title: "STT", show: true, disabled: true, minWidth: 100 },
+  { field: "stt", title: "STT", show: true, disabled: true, minWidth: 100, align: "center" },
   {
     field: "o_2",
     title: "invoice_no",
@@ -16,7 +16,7 @@ const tableColumn = [
     disabled: false,
     minWidth: 100,
     type: "dated",
-    align: "left",
+    align: "center",
   },
   {
     field: "o_6",
@@ -39,7 +39,7 @@ const tableColumn = [
     disabled: true,
     minWidth: 100,
     type: "dated",
-    align: "left",
+    align: "center",
   },
   {
     field: "o_9",
@@ -48,7 +48,7 @@ const tableColumn = [
     disabled: true,
     minWidth: 100,
     type: "number",
-    align: "left",
+    align: "right",
   },
   {
     field: "o_11",
@@ -64,7 +64,7 @@ const tableColumn = [
     disabled: false,
     minWidth: 100,
     type: "currency",
-    align: "left",
+    align: "right",
   },
   {
     field: "o_13",
@@ -73,7 +73,7 @@ const tableColumn = [
     disabled: false,
     minWidth: 100,
     type: "currency",
-    align: "left",
+    align: "right",
   },
   {
     field: "o_14",

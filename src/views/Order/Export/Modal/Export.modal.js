@@ -1,5 +1,7 @@
 import moment from 'moment'
 import reqFunction from '../../../../utils/constan/functions';
+import glb_sv from "../../../../utils/service/global_service";
+
 
 const tableColumn = [
     { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
@@ -97,15 +99,15 @@ const tableListAddColumn1 = [
     ]
 
     const tableListAddColumn2 = [
-        { field: 'stt', title: 'STT',tootip: 'STT', show: true, disabled: true, minWidth: 100, align: 'center' },
-        // { field: 'o_4', title: 'MÃ SP/SKU', tootip: 'MÃ SP/SKU', show: true, disabled: false, minWidth: 100, align: 'center' },
-        { field: 'o_3', title: 'LOẠI HÌNH XUẤT', tootip: 'LOẠI HÌNH XUẤT', show: true, disabled: false, minWidth: 100, align: 'center' },
-        { field: 'o_5', title: 'TÊN SP',tootip: 'TÊN SP', show: true, disabled: false, minWidth: 100, align: 'center' },
-        { field: 'o_6', title: 'SỐ LÔ',tootip: 'SỐ LÔ', show: true, disabled: true, minWidth: 100, align: 'center' },
-        { field: 'o_8', title: 'SỐ LƯỢNG',tootip: 'SỐ LƯỢNG', show: true, disabled: true, minWidth: 100, align: 'center',type: 'currency' },
-        { field: 'o_10', title: 'ĐƠN VỊ',tootip: 'ĐƠN VỊ', show: true, disabled: true, minWidth: 200, align: 'center' },
-        { field: 'o_11', title: 'GIÁ',tootip: 'GIÁ', show: true, disabled: true, minWidth: 100, align: 'center', type: 'currency'},
-        { field: 'action', title: 'HÀNH ĐỘNG',tootip: 'HÀNH ĐỘNG', show: true, disabled: false, minWidth: 100, align: 'center' },
+        { field: 'stt', title: 'STT',tooltip: 'STT', show: true, disabled: true, minWidth: 100, align: 'center' },
+        // { field: 'o_4', title: 'MÃ SP/SKU', tooltip: 'MÃ SP/SKU', show: true, disabled: false, minWidth: 100, align: 'center' },
+        { field: 'o_3', title: 'LOẠI HÌNH XUẤT', tooltip: 'LOẠI HÌNH XUẤT', show: true, disabled: false, minWidth: 100, align: 'center' },
+        { field: 'o_5', title: 'TÊN SP',tooltip: 'TÊN SP', show: true, disabled: false, minWidth: 100, align: 'center' },
+        { field: 'o_6', title: 'SỐ LÔ',tooltip: 'SỐ LÔ', show: true, disabled: true, minWidth: 100, align: 'center' },
+        { field: 'o_8', title: 'SỐ LƯỢNG',tooltip: 'SỐ LƯỢNG', show: true, disabled: true, minWidth: 100, align: 'center',type: 'currency' },
+        { field: 'o_10', title: 'ĐƠN VỊ',tooltip: 'ĐƠN VỊ', show: true, disabled: true, minWidth: 200, align: 'center' },
+        { field: 'o_11', title: 'GIÁ',tooltip: 'GIÁ', show: true, disabled: true, minWidth: 100, align: 'center', type: 'currency'},
+        { field: 'action', title: 'XÓA',tooltip: 'XÓA', show: true, disabled: false, minWidth: 100, align: 'center' },
     ]
     //test
 const tableListEditColumn = [
@@ -125,7 +127,7 @@ const tableListEditColumn = [
 
 const invoiceExportModal = {
     invoice_id: null,
-    order_dt: moment().toString(),
+    order_dt: glb_sv.endDay,
     customer: null,
     invoice_no: '',
     staff_exp: '',

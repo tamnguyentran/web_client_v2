@@ -1,5 +1,7 @@
 import moment from 'moment'
 import reqFunction from '../../../../utils/constan/functions';
+import glb_sv from "../../../../utils/service/global_service";
+
 
 const tableColumn = [
     { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
@@ -85,7 +87,7 @@ const tableListEditColumn = [
 
 const invoiceExportDestroyModal = {
     invoice_id: null,
-    exp_dt: moment().toString(),
+    exp_dt: glb_sv.endDay,
     invoice_val: 0,
     payment_amount: 0,
     invoice_no: '',

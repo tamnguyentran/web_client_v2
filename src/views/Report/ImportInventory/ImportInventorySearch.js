@@ -26,13 +26,14 @@ import {
   ButtonCpn,
 } from "../../../basicComponents";
 import { Unit, Product } from "../../../components/Autocomplete";
+import glb_sv from "../../../utils/service/global_service";
 
 const ImportInventorySearch = ({ handleSearch, process = false }) => {
   const { t } = useTranslation();
 
   const [searchModal, setSearchModal] = useState({
-    start_dt: moment().subtract(1, "month").toString(),
-    end_dt: moment().toString(),
+    start_dt: glb_sv.startDay,
+    end_dt: glb_sv.endDay,
     invoice_no: "",
     invoice_status: "1",
     product_id: null,
@@ -101,8 +102,18 @@ const ImportInventorySearch = ({ handleSearch, process = false }) => {
         </div>
         <div className="mb-4">
           <TitleFilterCpn className="mb-2" label="Lọc theo thông tin" />
+          <Product
+            value={searchModal.product_nm || ""}
+            size={"small"}
+            label={t("menu.product")}
+            onSelect={handleSelectProduct}
+            onKeyPress={(key) => {
+              if (key.which === 13) return handleSearch(searchModal);
+            }}
+          />
           <TextFieldCpn
-            label="Mã hoá đơn"
+            className="mt-1"
+            label="Số hoá đơn"
             onChange={handleChange}
             onKeyPress={(key) => {
               if (key.which === 13) return handleSearch(searchModal);
@@ -111,7 +122,8 @@ const ImportInventorySearch = ({ handleSearch, process = false }) => {
             name="invoice_no"
           />
           <SelectCpn
-            label={t("Trạng thái hợp đồng")}
+            className="mt-1"
+            label={t("Trạng thái hóa đơn")}
             value={searchModal.invoice_status || "1"}
             onChange={handleChange}
             onKeyPress={(key) => {
@@ -122,16 +134,6 @@ const ImportInventorySearch = ({ handleSearch, process = false }) => {
             <MenuItem value="1">{t("normal")}</MenuItem>
             <MenuItem value="2">{t("cancelled")}</MenuItem>
           </SelectCpn>
-          <Product
-            className="mt-1"
-            value={searchModal.product_nm || ""}
-            size={"small"}
-            label={t("menu.product")}
-            onSelect={handleSelectProduct}
-            onKeyPress={(key) => {
-              if (key.which === 13) return handleSearch(searchModal);
-            }}
-          />
         </div>
         <div className="mt-2">
           <ButtonCpn.ButtonSearch

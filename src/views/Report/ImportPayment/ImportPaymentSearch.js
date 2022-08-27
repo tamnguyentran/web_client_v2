@@ -18,13 +18,14 @@ import {
   ButtonCpn,
 } from "../../../basicComponents";
 import { Supplier } from "../../../components/Autocomplete";
+import glb_sv from "../../../utils/service/global_service";
 
 const ImportPaymentSearch = ({ handleSearch, process = false }) => {
   const { t } = useTranslation();
 
   const [searchModal, setSearchModal] = useState({
-    start_dt: moment().subtract(1, "month").toString(),
-    end_dt: moment().toString(),
+    start_dt: glb_sv.startDay,
+    end_dt: glb_sv.endDay,
     supplier_nm: "",
     supplier_id: null,
     invoice_no: "",
@@ -85,16 +86,6 @@ const ImportPaymentSearch = ({ handleSearch, process = false }) => {
         </div>
         <div className="mb-4">
           <TitleFilterCpn className="mb-2" label="Lọc theo thông tin" />
-          <TextFieldCpn
-            className="mb-1"
-            label="Mã hoá đơn"
-            onChange={handleChange}
-            onKeyPress={(key) => {
-              if (key.which === 13) return handleSearch(searchModal);
-            }}
-            value={searchModal.invoice_no}
-            name="invoice_no"
-          />
           <Supplier
             value={searchModal.supplier_nm || ""}
             size={"small"}
@@ -103,6 +94,16 @@ const ImportPaymentSearch = ({ handleSearch, process = false }) => {
             onKeyPress={(key) => {
               if (key.which === 13) return handleSearch(searchModal);
             }}
+          />
+          <TextFieldCpn
+            className="mt-1"
+            label="Số hoá đơn"
+            onChange={handleChange}
+            onKeyPress={(key) => {
+              if (key.which === 13) return handleSearch(searchModal);
+            }}
+            value={searchModal.invoice_no}
+            name="invoice_no"
           />
         </div>
         <div className="mt-2">

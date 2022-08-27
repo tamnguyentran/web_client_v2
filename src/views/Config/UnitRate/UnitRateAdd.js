@@ -190,9 +190,8 @@ const UnitRateAdd = ({ onRefresh }) => {
   return (
     <>
       <Button
-        style={{ height: "40px" }}
         size="medium"
-        className="primary-bg text-white"
+        className="primary-bg text-white h-btn"
         variant="contained"
         onClick={() => {
           setShouldOpenModal(true);
@@ -276,7 +275,7 @@ const UnitRateAdd = ({ onRefresh }) => {
               <Grid item xs={6} sm={4}>
                 <TextFieldCpn
                   inputRef={step3Ref}
-                  label={t("SL quy đổi ra ĐV nhỏ nhất (*)")}
+                  label={t("Số lượng quy đổi (*)")}
                   onChange={handleChange}
                   value={glb_sv.formatValue(unitRate.rate || 0, "currency")}
                   onFocus={(e) => e.target.select()}

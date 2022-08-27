@@ -90,6 +90,9 @@ const LoginLayout = () => {
   const handleResultLogin = (reqInfoMap, message) => {
     console.log(reqInfoMap, message)
     setProcess(false);
+    if(message["PROC_CODE"] = "0XX4"){
+      return history.push('/page/dashboard')
+    }
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       SnackBarService.alert(

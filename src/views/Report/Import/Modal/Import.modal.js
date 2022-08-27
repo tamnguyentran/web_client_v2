@@ -1,7 +1,7 @@
 import moment from 'moment'
 
 const tableColumn = [
-    { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
+    { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100, align: "center" },
     { field: 'o_2', title: 'invoice_no', show: true, disabled: true, minWidth: 200 },
     { field: 'o_3', title: 'partner.supplier.vender_nm_v', show: true, disabled: false, minWidth: 200, type: 'status' },
     {
@@ -14,7 +14,7 @@ const tableColumn = [
         align: 'center',
     },
     { field: 'o_7', title: 'product.name', show: true, disabled: true, minWidth: 100 },
-    { field: 'o_8', title: 'order.import.lot_no', show: true, disabled: true, minWidth: 100 },
+    { field: 'o_8', title: 'order.import.lot_no', show: true, disabled: true, minWidth: 100, align: "right"  },
     {
         field: 'o_9',
         title: 'order.import.exp_dt',
@@ -41,7 +41,6 @@ const tableColumn = [
         disabled: false,
         minWidth: 100,
         type: 'currency',
-        align: 'right',
     },
     {
         field: 'o_14',
@@ -52,15 +51,15 @@ const tableColumn = [
         type: 'currency',
         align: 'right',
     },
-    {
-        field: 'o_15',
-        title: 'report.vat_per',
-        show: true,
-        disabled: false,
-        minWidth: 100,
-        type: 'currency',
-        align: 'right',
-    },
+    // {
+    //     field: 'o_15',
+    //     title: 'report.vat_per',
+    //     show: true,
+    //     disabled: false,
+    //     minWidth: 100,
+    //     type: 'currency',
+    //     align: 'right',
+    // },
     {
         field: 'o_16',
         title: 'order.import.vals',

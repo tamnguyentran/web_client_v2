@@ -1,5 +1,6 @@
 import moment from 'moment';
 import reqFunction from '../../../../utils/constan/functions';
+import glb_sv from "../../../../utils/service/global_service";
 
 const tableColumn = [
     { field: 'stt', title: 'STT', show: true, disabled: true, minWidth: 100 },
@@ -85,7 +86,7 @@ const tableProductInvoiceViewColumn = [
 
 const invoiceExportModal = {
     invoice_id: null,
-    order_dt: moment().toString(),
+    order_dt: glb_sv.endDay,
     supplier: null,
     invoice_no: '',
     person_s: '',
@@ -128,8 +129,8 @@ const settlementDefaulModal = {
     invoice_no: '',
     settl_tp: '1',
     settl_tp_nm: '',
-    settl_dt: moment().toString(),
-    settl_dt_ip: moment().toString(),
+    settl_dt: glb_sv.endDay,
+    settl_dt_ip: glb_sv.endDay,
     bank_act_s: '',
     bank_act_nm_s: '',
     bank_cd_s: null,

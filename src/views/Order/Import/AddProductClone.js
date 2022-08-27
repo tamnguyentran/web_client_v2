@@ -307,7 +307,7 @@ const AddProduct = ({ onAddProduct, resetFlag, style, saveProcess }) => {
 
   return (
    <>
-      <div style={{ borderBottom: "2px solid var(--gray3)", padding: "10px" }}>
+      <div style={{ borderBottom: "1px solid var(--gray3)", padding: "10px" }}>
         <div className="flex">
           <SelectCpn
             className="mr-2"
@@ -392,6 +392,7 @@ const AddProduct = ({ onAddProduct, resetFlag, style, saveProcess }) => {
             }}
             className="mr-2"
             label="Số lượng nhập (*)"
+            align="right"
           />
           <div className="w-100 mr-2">
             <Unit
@@ -415,6 +416,7 @@ const AddProduct = ({ onAddProduct, resetFlag, style, saveProcess }) => {
           </div>
           <TextFieldCpn
             className="mr-2"
+            align="right"
             disabled={productInfo.imp_tp !== '1'}
             value={glb_sv.formatValue(productInfo.price || 0, "currency")}
             label={t('Giá nhập')}
@@ -427,29 +429,14 @@ const AddProduct = ({ onAddProduct, resetFlag, style, saveProcess }) => {
                 }
             }}
           />
-          {/* <TextFieldCpn
-            disabled={productInfo.imp_tp !== "1"}
-            value={productInfo.vat_per}
-            onValueChange={handleVATChange}
-            onFocus={(event) => event.target.select()}
-            inputRef={stepNineRef}
-            onKeyPress={(event) => {
-              if (event.key === "Enter") {
-                if (checkValidate()) return;
-                onAddProduct(productInfo);
-              }
-            }}
-            className="mr-2"
-            label="Chiết khấu"
-          /> */}
           <ButtonCpn.ButtonUpdate
             title="Lưu (F3)"
             onClick={() => {
               onAddProduct(productInfo);
             }}
-            variant="contained"
             disabled={checkValidate()}
-            className={`w-50 ${
+            style={{padding: "0px !important"}}
+            className={`w-100 p-0 ${
               checkValidate() === false ? "text-white" : ""
             }`}
             process={saveProcess}

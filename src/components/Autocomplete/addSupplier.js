@@ -16,6 +16,11 @@ import control_sv from '../../utils/service/control_services'
 import socket_sv from '../../utils/service/socket_service'
 import { defaultModalAdd } from "../Autocomplete/Modal/addSupplier.modal";
 import { AutocompleteCpn } from "../../basicComponents";
+import {
+    TextAreaCpn,
+    TextFieldCpn,
+    ButtonCpn
+  } from "../../basicComponents";
 
 const serviceInfo = {
     DROPDOWN_LIST: {
@@ -51,6 +56,7 @@ const SupplierAdd_Autocomplete = ({
     const [inputValue, setInputValue] = useState('')
     const [shouldOpenModal, setShouldOpenModal] = useState(false)
     const [supplierInfo, setSupplierInfo] = useState({ ...defaultModalAdd })
+    const [process, setProcess] = useState(false);
     const idCreated = useRef(-1)
 
     useEffect(() => {
@@ -100,7 +106,8 @@ const SupplierAdd_Autocomplete = ({
         }
         if (message['PROC_DATA']) {
             let newData = message['PROC_DATA']
-            setDataSource(newData.rows)
+            console.log(newData.rows)
+            setDataSource(newData.rows || [])
         }
     }
 
@@ -112,10 +119,12 @@ const SupplierAdd_Autocomplete = ({
         SnackBarService.alert(message['PROC_MESSAGE'], true, message['PROC_STATUS'], 3000)
         if (message['PROC_STATUS'] === 2) {
             reqInfoMap.resSucc = false
+            setProcess(false);
             glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap)
         } else {
             let data = message['PROC_DATA']
             idCreated.current = data.rows[0].o_1
+            setProcess(false);
             onCreate(data.rows[0].o_1)
             setSupplierInfo({ ...defaultModalAdd })
             setShouldOpenModal(false)
@@ -148,6 +157,7 @@ const SupplierAdd_Autocomplete = ({
 
     const handleCreateSupplier = () => {
         if (!supplierInfo.vender_nm_v.trim()) return
+        setProcess(true);
         const inputParam = [
             supplierInfo.vender_nm_v.trim(),
             supplierInfo.vender_nm_e.trim(),
@@ -178,105 +188,105 @@ const SupplierAdd_Autocomplete = ({
     }
 
     return (
-        <>
-            <AutocompleteCpn
-            label={label}
-                disabled={disabled}
-                onChange={onChange}
-                onInputChange={handleChangeInput}
-                onKeyPress={onKeyPress}
-                options={dataSource}
-                value={valueSelect}
-                // autoSelect={true}
-                autoHighlight={true}
-                autoComplete={true}
-                getOptionLabel={(option) => option.o_2 || ''}
-                renderInput={(params) => {
-                    let newParams = {
-                        ...params,
-                        ...{
-                            InputProps: {
-                                ...params.InputProps,
-                                startAdornment: (
-                                    <Tooltip title={t('partner.supplier.titleQuickAdd')} aria-label="add">
-                                        <AddCircleIcon
-                                        className="cursor-pointer"
-                                            style={{ color: 'green' }}
-                                            onClick={() => setShouldOpenModal(true)}
-                                        />
-                                    </Tooltip>
-                                ),
-                            },
-                        },
-                    }
-                    return (
-                        <TextField
-                            {...newParams}
-                            inputRef={inputRef}
-                            autoFocus={autoFocus}
-                            variant="outlined"
-                        />
-                    )
-                }}
-            />
-            <Dialog
-                fullWidth={true}
-                maxWidth="sm"
-                open={shouldOpenModal}
-                onClose={(e) => {
-                    setShouldOpenModal(false)
-                    setSupplierInfo({ ...defaultModalAdd })
-                }}
-            >
-                <Card>
-                    <CardHeader title={t('partner.supplier.titleQuickAdd')} />
-                    <CardContent>
-                        <Grid container spacing={1}>
-                            <Grid item xs={6}>
-                                <TextField
-                                    fullWidth={true}
-                                    margin="dense"
-                                    required={true}
-                                    className="uppercaseInput"
-                                    autoComplete="off"
-                                    label={t('partner.supplier.vender_nm_v')}
-                                    onChange={handleChange}
-                                    value={supplierInfo.vender_nm_v || ''}
-                                    name="vender_nm_v"
-                                    variant="outlined"
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    fullWidth={true}
-                                    margin="dense"
-                                    autoComplete="off"
-                                    label={t('partner.supplier.phone')}
-                                    onChange={handleChange}
-                                    value={supplierInfo.phone || ''}
-                                    name="phone"
-                                    variant="outlined"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth={true}
-                                    multiline
-                                    rows={2}
-                                    rowsMax={5}
-                                    autoComplete="off"
-                                    label={t('partner.supplier.address')}
-                                    onChange={handleChange}
-                                    value={supplierInfo.address || ''}
-                                    name="address"
-                                    variant="outlined"
-                                />
-                            </Grid>
-                        </Grid>
-                        <note style={{ color: 'var(--danger)' }}>{t('partner.supplier.titleQuickAddGuidle')}</note>
-                    </CardContent>
-                    <CardActions className="align-items-end" style={{ justifyContent: 'flex-end' }}>
-                        <Button
+      <>
+        <AutocompleteCpn
+          label={label}
+          disabled={disabled}
+          onChange={onChange}
+          onInputChange={handleChangeInput}
+          onKeyPress={onKeyPress}
+          options={dataSource}
+          value={valueSelect}
+          // autoSelect={true}
+          autoHighlight={true}
+          autoComplete={true}
+          getOptionLabel={(option) => option.o_2 || ""}
+          renderInput={(params) => {
+            let newParams = {
+              ...params,
+              ...{
+                InputProps: {
+                  ...params.InputProps,
+                  startAdornment: (
+                    <Tooltip
+                      title={t("partner.supplier.titleQuickAdd")}
+                      aria-label="add"
+                    >
+                      <AddCircleIcon
+                        className="cursor-pointer"
+                        style={{ color: "green" }}
+                        onClick={() => setShouldOpenModal(true)}
+                      />
+                    </Tooltip>
+                  ),
+                },
+              },
+            };
+            return (
+              <TextField
+                {...newParams}
+                inputRef={inputRef}
+                autoFocus={autoFocus}
+                variant="outlined"
+              />
+            );
+          }}
+        />
+        <Dialog
+          fullWidth={true}
+          maxWidth="sm"
+          open={shouldOpenModal}
+          onClose={(e) => {
+            setShouldOpenModal(false);
+            setSupplierInfo({ ...defaultModalAdd });
+          }}
+        >
+          <Card>
+            <CardHeader className='card-header' title={t("partner.supplier.titleQuickAdd")} />
+            <CardContent>
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <TextFieldCpn
+                    required={true}
+                    className="uppercaseInput"
+                    autoComplete="off"
+                    label={t("partner.supplier.vender_nm_v")}
+                    onChange={handleChange}
+                    value={supplierInfo.vender_nm_v || ""}
+                    name="vender_nm_v"
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextFieldCpn
+                    fullWidth={true}
+                    label={t("partner.supplier.phone")}
+                    onChange={handleChange}
+                    value={supplierInfo.phone || ""}
+                    name="phone"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextAreaCpn
+                    className="w-100"
+                    rows={2}
+                    rowsMax={5}
+                    autoComplete="off"
+                    label={t("partner.supplier.address")}
+                    onChange={handleChange}
+                    value={supplierInfo.address || ""}
+                    name="address"
+                  />
+                </Grid>
+              </Grid>
+              <div
+                className="mt-2"
+                style={{ color: "var(--danger)", fontSize: "0.875rem" }}
+              >
+                {t("partner.supplier.titleQuickAddGuidle")}
+              </div>
+            </CardContent>
+            <CardActions className="align-items-end justify-content-end p-3">
+              {/* <Button
                             size="small"
                             onClick={(e) => {
                                 setShouldOpenModal(false)
@@ -299,12 +309,28 @@ const SupplierAdd_Autocomplete = ({
                             className={checkValidate() === false ? 'bg-success text-white' : ''}
                         >
                             {t('btn.save')} (F3)
-                        </Button>
-                    </CardActions>
-                </Card>
-            </Dialog>
-        </>
-    )
+                        </Button> */}
+              <ButtonCpn.ButtonClose
+                process={process}
+                onClick={() => {
+                  setShouldOpenModal(false);
+                  setSupplierInfo({ ...defaultModalAdd });
+                }}
+              />
+              <ButtonCpn.ButtonUpdate
+                onClick={() => {
+                  handleCreateSupplier();
+                  setSupplierInfo({ ...defaultModalAdd });
+                }}
+                process={process}
+                disabled={checkValidate()}
+                title="Lưu (F3)"
+              />
+            </CardActions>
+          </Card>
+        </Dialog>
+      </>
+    );
 }
 
 export default SupplierAdd_Autocomplete

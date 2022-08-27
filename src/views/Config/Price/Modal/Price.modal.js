@@ -1,7 +1,7 @@
 import reqFunction from "../../../../utils/constan/functions";
 
 const tableColumn = [
-  { field: "stt", title: "STT", show: true, disabled: true, minWidth: 100 },
+  { field: "stt", title: "STT", show: true, disabled: true, minWidth: 100, align: "center" },
   {
     field: "o_3",
     title: "menu.product",
@@ -22,26 +22,26 @@ const tableColumn = [
     show: true,
     disabled: false,
     minWidth: 100,
-    type: "number",
-    align: "left",
+    type: "currency",
+    align: "right",
   },
-  {
-    field: "o_7",
-    title: "config.price.importVAT",
-    show: true,
-    disabled: false,
-    minWidth: 100,
-    type: "number",
-    align: "left",
-  },
+  // {
+  //   field: "o_7",
+  //   title: "config.price.importVAT",
+  //   show: true,
+  //   disabled: false,
+  //   minWidth: 100,
+  //   type: "currency",
+  //   align: "left",
+  // },
   {
     field: "o_8",
     title: "config.price.price",
     show: true,
     disabled: false,
     minWidth: 100,
-    type: "number",
-    align: "left",
+    type: "currency",
+    align: "right"
   },
   {
     field: "o_9",
@@ -49,18 +49,18 @@ const tableColumn = [
     show: true,
     disabled: false,
     minWidth: 100,
-    type: "number",
-    align: "left",
+    type: "currency",
+    align: "right"
   },
-  {
-    field: "o_10",
-    title: "config.price.exportVAT",
-    show: true,
-    disabled: false,
-    minWidth: 100,
-    type: "number",
-    align: "left",
-  },
+  // {
+  //   field: "o_10",
+  //   title: "config.price.exportVAT",
+  //   show: true,
+  //   disabled: false,
+  //   minWidth: 100,
+  //   type: "number",
+  //   align: "left",
+  // },
   {
     field: "o_11",
     title: "config.price.note",
@@ -82,7 +82,7 @@ const tableColumn = [
     disabled: false,
     minWidth: 100,
     type: "date",
-    align: "left",
+    align: "center",
   },
   {
     field: "action",
@@ -90,6 +90,7 @@ const tableColumn = [
     show: true,
     disabled: true,
     minWidth: 100,
+    align: "center"
   },
   // { field: 'o_11', title: 'config.unit.titleBranch', show: true, disabled: false, minWidth: 100 }
 ];

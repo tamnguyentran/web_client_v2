@@ -253,6 +253,7 @@ const TransactionStatementList = () => {
                           !col.show && "dl-none"
                         }`}
                         key={col.field}
+                        align={col.align}
                       >
                         {t(col.title)}
                       </TableCell>

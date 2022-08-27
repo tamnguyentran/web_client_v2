@@ -71,6 +71,8 @@ const Export_Bill = ({ headerModal, detailModal, className, componentRef }) => {
         SnackBarService.alert(t(`message.${e.type}`), true, 4, 3000)
     }
 
+    console.log(detailModal)
+
     return (
         <div className={className} ref={componentRef}>
             <div className='print-container'>
@@ -146,19 +148,19 @@ const Export_Bill = ({ headerModal, detailModal, className, componentRef }) => {
                                                     {!!details.o_3 ? details.o_3 : ''}
                                                 </td>
                                                 <td className='number' style={{ textAlign: 'right' }}>
-                                                    {!!details.o_7 ? details.o_7 : ''}
+                                                    {!!details.o_8 ? details.o_8 : ''}
                                                 </td>
                                                 <td className='' style={{ textAlign: 'right' }}>
-                                                    {!!details.o_9 ? details.o_9 : ''}
-                                                </td>
-                                                <td className='number' style={{ textAlign: 'right' }}>
-                                                    {formatCurrency(!!details.o_10 ? details.o_10 : '')}
+                                                    {!!details.o_10 ? details.o_10 : ''}
                                                 </td>
                                                 <td className='number' style={{ textAlign: 'right' }}>
                                                     {formatCurrency(!!details.o_11 ? details.o_11 : '')}
                                                 </td>
                                                 <td className='number' style={{ textAlign: 'right' }}>
                                                     {formatCurrency(!!details.o_12 ? details.o_12 : '')}
+                                                </td>
+                                                <td className='number' style={{ textAlign: 'right' }}>
+                                                    {formatCurrency(!!details.o_13 ? details.o_13 : '')}
                                                 </td>
                                             </tr>
                                         </React.Fragment>

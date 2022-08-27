@@ -11,6 +11,7 @@ import {
   Dialog,
   Tooltip,
   Grid,
+  Divider,
 } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SaveIcon from "@material-ui/icons/Save";
@@ -27,6 +28,11 @@ import socket_sv from "../../utils/service/socket_service";
 import { defaultModalAdd } from "../Autocomplete/Modal/addCustomer.modal";
 import LoopIcon from "@material-ui/icons/Loop";
 import { AutocompleteCpn } from "../../basicComponents";
+import {
+  TextAreaCpn,
+  TextFieldCpn,
+  ButtonCpn
+} from "../../basicComponents";
 
 const serviceInfo = {
   DROPDOWN_LIST: {
@@ -74,7 +80,9 @@ const CustomerAdd = ({
     sendRequest(
       serviceInfo.DROPDOWN_LIST,
       inputParam,
-      null,
+      (e,r)=>{
+        console.log(e,r)
+              },
       true,
       handleTimeOut
     );
@@ -221,10 +229,13 @@ const CustomerAdd = ({
       customerInfo.default_yn,
       customerInfo.cust_tp,
     ];
+    console.log(inputParam)
     sendRequest(
       serviceInfo.CREATE_CUSTOMER,
       inputParam,
-      null,
+      (e,w)=>{
+        console.log(e,w)
+      },
       true,
       handleTimeOut
     );
@@ -240,6 +251,7 @@ const CustomerAdd = ({
     setShouldOpenModal(false);
     setCustomerInfo({ ...defaultModalAdd });
   };
+  console.log(dataSource)
   return (
     <div className={className}>
      <AutocompleteCpn
@@ -278,7 +290,6 @@ const CustomerAdd = ({
             {...newParams}
             inputRef={inputRef}
             autoFocus={autoFocus}
-            // label={!!label ? label : ""}
             variant="outlined"
           />
         );
@@ -337,43 +348,33 @@ const CustomerAdd = ({
         onClose={closePopupAddCustomer}
       >
         <Card>
-          <CardHeader title={t("partner.customer.titleQuickAdd")} />
+          <CardHeader className="card-header" title={t("partner.customer.titleQuickAdd")} />
           <CardContent>
             <Grid container spacing={1}>
               <Grid item xs={6}>
-                <TextField
-                  fullWidth={true}
-                  margin="dense"
-                  required={true}
+                <TextFieldCpn 
                   className="uppercaseInput"
                   autoComplete="off"
-                  label={t("partner.customer.cust_nm_v")}
+                  label={t("Tên khách hàng (*)")}
                   onChange={handleChange}
                   value={customerInfo.cust_nm_v || ""}
                   name="cust_nm_v"
-                  variant="outlined"
                   inputRef = {refFocus1}
                   autoFocus = {true}
                 />
               </Grid>
               <Grid item xs={6}>
-                <TextField
-                  fullWidth={true}
-                  margin="dense"
-                  autoComplete="off"
-                  label={t("partner.customer.phone")}
+                <TextFieldCpn
+                  label={t("Điện thoại")}
                   onChange={handleChange}
                   value={customerInfo.phone || ""}
                   name="phone"
-                  variant="outlined"
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  fullWidth={true}
-                  // margin="dense"
-                  autoComplete="off"
-                  label={t("partner.customer.address")}
+                <TextAreaCpn
+                  className="w-100"
+                  label={t("Địa chỉ")}
                   onChange={handleChange}
                   value={customerInfo.address || ""}
                   name="address"
@@ -381,45 +382,26 @@ const CustomerAdd = ({
                 />
               </Grid>
             </Grid>
-            <note style={{ color: "var(--danger)" }}>
-              {t("partner.customer.titleQuickAddGuidles")}
-            </note>
+            <div className="mt-2" style={{ color: "var(--danger)", fontSize: "0.875rem" }}>
+              {t("* Vui lòng qua trang Quản lý thông tin khách hàng để cập nhật thông tin")}
+            </div>
           </CardContent>
           <CardActions
-            className="align-items-end"
-            style={{ justifyContent: "flex-end" }}
+            className="align-items-end justify-content-end p-3"
           >
-            <Button
-              size="small"
-              onClick={(e) => {
-                setShouldOpenModal(false);
-                setCustomerInfo({ ...defaultModalAdd });
-              }}
-              startIcon={<ExitToAppIcon />}
-              variant="contained"
-              disableElevation
-            >
-              {t("btn.close")} (Esc)
-            </Button>
-            <Button
-              size="small"
-              onClick={() => {
-                handleCreateCustomer();
-              }}
-              variant="contained"
-              disabled={checkValidate()}
-              className={
-                checkValidate() === false
-                  ? process
-                    ? "button-loading bg-success text-white"
-                    : "bg-success text-white"
-                  : ""
-              }
-              endIcon={process && <LoopIcon />}
-              startIcon={<SaveIcon />}
-            >
-              {t("btn.save")} (F3)
-            </Button>
+             <ButtonCpn.ButtonClose
+            process={process}
+            onClick={() => {
+              setShouldOpenModal(false);
+              setCustomerInfo({ ...defaultModalAdd });
+            }}
+          />
+          <ButtonCpn.ButtonUpdate
+            onClick={handleCreateCustomer}
+            process={process}
+            disabled={checkValidate()}
+            title="Lưu (F3)"
+          />
           </CardActions>
         </Card>
       </Dialog>

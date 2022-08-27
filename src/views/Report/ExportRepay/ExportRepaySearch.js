@@ -8,13 +8,15 @@ import Supplier_Autocomplete from '../../Partner/Supplier/Control/Supplier.Autoc
 import Product_Autocomplete from '../../Products/Product/Control/Product.Autocomplete'
 import SearchIcon from '@material-ui/icons/Search'
 import LoopIcon from '@material-ui/icons/Loop'
+import glb_sv from "../../../utils/service/global_service";
+
 
 const ExportRepaySearch = ({ handleSearch, process = false }) => {
     const { t } = useTranslation()
 
     const [searchModal, setSearchModal] = useState({
         start_dt: moment().subtract(1, 'month').toString(),
-        end_dt: moment().toString(),
+        end_dt: glb_sv.endDay,
         supplier_nm: '',
         supplier_id: null,
         invoice_no: '',

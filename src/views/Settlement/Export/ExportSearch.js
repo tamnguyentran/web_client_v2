@@ -14,13 +14,16 @@ import {
     ButtonCpn,
     DatePickerCpn
   } from "../../../basicComponents";
+  
+import glb_sv from "../../../utils/service/global_service";
+
 
 const ExportSearch = ({ handleSearch, process = false }) => {
     const { t } = useTranslation()
 
     const [searchModal, setSearchModal] = useState({
         start_dt: moment().subtract(1, 'months').toString(),
-        end_dt: moment().toString(),
+        end_dt: glb_sv.endDay,
     })
 
     const handleStartDateChange = (date) => {

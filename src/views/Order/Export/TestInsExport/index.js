@@ -435,7 +435,7 @@ const InsExport = () => {
 
   const debouncedSave = useCallback(
     debounce((value) => {
-      const inputParam = [`%${value}%`, "N"];
+      const inputParam = [`%${value}%`, "Y"];
       sendRequest(
         serviceInfo.SEARCH_INVEN_PROD,
         inputParam,
@@ -752,6 +752,7 @@ const InsExport = () => {
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
+      setDataSource([])
     } else if (message["PROC_DATA"]) {
       // xử lý thành công
       let newData = message["PROC_DATA"];
@@ -796,15 +797,15 @@ const InsExport = () => {
   };
 
   const handleResultUpdateProduct = (reqInfoMap, message) => {
-    SnackBarService.alert(
-      message["PROC_MESSAGE"],
-      true,
-      message["PROC_STATUS"],
-      3000
-    );
     if (message["PROC_STATUS"] !== 1) {
-      // xử lý thất bại
+      SnackBarService.alert(
+        message["PROC_MESSAGE"],
+        true,
+        message["PROC_STATUS"],
+        3000
+      );
       handleCallApiFail(reqInfoMap, message);
+      handleRefresh();
     } else if (message["PROC_DATA"]) {
       handleRefresh();
       // setIsIndexRow(null);
@@ -836,20 +837,32 @@ const InsExport = () => {
         qty, // Số lượng
         price,
         0,
-        0,
+        0
       ];
       sendRequest(
         serviceInfo.UPDATE_PRODUCT_TO_INVOICE,
         inputParam,
         handleResultUpdateProduct,
         true,
-        handleTimeOut
+        (e) => {
+          sendRequest(
+            serviceInfo.GET_ALL_PRODUCT_BY_EXPORT_ID,
+            [newInvoiceId.current],
+            handleGetAllProductByInvoiceID,
+            true,
+            () => {
+              setDataSource([])
+            }
+          );
+          handleTimeOut(e)
+        }
       );
     }, 800),
     []
   );
 
   const handleChangeQtyProductInvoice = (type, item, index, valueQty) => {
+    let tempQty = productInfo[index].expQty
     if (type === "change") {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expQty: valueQty };
@@ -862,28 +875,30 @@ const InsExport = () => {
         pre[index] = { ...pre[index], expQty: pre[index].expQty + 1 };
         return [...pre];
       });
+      tempQty++
       return updateDataListProduct(
-        productInfo[index].expQty + 1,
+        tempQty,
         item.o_11,
         item
-      );
+      )
     } else if (productInfo[index].expQty > 1) {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expQty: pre[index].expQty - 1 };
         return [...pre];
       });
+      tempQty--
       return updateDataListProduct(
-        productInfo[index].expQty - 1,
+        tempQty,
         item.o_11,
         item
       );
-    } else {
-      return updateDataListProduct(1, item.o_11, item);
     }
+    return updateDataListProduct(1, item.o_11, item);
   };
 
   const handleChangePriceProductInvoice = (type, item, index, valuePrice) => {
-    if (type === "change") {
+    let tempPrice = productInfo[index].expPrice
+    if (type === "change" && valuePrice > 0) {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expPrice: valuePrice };
         return [...pre];
@@ -892,27 +907,28 @@ const InsExport = () => {
     }
     if (type === "increase") {
       setProductInfo((pre) => {
-        pre[index] = { ...pre[index], expPrice: pre[index].expPrice + 1 };
+        pre[index] = { ...pre[index], expPrice: pre[index].expPrice + 1000 };
         return [...pre];
       });
+      tempPrice = tempPrice + 1000
       return updateDataListProduct(
         item.o_8,
-        productInfo[index].expPrice + 1,
+        tempPrice,
         item
       );
-    } else if (productInfo[index].expPrice > 1) {
+    } else if (productInfo[index].expPrice > 1000) {
       setProductInfo((pre) => {
-        pre[index] = { ...pre[index], expPrice: pre[index].expPrice - 1 };
+        pre[index] = { ...pre[index], expPrice: pre[index].expPrice - 1000 };
         return [...pre];
       });
+      tempPrice = tempPrice - 1000
       return updateDataListProduct(
         item.o_8,
-        productInfo[index].expPrice - 1,
+        tempPrice,
         item
       );
-    } else {
-      return updateDataListProduct(item.o_8, 1, item);
     }
+    return updateDataListProduct(item.o_8, tempPrice, item);
   };
 
   const handleChangeType = (e, item) => {
@@ -1191,8 +1207,6 @@ const InsExport = () => {
     }
   };
 
-  console.log(dataHistoryListInvoice)
-
   return (
     <>
       <div className="layout-page p-2">
@@ -1204,14 +1218,14 @@ const InsExport = () => {
             <div>
               <div className="flex align-item-end">
                 {isScan ? (
-                  <div style={{ width: "50%" }}>
+                  <div style={{ width: "300px" }}>
                     <TextFieldCpn
                       placeholder="Nhập tay"
                       onChange={handleSearchInput}
                       value={dataSearchInput}
                     />
                     <List
-                      className={`list-product-inventory ${
+                      className={`list-product-inventory mt-2 ${
                         !listInventoryProduct.length && "dl-none"
                       }`}
                     >
@@ -1230,13 +1244,13 @@ const InsExport = () => {
                               }}
                             >
                               <Avatar
-                                className="custom-avatar"
+                                className="medium-avatar mt-1 mb-1"
                                 variant="square"
                                 src={`${glb_sv.configInfo.domain}/upload/product/${data.o_10}`}
                               >
                                 <TextImage />
                               </Avatar>
-                              <div className="w-100">
+                              <div className="w-100 ml-2">
                                 <div className="fz12">
                                   <div className="fz14 font-weight-500">
                                     {data.o_2}
@@ -1288,7 +1302,15 @@ const InsExport = () => {
                   </div>
                 ) : (
                   <div style={{ width: "50%" }}>
-                    <TextFieldCpn placeholder="Vét mã vạch" />
+                    <TextFieldCpn
+                      id="bar-code-id"
+                      style={{ width: "300px" }}
+                      size={"small"}
+                      variant="outlined"
+                      autoFocus={true}
+                      onKeyUp={handleBarcode}
+                      placeholder="Vét mã vạch"
+                    />
                   </div>
                 )}
                 <button
@@ -1359,7 +1381,6 @@ const InsExport = () => {
                 }}
               >
                 {dataHistoryListInvoice.map((item, index) => {
-                  console.log(item)
                   return (
                     <div
                       key={index}
@@ -1373,11 +1394,11 @@ const InsExport = () => {
                         setDisableUpdateInvoice(false);
                       }}
                     >
-                      <div className="fz15 text-center text-black2 item-receipt">
-                        H.Đơn {item.o_2}
+                      <div className="fz11 text-center text-black2 item-receipt">
+                        {item.o_2}
                       </div>
-                      <div className="fz15 text-green2">
-                        {moment(item.o_5, "YYYYMMDD").format("DD/MM/YYYY")}
+                      <div className="fz11 text-green2 text-center">
+                        {moment(item.o_11, "DDMMYYYYhhmmss").format('hh:mm:ss')}
                       </div>
                     </div>
                   );
@@ -1393,10 +1414,10 @@ const InsExport = () => {
             }}
           >
             <Wrapper.WrapperTable
-              style={{ width: "calc(100% - 22% - 8px)", minWidth: "800px" }}
+              style={{ width: "calc(100% - 22% - 8px)", minWidth: "800px", border:"none" }}
               hiddenIcon={true}
             >
-              <div className="p-2" style={{ height: "45%" }}>
+              <div className="pl-2" style={{ height: "45%" }}>
                 <div
                   style={{ height: "100%", border: "1px solid var(--gray3)" }}
                 >
@@ -1423,7 +1444,7 @@ const InsExport = () => {
                                 placement="top"
                                 disableFocusListener
                                 disableTouchListener
-                                title={t(col.tootip)}
+                                title={t(col.tooltip)}
                               >
                                 <TableCell
                                   colSpan={col.field === "action" ? 2 : 1}
@@ -1511,54 +1532,62 @@ const InsExport = () => {
                                           key={indexRow}
                                           align={col.align}
                                         >
-                                          <div className="flex justify-content-center align-items-center">
-                                            <IC_ADD
-                                              className="cursor-pointer"
-                                              stroke="var(--gray2)"
-                                              onClick={() =>
-                                                handleChangeQtyProductInvoice(
-                                                  "increase",
-                                                  item,
-                                                  index
-                                                )
-                                              }
-                                            />
-                                            <input
-                                              onChange={(e) =>
-                                                handleChangeQtyProductInvoice(
-                                                  "change",
-                                                  item,
-                                                  index,
-                                                  glb_sv.formatValue(
-                                                    e.target.value,
-                                                    "number"
+                                          {item.o_2 === "1" ? (
+                                            <div className="flex justify-content-center align-items-center">
+                                              <IC_ADD
+                                                className="cursor-pointer"
+                                                stroke="var(--gray2)"
+                                                onClick={() =>
+                                                  handleChangeQtyProductInvoice(
+                                                    "increase",
+                                                    item,
+                                                    index
                                                   )
-                                                )
-                                              }
-                                              className="mr-1"
-                                              style={{
-                                                border: "none",
-                                                width: "30%",
-                                                textAlign: "center",
-                                                outline: "none",
-                                              }}
-                                              value={glb_sv.formatValue(
-                                                productInfo[index]?.expQty || 1,
-                                                "currency"
-                                              )}
-                                            />
-                                            <IC_REDUCED
-                                              className="cursor-pointer"
-                                              stroke="var(--gray2)"
-                                              onClick={() =>
-                                                handleChangeQtyProductInvoice(
-                                                  "reduced",
-                                                  item,
-                                                  index
-                                                )
-                                              }
-                                            />
-                                          </div>
+                                                }
+                                              />
+                                              <input
+                                                onChange={(e) =>
+                                                  handleChangeQtyProductInvoice(
+                                                    "change",
+                                                    item,
+                                                    index,
+                                                    glb_sv.formatValue(
+                                                      e.target.value,
+                                                      "number"
+                                                    )
+                                                  )
+                                                }
+                                                className="mr-1"
+                                                style={{
+                                                  border: "none",
+                                                  width: "30%",
+                                                  textAlign: "center",
+                                                  outline: "none",
+                                                }}
+                                                value={glb_sv.formatValue(
+                                                  productInfo[index]?.expQty ||
+                                                    1,
+                                                  "currency"
+                                                )}
+                                              />
+                                              <IC_REDUCED
+                                                className="cursor-pointer"
+                                                stroke="var(--gray2)"
+                                                onClick={() =>
+                                                  handleChangeQtyProductInvoice(
+                                                    "reduced",
+                                                    item,
+                                                    index
+                                                  )
+                                                }
+                                              />
+                                            </div>
+                                          ) : (
+                                            glb_sv.formatValue(
+                                              value,
+                                              "currency"
+                                            )
+                                          )}
                                         </TableCell>
                                       );
 
@@ -1650,7 +1679,7 @@ const InsExport = () => {
                 </div>
               </div>
 
-              <div className="p-2" style={{ height: "55%" }}>
+              <div className="pl-2 pt-2" style={{ height: "55%" }}>
                 <div style={{ border: "1px solid var(--gray3)" }}>
                   <div
                     style={{ borderBottom: "1px solid var(--gray3)" }}
@@ -1762,9 +1791,7 @@ const InsExport = () => {
               </div>
             </Wrapper.WrapperTable>
             <Wrapper.WrapperFilter style={{ width: "22%", overflowY: "auto" }}>
-              <div
-                className="pr-2 gray3-bg align-items-center text-right"
-              >
+              <div className="pr-2 gray3-bg align-items-center text-right">
                 <Checkbox
                   className="text-green2"
                   checked={invoiceType}
@@ -1805,32 +1832,8 @@ const InsExport = () => {
                   format="dd/MM/yyyy"
                   value={Export.order_dt}
                   onChange={handleDateChange}
+                  disabled={true}
                 />
-                <div className="flex align-items-end">
-                  <div className="mr-2" style={{ width: "50%" }}>
-                    <SelectCpn
-                      value={Export.discount_tp}
-                      onChange={handleChangeDiscount}
-                      name="discount_tp"
-                      label="Loại CK"
-                    >
-                      <MenuItem value="1">{t("Tiền mặt")}</MenuItem>
-                      <MenuItem value="2">{t("% Hóa đơn")}</MenuItem>
-                    </SelectCpn>
-                  </div>
-                  <div style={{ width: "50%" }}>
-                    <TextFieldCpn
-                      value={glb_sv.formatValue(
-                        Export.invoice_discount || 0,
-                        "number"
-                      )}
-                      label={" "}
-                      name="invoice_discount"
-                      onChange={handleChangeInvoiceDiscount}
-                      disabled={!Export?.discount_tp}
-                    />
-                  </div>
-                </div>
                 <TextFieldCpn
                   align="right"
                   className="mt-1"
@@ -1841,6 +1844,32 @@ const InsExport = () => {
                   label={t("Giá trị HĐ")}
                   disabled={true}
                 />
+                <div className="flex align-items-end">
+                  <div className="mr-2 w-50">
+                    <SelectCpn
+                      value={Export.discount_tp}
+                      onChange={handleChangeDiscount}
+                      name="discount_tp"
+                      label="Loại CK"
+                    >
+                      <MenuItem value="1">{t("Tiền mặt")}</MenuItem>
+                      <MenuItem value="2">{t("% Hóa đơn")}</MenuItem>
+                    </SelectCpn>
+                  </div>
+                  <div className="w-50">
+                    <TextFieldCpn
+                      value={glb_sv.formatValue(
+                        Export.invoice_discount || 0,
+                        "number"
+                      )}
+                      label={" "}
+                      name="invoice_discount"
+                      onChange={handleChangeInvoiceDiscount}
+                      disabled={!Export?.discount_tp}
+                      align="right"
+                    />
+                  </div>
+                </div>
                 <TextFieldCpn
                   align="right"
                   className="mt-1"
@@ -2125,7 +2154,7 @@ const InsExport = () => {
                       {isScan ? (
                         <div id="search-product">
                           <TextField
-                            style={{ width: "300px" }}
+                            style={{ width: "350px" }}
                             size={"small"}
                             label={t("search_btn")}
                             variant="outlined"
@@ -2142,7 +2171,7 @@ const InsExport = () => {
                                 <>
                                   <ListItem
                                     button
-                                    className="cursor-pointer w-100"
+                                    className="item-inventory cursor-pointer w-100"
                                     key={index}
                                     onClick={() => {
                                       handleShowModalPrice(data);
@@ -2152,7 +2181,9 @@ const InsExport = () => {
                                     }}
                                   >
                                     <Avatar
-                                      className="custom-avatar"
+                                      style={{width: "60px"}}
+                                      className="medium-avata"
+                                      sizes="100"
                                       variant="square"
                                       src={`${glb_sv.configInfo.domain}/upload/product/${data.o_10}`}
                                     >

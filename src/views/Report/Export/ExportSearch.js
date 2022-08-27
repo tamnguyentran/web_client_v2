@@ -19,6 +19,8 @@ import Dictionary_Autocomplete from "../../../components/Dictionary_Autocomplete
 import LoopIcon from "@material-ui/icons/Loop";
 import { Dictionary } from "../../../components/Autocomplete";
 import { Unit, Product } from "../../../components/Autocomplete";
+import glb_sv from "../../../utils/service/global_service";
+
 
 import {
   TextFieldCpn,
@@ -32,8 +34,8 @@ const ExportSearch = ({ handleSearch, process = false }) => {
   const { t } = useTranslation();
 
   const [searchModal, setSearchModal] = useState({
-    start_dt: moment().subtract(1, "month").toString(),
-    end_dt: moment().toString(),
+    start_dt: glb_sv.startDay,
+    end_dt: glb_sv.endDay,
     customer_nm: "",
     customer_id: null,
     invoice_no: "",
@@ -126,7 +128,7 @@ const ExportSearch = ({ handleSearch, process = false }) => {
           />
           <SelectCpn
             className="mt-1"
-            label={t("Trạng thái hợp đồng")}
+            label={t("Trạng thái hóa đơn")}
             value={searchModal.invoice_status || "1"}
             onChange={handleChange}
             onKeyPress={(key) => {
@@ -146,6 +148,12 @@ const ExportSearch = ({ handleSearch, process = false }) => {
             onKeyPress={(key) => {
               if (key.which === 13) return handleSearch(searchModal);
             }}
+          />
+        </div>
+        <div className="mt-2">
+          <ButtonCpn.ButtonSearch
+            process={process}
+            onClick={() => handleSearch(searchModal)}
           />
         </div>
       </div>

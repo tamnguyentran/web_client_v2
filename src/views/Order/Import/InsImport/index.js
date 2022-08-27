@@ -250,7 +250,7 @@ const ProductImport = () => {
       searchModalInvoice.id_status,
       searchModalInvoice.vender_nm
     );
-  }, [openModalShowBill]);
+  }, []);
 
   useEffect(() => {
     if (id !== 0) {
@@ -721,7 +721,14 @@ const ProductImport = () => {
       // xử lý thành công
       dataWaitAdd.current = [];
       setResetFormAddFlag(true);
-      setIsIndexRow(null);
+      dataHistoryListInvoiceRef.current = [];
+      getListBill(
+        searchModalInvoice.start_dt,
+        searchModalInvoice.end_dt,
+        searchModalInvoice.last_id,
+        searchModalInvoice.id_status,
+        searchModalInvoice.vender_nm
+      );
       setTimeout(() => {
         setResetFormAddFlag(false);
       }, 1000);
@@ -1052,7 +1059,7 @@ const ProductImport = () => {
     <>
       <div className="layout-page p-2">
         <Wrapper.WrapperTable isShowLayout={true} hiddenIcon={true}>
-          <Wrapper.WrapperHeader>
+        <Wrapper.WrapperHeader className="border-none">
             <div>
               <Breadcrumb description="Đây là trang giúp bạn nhập hàng cho nhà thuốc" />
             </div>
@@ -1072,7 +1079,7 @@ const ProductImport = () => {
                 <div>H.Đ mới</div>
               </Button>
               <div
-                className="flex cursor-pointer"
+                className="flex cursor-pointer ml-2"
                 style={{
                   overflowX: "auto",
                   maxWidth: `${
@@ -1096,11 +1103,11 @@ const ProductImport = () => {
                         setDisableUpdateInvoice(false);
                       }}
                     >
-                      <div className="fz15 text-center text-black2 item-receipt">
-                        H.Đơn {item.o_2}
+                      <div className="fz11 text-center text-black2 item-receipt">
+                        {item.o_2}
                       </div>
-                      <div className="fz15 text-green2">
-                        {moment(item.o_7, "YYYYMMDD").format("DD/MM/YYYY")}
+                      <div className="fz11 text-green2 text-center">
+                        {moment(item.o_20, "DDMMYYYYhhmmss").format('hh:mm:ss')}
                       </div>
                     </div>
                   );
@@ -1124,7 +1131,6 @@ const ProductImport = () => {
               />
               <ListProductImport
                 column={column}
-                // handleClickEdit={handleClickEdit}
                 isIndexRow={isIndexRow}
                 setIsIndexRow={setIsIndexRow}
                 updateDataListProduct={updateDataListProduct}
@@ -1157,7 +1163,6 @@ const ProductImport = () => {
                 name="invoice_no"
                 />
                 <AddSupplier
-                  // autoFocus={true}
                   value={supplierSelect || ""}
                   size={"small"}
                   onSelect={handleSelectSupplier}
@@ -1175,7 +1180,17 @@ const ProductImport = () => {
                   label="Ngày nhập hàng (*)"
                   format="dd/MM/yyyy"
                 />
-                <div className="flex align-items-end">
+                 <TextFieldCpn
+                  value={glb_sv.formatValue(
+                    Import.invoice_val || 0,
+                    "currency"
+                  )}
+                  align="right"
+                  className="mt-1"
+                  label={t("Giá trị HĐ")}
+                  disabled={true}
+                />
+                <div className="flex align-items-end mt-1">
                   <div className="mr-2" style={{ width: "50%" }}>
                     <SelectCpn
                       value={Import.discount_tp}
@@ -1187,6 +1202,7 @@ const ProductImport = () => {
                       <MenuItem value="2">{t("% Hóa đơn")}</MenuItem>
                     </SelectCpn>
                   </div>
+                  
                   <div style={{ width: "50%" }}>
                     <TextFieldCpn
                       value={glb_sv.formatValue(
@@ -1197,19 +1213,10 @@ const ProductImport = () => {
                       name="discount_val"
                       onChange={handleChangeInvoiceDiscount}
                       disabled={!Import?.discount_tp}
+                      align="right"
                     />
                   </div>
                 </div>
-                <TextFieldCpn
-                  value={glb_sv.formatValue(
-                    Import.invoice_val || 0,
-                    "currency"
-                  )}
-                  align="right"
-                  className="mt-1"
-                  label={t("Giá trị HĐ")}
-                  disabled={true}
-                />
                 <TextFieldCpn
                   value={glb_sv.formatValue(
                     Math.round(paymentInfo.invoice_needpay) || 0,
@@ -1225,7 +1232,10 @@ const ProductImport = () => {
                   className="mt-1"
                   label={t("Nhà thuốc trả")}
                   name="payment_amount"
-                  value={glb_sv.formatValue(Import.payment_amount, "number")}
+                  value={glb_sv.formatValue(
+                    Math.round(paymentInfo.invoice_needpay) || 0,
+                    "currency"
+                  )}
                   onChange={handleAmountChange}
                   disabled = {Import.invoice_val === 0}
                 />
@@ -1330,6 +1340,13 @@ const ProductImport = () => {
             </CardActions>
           </Card>
         </Dialog>
+        <div className="dl-none">
+            <Import_Bill
+              headerModal={Import}
+              detailModal={dataSource}
+              componentRef={componentPrint}
+            />
+          </div>
       </div>
       {false && (
         <Grid container spacing={1} className="h-100">

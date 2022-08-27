@@ -816,7 +816,7 @@
             "unitChild": "Đơn vị bậc con",
             "note": "Ghi chú",
             "rule": "Nguyên tắc",
-            "rate": "SL quy đổi ra đv nhỏ nhất",
+            "rate": "Số lượng quy đổi",
             "minRate": "Đơn vị tính nhỏ nhất"
         },
         "price": {
