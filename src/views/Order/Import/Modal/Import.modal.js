@@ -141,7 +141,7 @@ const tableListEditColumn = [
 ]
 
 const searchDefaultModalInvoice = {
-    start_dt: moment().subtract(1, 'days').format('YYYYMMDD'),
+    start_dt: moment().format("YYYYMMDD"),
     end_dt: moment().format('YYYYMMDD'),
     last_id: 999999999999,
     id_status: "1",

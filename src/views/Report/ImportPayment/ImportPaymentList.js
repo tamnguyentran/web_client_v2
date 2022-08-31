@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -26,6 +27,7 @@ import {
   Tooltip,
   Grid,
   CardActions,
+  Button,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import moment from "moment";
@@ -39,6 +41,8 @@ import {
   ButtonCpn,
 } from "../../../basicComponents";
 
+import { ReactComponent as IC_ADD } from "../../../asset/images/add.svg";
+
 const serviceInfo = {
   GET_ALL: {
     functionName: "set_imp_time",
@@ -50,6 +54,7 @@ const serviceInfo = {
 
 const ImportPaymentList = () => {
   const { t } = useTranslation();
+  const history = useHistory();
   const [anChorEl, setAnChorEl] = useState(null);
   const [column, setColumn] = useState(tableColumn);
   const [searchModal, setSearchModal] = useState({ ...searchDefaultModal });
@@ -99,6 +104,12 @@ const ImportPaymentList = () => {
 
   const handleResultGetAll = (reqInfoMap, message) => {
     setSearchProcess(false);
+    SnackBarService.alert(
+      message["PROC_MESSAGE"],
+      true,
+      message["PROC_STATUS"],
+      3000
+    );
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       const cltSeqResult = message["REQUEST_SEQ"];
@@ -261,7 +272,18 @@ const ImportPaymentList = () => {
               <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, xem thông tin thanh toán nhập hàng của sản phẩm" />
             </div>
             <div className="flex">
-              {/* <WarnTimeAdd onRefresh={handleRefresh} /> */}
+              <Button
+                style={{ height: "35px" }}
+                size="medium"
+                variant="contained"
+                className="primary-bg text-white"
+                onClick={() => {
+                  history.push("/page/settlement/import")
+                }}
+              >
+                {" "}
+                <IC_ADD /> Tạo phiếu thanh toán
+              </Button>
               &ensp;
               <DisplayColumn
                 columns={tableColumn}

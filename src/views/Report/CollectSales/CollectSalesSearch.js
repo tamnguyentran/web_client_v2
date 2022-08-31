@@ -86,16 +86,6 @@ const CollectSalesSearch = ({ handleSearch, process = false }) => {
         </div>
         <div className="mb-4">
           <TitleFilterCpn className="mb-2" label="Lọc theo thông tin" />
-          <TextFieldCpn
-            className="mb-1"
-            label="Số hoá đơn"
-            onChange={handleChange}
-            onKeyPress={(key) => {
-              if (key.which === 13) return handleSearch(searchModal);
-            }}
-            value={searchModal.invoice_no}
-            name="invoice_no"
-          />
           <Dictionary
             directionName="customers"
             value={searchModal.customer_nm || ""}
@@ -105,6 +95,16 @@ const CollectSalesSearch = ({ handleSearch, process = false }) => {
             onKeyPress={(key) => {
               if (key.which === 13) return handleSearch(searchModal);
             }}
+          />
+          <TextFieldCpn
+            className="mt-1"
+            label="Số hoá đơn"
+            onChange={handleChange}
+            onKeyPress={(key) => {
+              if (key.which === 13) return handleSearch(searchModal);
+            }}
+            value={searchModal.invoice_no}
+            name="invoice_no"
           />
         </div>
         <div className="mt-2">

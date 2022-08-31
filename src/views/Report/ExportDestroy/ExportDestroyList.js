@@ -92,6 +92,7 @@ const ExportDestroyList = () => {
       last_invoice_id || glb_sv.defaultValueSearch,
       last_invoice_detail_id || glb_sv.defaultValueSearch,
     ];
+    console.log(inputParam)
     sendRequest(
       serviceInfo.GET_ALL,
       inputParam,
@@ -258,7 +259,6 @@ const ExportDestroyList = () => {
               <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, xem thông tin xuất huỷ của sản phẩm" />
             </div>
             <div className="flex">
-              {/* <WarnTimeAdd onRefresh={handleRefresh} /> */}
               &ensp;
               <DisplayColumn
                 columns={tableColumn}

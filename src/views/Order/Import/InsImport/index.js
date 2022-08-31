@@ -979,7 +979,16 @@ const ProductImport = () => {
         serviceInfo.UPDATE_PRODUCT_TO_INVOICE,
         inputParam,
         handleResultUpdateProduct,
-        true,
+        (e) => {
+          sendRequest(
+            serviceInfo.GET_ALL_PRODUCT_BY_INVOICE_ID,
+            [newInvoiceId.current],
+            handleGetAllProductByInvoiceID,
+            true,
+            handleTimeOut
+          );
+          handleTimeOut(e);
+        },
         handleTimeOut
       );
     }, 800),
@@ -989,9 +998,16 @@ const ProductImport = () => {
   const handleResultUpdateProduct = (reqInfoMap, message) => {
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
+      SnackBarService.alert(
+        message["PROC_MESSAGE"],
+        true,
+        message["PROC_STATUS"],
+        3000
+      );
       const cltSeqResult = message["REQUEST_SEQ"];
       glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
       control_sv.clearReqInfoMapRequest(cltSeqResult);
+      handleRefresh();
     } else if (message["PROC_DATA"]) {
       handleRefresh();
     }
@@ -1053,6 +1069,10 @@ const ProductImport = () => {
   const handleChangeDiscount = (e) => {
     const { value, name } = e.target;
     setImport((pre) => ({ ...pre, [`${name}`]: value, discount_val: 0 }));
+  };
+
+  const handleSupplierId = (value) => {
+    setImport((pre) => ({ ...pre, supplier: value }));
   };
 
   return (
@@ -1163,6 +1183,8 @@ const ProductImport = () => {
                 name="invoice_no"
                 />
                 <AddSupplier
+                  handleSupplierId={handleSupplierId}
+                  closeIcon={() => {}}
                   value={supplierSelect || ""}
                   size={"small"}
                   onSelect={handleSelectSupplier}
@@ -1196,7 +1218,7 @@ const ProductImport = () => {
                       value={Import.discount_tp}
                       onChange={handleChangeDiscount}
                       name="discount_tp"
-                      label="Loại CK"
+                      label="Loại chiết khấu"
                     >
                       <MenuItem value="1">{t("Tiền mặt")}</MenuItem>
                       <MenuItem value="2">{t("% Hóa đơn")}</MenuItem>
@@ -1345,6 +1367,7 @@ const ProductImport = () => {
               headerModal={Import}
               detailModal={dataSource}
               componentRef={componentPrint}
+              paymentInfo={paymentInfo}
             />
           </div>
       </div>

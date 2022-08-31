@@ -296,10 +296,13 @@ const CustomerList = () => {
         <Wrapper.WrapperFilter isShowLayout={isShowLayout}>
           <div className="p-2">
             <div className="mb-4">
-              {/* <ImportSearch
-                process={searchProcess}
-                handleSearch={searchSubmit}
-              /> */}
+            <TitleFilterCpn className="mb-2" label="Tìm kiếm" />
+            <SearchOne
+            process={searchProcess}
+            name="supplier_name"
+            label={"partner.customer.search_name"}
+            searchSubmit={searchSubmit}
+          />
             </div>
           </div>
         </Wrapper.WrapperFilter>
@@ -424,7 +427,7 @@ const CustomerList = () => {
           </Wrapper.WrapperFooter>
         </Wrapper.WrapperTable>
       </div>
-     {false && <>
+     {true && <>
       <Card className="mb-2">
       <CardHeader
           title={<div className="flex aligh-item-center">{<Breadcrumb />}</div>}

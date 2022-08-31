@@ -103,10 +103,10 @@ const PriceAdd = ({ onRefresh }) => {
       Price.product,
       Price.unit,
       Price.importPrice,
-      Price.importVAT,
+      Price.importVAT || 0,
       Price.price,
       Price.wholePrice,
-      Price.exportVAT,
+      Price.exportVAT || 0,
       Price.note || "",
     ];
     setControlTimeOutKey(
@@ -269,7 +269,7 @@ const PriceAdd = ({ onRefresh }) => {
       </Button>
       <Dialog
         fullWidth={false}
-        maxWidth="md"
+        maxWidth="xl"
         open={shouldOpenModal}
         // onClose={e => {
         //     setShouldOpenModal(false)
@@ -311,7 +311,7 @@ const PriceAdd = ({ onRefresh }) => {
                   }}
                 />
               </Grid>
-              <Grid item xs={6} sm={4}>
+              <Grid item xs={6} sm={6}>
                 {/* <Unit_Autocomplete
                   unitID={Price.unit || null}
                   style={{ marginTop: 8, marginBottom: 4 }}
@@ -338,7 +338,7 @@ const PriceAdd = ({ onRefresh }) => {
                   }}
                 />
               </Grid>
-              <Grid item xs={6} sm={4}>
+              <Grid item xs={6} sm={6}>
                 <TextFieldCpn
                   label={t("Giá nhập (*)")}
                   onChange={handleImportPriceChange}
@@ -376,8 +376,8 @@ const PriceAdd = ({ onRefresh }) => {
                   }}
                 /> */}
               </Grid>
-              <Grid item xs={6} sm={4}>
-                <TextFieldCpn
+              {/* <Grid item xs={6} sm={4}> */}
+                {/* <TextFieldCpn
                   label={t("VAT nhập % (*)")}
                   onChange={handleImportVATChange}
                   value={Price.importVAT || 0}
@@ -388,7 +388,7 @@ const PriceAdd = ({ onRefresh }) => {
                       step5Ref.current.focus();
                     }
                   }}
-                />
+                /> */}
                 {/* <NumberFormat
                   className="inputNumber"
                   style={{ width: "100%" }}
@@ -415,9 +415,9 @@ const PriceAdd = ({ onRefresh }) => {
                     }
                   }}
                 /> */}
-              </Grid>
+              {/* </Grid> */}
             </Grid>
-            <Grid container spacing={1}>
+            <Grid container spacing={1} >
               <Grid item xs>
                 <TextFieldCpn
                   label={t("Giá bán lẻ (*)")}
@@ -494,8 +494,8 @@ const PriceAdd = ({ onRefresh }) => {
                   }}
                 /> */}
               </Grid>
-              <Grid item xs>
-                <TextFieldCpn
+              {/* <Grid item xs> */}
+                {/* <TextFieldCpn
                   label={t("VAT xuất % (*)")}
                   onChange={handleExportVATChange}
                   value={Price.exportVAT || 0}
@@ -506,7 +506,7 @@ const PriceAdd = ({ onRefresh }) => {
                       step8Ref.current.focus();
                     }
                   }}
-                />
+                /> */}
                 {/* <NumberFormat
                   className="inputNumber"
                   style={{ width: "100%" }}
@@ -533,7 +533,7 @@ const PriceAdd = ({ onRefresh }) => {
                     }
                   }}
                 /> */}
-              </Grid>
+              {/* </Grid> */}
             </Grid>
             <Grid container>
               {/* <TextField

@@ -35,6 +35,8 @@ export default function AutocompleteCpn(props) {
     inputRef,
     inputValue = "",
     placeholder = "",
+    defaultValue = "",
+    closeIcon,
     renderInput = (params) => (
       <TextField
         inputRef={inputRef}
@@ -55,6 +57,8 @@ export default function AutocompleteCpn(props) {
     >
       <div className="text-label-input">{label}</div>
       <Autocomplete
+        closeIcon={closeIcon}
+        defaultValue={defaultValue}
         className="custom-input w-100"
         size={size}
         options={options}

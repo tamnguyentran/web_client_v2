@@ -14,7 +14,7 @@ const tableColumn = [
         align: 'center',
     },
     { field: 'o_7', title: 'product.name', show: true, disabled: true, minWidth: 100 },
-    { field: 'o_8', title: 'order.import.lot_no', show: true, disabled: true, minWidth: 100, align: "right"  },
+    { field: 'o_8', title: 'order.import.lot_no', show: true, disabled: true, minWidth: 100, align: "left"  },
     {
         field: 'o_9',
         title: 'order.import.exp_dt',
@@ -41,6 +41,7 @@ const tableColumn = [
         disabled: false,
         minWidth: 100,
         type: 'currency',
+        align: "right"
     },
     {
         field: 'o_14',

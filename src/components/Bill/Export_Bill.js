@@ -32,7 +32,7 @@ const serviceInfo = {
     }
 }
 
-const Export_Bill = ({ headerModal, detailModal, className, componentRef }) => {
+const Export_Bill = ({ headerModal, detailModal, className, componentRef, paymentInfo }) => {
     const { t } = useTranslation()
     const classes = useStyles()
     const [pharmacyInfo, setPharmacyInfo] = useState(initPharmacyInfo)
@@ -71,7 +71,7 @@ const Export_Bill = ({ headerModal, detailModal, className, componentRef }) => {
         SnackBarService.alert(t(`message.${e.type}`), true, 4, 3000)
     }
 
-    console.log(detailModal)
+    console.log(detailModal, paymentInfo)
 
     return (
         <div className={className} ref={componentRef}>
@@ -106,7 +106,7 @@ const Export_Bill = ({ headerModal, detailModal, className, componentRef }) => {
                         </div>
                     </div>
                     <div>
-                        <h2 style={{ marginTop: '20px', fontSize: '30pt', textAlign: 'center' }}><b>{t('invoice')}</b></h2>
+                        <h2 style={{ marginTop: '20px', fontSize: '30pt', textAlign: 'center' }}><b>{t('HÓA ĐƠN XUẤT BÁN')}</b></h2>
                     </div>
                     <div style={{ fontSize: '12pt', marginLeft: '10px' }}>
                         <span style={{ marginTop: '20px' }}><b>{t('invoice_code')}: </b>{headerModal.invoice_no}</span>
@@ -126,8 +126,8 @@ const Export_Bill = ({ headerModal, detailModal, className, componentRef }) => {
                                     <th style={{ width: '8%' }} >{t('qty')}</th>
                                     <th style={{ width: '10%' }} >{t('unit')}</th>
                                     <th style={{ width: '10%' }} >{t('report.export_order.price')}</th>
-                                    <th style={{ width: '8%' }} >{t('report.discount_per')}</th>
-                                    <th style={{ width: '8%' }} >{t('report.vat_per')}</th>
+                                    <th style={{ width: '8%' }} >{t('Chiết khấu')}</th>
+                                    {/* <th style={{ width: '8%' }} >{t('report.vat_per')}</th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -157,11 +157,11 @@ const Export_Bill = ({ headerModal, detailModal, className, componentRef }) => {
                                                     {formatCurrency(!!details.o_11 ? details.o_11 : '')}
                                                 </td>
                                                 <td className='number' style={{ textAlign: 'right' }}>
-                                                    {formatCurrency(!!details.o_12 ? details.o_12 : '')}
+                                                {glb_sv.formatValue((+headerModal.invoice_val - +paymentInfo?.invoice_needpay),"currency")}
                                                 </td>
-                                                <td className='number' style={{ textAlign: 'right' }}>
+                                                {/* <td className='number' style={{ textAlign: 'right' }}>
                                                     {formatCurrency(!!details.o_13 ? details.o_13 : '')}
-                                                </td>
+                                                </td> */}
                                             </tr>
                                         </React.Fragment>
                                     );
@@ -173,14 +173,14 @@ const Export_Bill = ({ headerModal, detailModal, className, componentRef }) => {
                         <span style={{ fontSize: '12pt', marginRight: '1rem' }}>
                             <span><b>{t('order.export.invoice_val')}</b></span><br />
                             <span><b>{t('order.export.invoice_discount')}</b></span><br />
-                            <span><b>{t('order.export.invoice_vat')}</b></span><br />
+                            {/* <span><b>{t('order.export.invoice_vat')}</b></span><br /> */}
                             <span><b>{t('order.export.invoice_needpay')}</b></span><br />
                         </span>
                         <span style={{ textAlign: 'right', marginLeft: '2px', fontSize: '12pt' }}>
-                            <span>{headerModal.invoice_val ? formatCurrency(headerModal.invoice_val) + t('currency') : ''}</span><br />
+                            <span>{headerModal.invoice_val ? formatCurrency(Math.round(headerModal.invoice_val)) + t('currency') : ''}</span><br />
                             <span>{headerModal.invoice_discount ? formatCurrency(headerModal.invoice_discount) + t('currency') : ''}</span><br />
-                            <span>{headerModal.invoice_vat ? formatCurrency(headerModal.invoice_vat) + t('currency') : ''}</span><br />
-                            <span>{headerModal.invoice_val ? formatCurrency(headerModal.invoice_val - headerModal.invoice_discount + headerModal.invoice_vat) + t('currency') : ''}</span><br />
+                            {/* <span>{headerModal.invoice_vat ? formatCurrency(headerModal.invoice_vat) + t('currency') : ''}</span><br /> */}
+                            <span>{glb_sv.formatValue(Math.round(paymentInfo.invoice_needpay) || 0,"currency") + t('currency')}</span>
                         </span>
                     </div>
                 </div>

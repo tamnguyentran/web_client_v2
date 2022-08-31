@@ -215,8 +215,8 @@ const InsExport = () => {
     ...searchDefaultModalInvoice,
   });
   const [totalRecordsListInvoice, setTotalRecordsListInvoice] = useState(0);
+  const [customerId, setCustomerId] = useState(null);
 
-  // const [disableInputBarCode, setDisableInputBarCode] = useState(false)
 
   const componentPrint = useRef(null);
   const dataWaitAdd = useRef({});
@@ -257,12 +257,9 @@ const InsExport = () => {
         : (newData["invoice_val"] * Export.invoice_discount) / 100;
     newData["invoice_needpay"] =
       newData.invoice_val - newData.invoice_discount || 0;
-    // setExport((prevState) => {
-    //   return { ...prevState, ...{ payment_amount: newData.invoice_needpay } };
-    // });
     setPaymentInfo(newData);
   }, [dataSource, Export.discount_tp, Export.invoice_discount]);
-
+console.log(paymentInfo)
   useEffect(() => {
     dataSourceRef.current = [];
     getList(
@@ -299,7 +296,6 @@ const InsExport = () => {
   }, [dataProductBarCode]);
   //-- xử lý khi timeout -> ko nhận được phản hồi từ server
 
-  useEffect(() => {}, []);
   const headersCSV = [
     { label: t("stt"), key: "stt" },
     { label: t("order.export.prod_nm"), key: "prod_nm" },
@@ -520,16 +516,9 @@ const InsExport = () => {
   const handleAddProduce = () => {
     setListInventoryProduct([]);
     setDataSearchInput("");
-    if (
-      !Export.customer_id ||
-      !Export.order_dt
-      // !Export.invoice_discount ||
-      // !Export.discount_tp
-    ) {
+    if (!Export.customer_id || !Export.order_dt) {
       SnackBarService.alert(
-        t(
-          "Khách hàng, ngày xuất hàng là bắt buộc chọn"
-        ),
+        t("Khách hàng, ngày xuất hàng là bắt buộc chọn"),
         true,
         4,
         3000
@@ -640,9 +629,7 @@ const InsExport = () => {
       // !Export.discount_tp
     ) {
       SnackBarService.alert(
-        t(
-          "Khách hàng, ngày xuất hàng là bắt buộc chọn"
-        ),
+        t("Khách hàng, ngày xuất hàng là bắt buộc chọn"),
         true,
         4,
         3000
@@ -669,12 +656,6 @@ const InsExport = () => {
   };
 
   const handleResultCreateInvoice = (reqInfoMap, message) => {
-    // SnackBarService.alert(
-    //   message["PROC_MESSAGE"],
-    //   true,
-    //   message["PROC_STATUS"],
-    //   3000
-    // );
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
 
@@ -693,7 +674,7 @@ const InsExport = () => {
           true,
           handleTimeOut
         );
-        dataHistoryListInvoiceRef.current = []
+        dataHistoryListInvoiceRef.current = [];
         getListInvoice(
           searchModalInvoice.start_dt,
           searchModalInvoice.end_dt,
@@ -752,7 +733,7 @@ const InsExport = () => {
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       handleCallApiFail(reqInfoMap, message);
-      setDataSource([])
+      setDataSource([]);
     } else if (message["PROC_DATA"]) {
       // xử lý thành công
       let newData = message["PROC_DATA"];
@@ -837,7 +818,7 @@ const InsExport = () => {
         qty, // Số lượng
         price,
         0,
-        0
+        0,
       ];
       sendRequest(
         serviceInfo.UPDATE_PRODUCT_TO_INVOICE,
@@ -851,10 +832,10 @@ const InsExport = () => {
             handleGetAllProductByInvoiceID,
             true,
             () => {
-              setDataSource([])
+              setDataSource([]);
             }
           );
-          handleTimeOut(e)
+          handleTimeOut(e);
         }
       );
     }, 800),
@@ -862,7 +843,7 @@ const InsExport = () => {
   );
 
   const handleChangeQtyProductInvoice = (type, item, index, valueQty) => {
-    let tempQty = productInfo[index].expQty
+    let tempQty = productInfo[index].expQty;
     if (type === "change") {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expQty: valueQty };
@@ -875,29 +856,21 @@ const InsExport = () => {
         pre[index] = { ...pre[index], expQty: pre[index].expQty + 1 };
         return [...pre];
       });
-      tempQty++
-      return updateDataListProduct(
-        tempQty,
-        item.o_11,
-        item
-      )
+      tempQty++;
+      return updateDataListProduct(tempQty, item.o_11, item);
     } else if (productInfo[index].expQty > 1) {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expQty: pre[index].expQty - 1 };
         return [...pre];
       });
-      tempQty--
-      return updateDataListProduct(
-        tempQty,
-        item.o_11,
-        item
-      );
+      tempQty--;
+      return updateDataListProduct(tempQty, item.o_11, item);
     }
     return updateDataListProduct(1, item.o_11, item);
   };
 
   const handleChangePriceProductInvoice = (type, item, index, valuePrice) => {
-    let tempPrice = productInfo[index].expPrice
+    let tempPrice = productInfo[index].expPrice;
     if (type === "change" && valuePrice > 0) {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expPrice: valuePrice };
@@ -910,23 +883,15 @@ const InsExport = () => {
         pre[index] = { ...pre[index], expPrice: pre[index].expPrice + 1000 };
         return [...pre];
       });
-      tempPrice = tempPrice + 1000
-      return updateDataListProduct(
-        item.o_8,
-        tempPrice,
-        item
-      );
+      tempPrice = tempPrice + 1000;
+      return updateDataListProduct(item.o_8, tempPrice, item);
     } else if (productInfo[index].expPrice > 1000) {
       setProductInfo((pre) => {
         pre[index] = { ...pre[index], expPrice: pre[index].expPrice - 1000 };
         return [...pre];
       });
-      tempPrice = tempPrice - 1000
-      return updateDataListProduct(
-        item.o_8,
-        tempPrice,
-        item
-      );
+      tempPrice = tempPrice - 1000;
+      return updateDataListProduct(item.o_8, tempPrice, item);
     }
     return updateDataListProduct(item.o_8, tempPrice, item);
   };
@@ -1030,16 +995,11 @@ const InsExport = () => {
   };
 
   const checkValidate = () => {
-    if (
-      !!Export.customer_id &&
-      !!Export.order_dt &&
-      invoiceFlag
-    ) {
+    if (!!Export.customer_id && !!Export.order_dt && invoiceFlag) {
       return false;
     }
     return true;
   };
-
 
   const handleUpdateInvoice = () => {
     if (!Export.invoice_id && !invoiceFlag) {
@@ -1064,7 +1024,7 @@ const InsExport = () => {
       "",
       Export?.discount_tp || "1",
       Export?.invoice_discount || 0,
-      ""
+      "",
     ];
     sendRequest(
       serviceInfo.UPDATE_INVOICE,
@@ -1205,6 +1165,10 @@ const InsExport = () => {
         [`${name}`]: glb_sv.formatValue(value, "number"),
       }));
     }
+  };
+
+  const handleCustomerId = (value) => {
+    setExport((pre) => ({ ...pre, customer_id: value }));
   };
 
   return (
@@ -1398,7 +1362,7 @@ const InsExport = () => {
                         {item.o_2}
                       </div>
                       <div className="fz11 text-green2 text-center">
-                        {moment(item.o_11, "DDMMYYYYhhmmss").format('hh:mm:ss')}
+                        {moment(item.o_11, "DDMMYYYYhhmmss").format("hh:mm:ss")}
                       </div>
                     </div>
                   );
@@ -1414,7 +1378,11 @@ const InsExport = () => {
             }}
           >
             <Wrapper.WrapperTable
-              style={{ width: "calc(100% - 22% - 8px)", minWidth: "800px", border:"none" }}
+              style={{
+                width: "calc(100% - 22% - 8px)",
+                minWidth: "800px",
+                border: "none",
+              }}
               hiddenIcon={true}
             >
               <div className="pl-2" style={{ height: "45%" }}>
@@ -1818,8 +1786,9 @@ const InsExport = () => {
                 <AddCustomer
                   className="mt-1"
                   value={customerSelect || ""}
-                  // autoFocus={true}
+                  closeIcon={() => {}}
                   size={"small"}
+                  handleCustomerId={handleCustomerId}
                   label={t("Khách hàng (*)")}
                   onSelect={handleSelectCustomer}
                   onCreate={(id) =>
@@ -1844,13 +1813,13 @@ const InsExport = () => {
                   label={t("Giá trị HĐ")}
                   disabled={true}
                 />
-                <div className="flex align-items-end">
+                <div className="flex align-items-end mt-1">
                   <div className="mr-2 w-50">
                     <SelectCpn
                       value={Export.discount_tp}
                       onChange={handleChangeDiscount}
                       name="discount_tp"
-                      label="Loại CK"
+                      label="Loại chiết khấu"
                     >
                       <MenuItem value="1">{t("Tiền mặt")}</MenuItem>
                       <MenuItem value="2">{t("% Hóa đơn")}</MenuItem>
@@ -1946,6 +1915,7 @@ const InsExport = () => {
             headerModal={Export}
             detailModal={dataSource}
             componentRef={componentPrint}
+            paymentInfo={paymentInfo}
           />
         </div>
         <Dialog
@@ -2181,7 +2151,7 @@ const InsExport = () => {
                                     }}
                                   >
                                     <Avatar
-                                      style={{width: "60px"}}
+                                      style={{ width: "60px" }}
                                       className="medium-avata"
                                       sizes="100"
                                       variant="square"

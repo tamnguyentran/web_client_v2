@@ -24,12 +24,14 @@ import ExportExcel from "../../../components/ExportExcel";
 import DisplayColumn from "../../../components/DisplayColumn";
 import Breadcrumb from "../../../components/Breadcrumb/View";
 
+
 import {
   TitleFilterCpn,
   Wrapper,
   IconButtonCpn,
   ButtonCpn,
 } from "../../../basicComponents";
+
 
 const serviceInfo = {
   GET_ALL: {
@@ -97,6 +99,12 @@ const ImportList = () => {
 
   const handleResultGetAll = (reqInfoMap, message) => {
     setSearchProcess(false);
+    SnackBarService.alert(
+      message["PROC_MESSAGE"],
+      true,
+      message["PROC_STATUS"],
+      3000
+    );
     if (message["PROC_STATUS"] !== 1) {
       // xử lý thất bại
       const cltSeqResult = message["REQUEST_SEQ"];
@@ -355,7 +363,7 @@ const ImportList = () => {
           </Wrapper.WrapperFooter>
         </Wrapper.WrapperTable>
       </div>
-      {true && (
+      {false && (
         <>
           <Card className="mb-2">
             <CardHeader

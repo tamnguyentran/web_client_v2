@@ -88,9 +88,8 @@ const LoginLayout = () => {
     }
 
   const handleResultLogin = (reqInfoMap, message) => {
-    console.log(reqInfoMap, message)
     setProcess(false);
-    if(message["PROC_CODE"] = "0XX4"){
+    if(message["PROC_CODE"] === "0XX4"){
       return history.push('/page/dashboard')
     }
     if (message["PROC_STATUS"] !== 1) {

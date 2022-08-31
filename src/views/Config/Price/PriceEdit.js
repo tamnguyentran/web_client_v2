@@ -129,13 +129,15 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
     const inputParam = [
       Price.o_1,
       Price.o_4,
-      Price.o_6,
-      Price.o_7,
-      Price.o_8,
-      Price.o_9,
-      Price.o_10,
+      glb_sv.filterNumber(Price.o_6),
+      Price.o_7 || 0,
+      glb_sv.filterNumber(Price.o_8),
+      glb_sv.filterNumber(Price.o_9),
+      Price.o_10 || 0,
       Price.o_11 || "",
     ];
+
+    console.log(inputParam)
     setControlTimeOutKey(
       serviceInfo.UPDATE.reqFunct + "|" + JSON.stringify(inputParam)
     );
@@ -162,13 +164,13 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
       !!Price.o_4 &&
       !!Price.o_6 &&
       Price.o_6 > 0 &&
-      Price.o_7 <= 100 &&
-      Price.o_7 >= 0 &&
+      // Price.o_7 <= 100 &&
+      // Price.o_7 >= 0 &&
       Price.o_8 > 0 &&
       !!Price.o_9 &&
-      Price.o_9 > 0 &&
-      Price.o_10 <= 100 &&
-      Price.o_10 > 0
+      Price.o_9 > 0
+      // Price.o_10 <= 100 &&
+      // Price.o_10 > 0
     ) {
       return false;
     }
@@ -231,7 +233,7 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
       // }}
     >
       <Card>
-        <CardHeader title={t("config.price.titleEdit", { name: Price.o_3 })} />
+        <CardHeader className="card-header" title={t("config.price.titleEdit", { name: Price.o_3 })} />
         <CardContent>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={12}>
@@ -249,7 +251,7 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                 value={Price.o_3}
               />
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={6} sm={6}>
               <Unit
                 size={"small"}
                 label={t("Đơn vị (*)")}
@@ -277,7 +279,7 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                 }}
               /> */}
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={6} sm={6}>
               <TextFieldCpn
                 label={t("Giá nhập (*)")}
                 onChange={handleImportPriceChange}
@@ -315,8 +317,8 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                 }}
               /> */}
             </Grid>
-            <Grid item xs={6} sm={4}>
-              <TextFieldCpn
+            {/* <Grid item xs={6} sm={4}> */}
+              {/* <TextFieldCpn
                 label={t("VAT nhập (*)")}
                 onChange={handleImportVATChange}
                 onFocus={(e) => e.target.select()}
@@ -327,7 +329,7 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                     step4Ref.current.focus();
                   }
                 }}
-              />
+              /> */}
               {/* <NumberFormat
                 className="inputNumber"
                 style={{ width: "100%" }}
@@ -354,7 +356,7 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                   }
                 }}
               /> */}
-            </Grid>
+            {/* </Grid> */}
           </Grid>
           <Grid container spacing={1}>
             <Grid item xs>
@@ -433,8 +435,8 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                 }}
               /> */}
             </Grid>
-            <Grid item xs>
-              <TextFieldCpn
+            {/* <Grid item xs={6} sm={6}> */}
+              {/* <TextFieldCpn
                 label={t("VAT xuất % (*)")}
                 onChange={handleExportVATChange}
                 onFocus={(e) => e.target.select()}
@@ -445,7 +447,7 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                     step7Ref.current.focus();
                   }
                 }}
-              />
+              /> */}
               {/* <NumberFormat
                 className="inputNumber"
                 style={{ width: "100%" }}
@@ -472,7 +474,7 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                   }
                 }}
               /> */}
-            </Grid>
+            {/* </Grid> */}
           </Grid>
           <Grid container>
             <TextAreaCpn

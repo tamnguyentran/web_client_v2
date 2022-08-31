@@ -28,11 +28,7 @@ import socket_sv from "../../utils/service/socket_service";
 import { defaultModalAdd } from "../Autocomplete/Modal/addCustomer.modal";
 import LoopIcon from "@material-ui/icons/Loop";
 import { AutocompleteCpn } from "../../basicComponents";
-import {
-  TextAreaCpn,
-  TextFieldCpn,
-  ButtonCpn
-} from "../../basicComponents";
+import { TextAreaCpn, TextFieldCpn, ButtonCpn } from "../../basicComponents";
 
 const serviceInfo = {
   DROPDOWN_LIST: {
@@ -61,28 +57,29 @@ const CustomerAdd = ({
   inputRef = null,
   autoFocus = null,
   placeholder = "",
-  className=""
+  className = "",
+  closeIcon,
+  handleCustomerId,
 }) => {
   const { t } = useTranslation();
 
   const [dataSource, setDataSource] = useState([]);
   const [valueSelect, setValueSelect] = useState({});
+  const [defaultValueSelect, setDefaultValueSelect] = useState({});
   const [inputValue, setInputValue] = useState("");
   const [shouldOpenModal, setShouldOpenModal] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({ ...defaultModalAdd });
   const [process, setProcess] = useState(false);
   const idCreated = useRef(-1);
 
-  const refFocus1 = useRef(null)
+  const refFocus1 = useRef(null);
 
   useEffect(() => {
     const inputParam = ["customers", "%"];
     sendRequest(
       serviceInfo.DROPDOWN_LIST,
       inputParam,
-      (e,r)=>{
-        console.log(e,r)
-              },
+      null,
       true,
       handleTimeOut
     );
@@ -117,15 +114,28 @@ const CustomerAdd = ({
   }, []);
 
   useEffect(() => {
-    if (value !== null || value !== undefined) {
-      console.log(dataSource)
-    setValueSelect(dataSource.find((x) => x?.o_2 === value));
+    if (!value) {
+      const customerSelect = dataSource.find((item) => item.o_3 === "Y");
+      return setValueSelect(customerSelect || dataSource[0] || {});
+    }
+    if (value) {
+      const customerSelect = dataSource.find((item) => item.o_3 === "Y");
+      setValueSelect(
+        dataSource.find((x) => x?.o_2 === value) || customerSelect
+      );
     }
     if (idCreated.current !== -1) {
-      setValueSelect(dataSource.find((x) => x.o_1 === idCreated.current));
+      setValueSelect(dataSource.find((x) => x.o_1 === idCreated.current) || {});
       idCreated.current = -1;
     }
   }, [value, dataSource]);
+
+  useEffect(() => {
+    if (!value) {
+      const customerSelect = dataSource.find((item) => item.o_3 === "Y");
+      handleCustomerId(customerSelect?.o_1 || dataSource[0]?.o_1 || null);
+    }
+  }, [dataSource, value]);
 
   const resultCustomerDropDownList = (
     message = {},
@@ -142,6 +152,9 @@ const CustomerAdd = ({
     if (message["PROC_DATA"]) {
       let newData = message["PROC_DATA"];
       setDataSource(newData.rows || []);
+      const customerSelect = newData.rows.find((item) => item.o_3 === "Y");
+      setValueSelect(customerSelect);
+      // setCustomerId(customerSelect.o_1 || null)
     }
   };
 
@@ -164,7 +177,7 @@ const CustomerAdd = ({
       reqInfoMap.resSucc = false;
       setProcess(false);
       glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
-      refFocus1.current.focus()
+      refFocus1.current.focus();
     } else {
       let data = message["PROC_DATA"];
       idCreated.current = data.rows[0].o_1;
@@ -229,13 +242,10 @@ const CustomerAdd = ({
       customerInfo.default_yn,
       customerInfo.cust_tp,
     ];
-    console.log(inputParam)
     sendRequest(
       serviceInfo.CREATE_CUSTOMER,
       inputParam,
-      (e,w)=>{
-        console.log(e,w)
-      },
+      null,
       true,
       handleTimeOut
     );
@@ -251,50 +261,52 @@ const CustomerAdd = ({
     setShouldOpenModal(false);
     setCustomerInfo({ ...defaultModalAdd });
   };
-  console.log(dataSource)
+
   return (
     <div className={className}>
-     <AutocompleteCpn
-      label={label}
-      options={dataSource}
-      getOptionLabel={(option) => option?.o_2 || ""}
-      disabled={disabled}
-      value={valueSelect}
-      onChange={onChange}
-      onInputChange={handleChangeInput}
-      placeholder={placeholder}
-      inputValue={value}
-      renderInput={(params) => {
-        let newParams = {
-          ...params,
-          ...{
-            InputProps: {
-              ...params.InputProps,
-              startAdornment: (
-                <Tooltip
-                  title={t("partner.customer.titleQuickAdd")}
-                  aria-label="add"
-                >
-                  <AddCircleIcon
-                    className="cursor-pointer"
-                    style={{ color: "green" }}
-                    onClick={() => setShouldOpenModal(true)}
-                  />
-                </Tooltip>
-              ),
+      <AutocompleteCpn
+        closeIcon={closeIcon}
+        label={label}
+        options={dataSource}
+        getOptionLabel={(option) => option?.o_2 || ""}
+        disabled={disabled}
+        value={valueSelect}
+        onChange={onChange}
+        onInputChange={handleChangeInput}
+        placeholder={placeholder}
+        inputValue={value}
+        onKeyPress={onKeyPress}
+        renderInput={(params) => {
+          let newParams = {
+            ...params,
+            ...{
+              InputProps: {
+                ...params.InputProps,
+                startAdornment: (
+                  <Tooltip
+                    title={t("partner.customer.titleQuickAdd")}
+                    aria-label="add"
+                  >
+                    <AddCircleIcon
+                      className="cursor-pointer"
+                      style={{ color: "green" }}
+                      onClick={() => setShouldOpenModal(true)}
+                    />
+                  </Tooltip>
+                ),
+              },
             },
-          },
-        };
-        return (
-          <TextField
-            {...newParams}
-            inputRef={inputRef}
-            autoFocus={autoFocus}
-            variant="outlined"
-          />
-        );
-      }}
-    />
+          };
+          return (
+            <TextField
+              {...newParams}
+              inputRef={inputRef}
+              autoFocus={autoFocus}
+              variant="outlined"
+            />
+          );
+        }}
+      />
       {/* <Autocomplete
         disableClearable
         disabled={disabled}
@@ -348,19 +360,22 @@ const CustomerAdd = ({
         onClose={closePopupAddCustomer}
       >
         <Card>
-          <CardHeader className="card-header" title={t("partner.customer.titleQuickAdd")} />
+          <CardHeader
+            className="card-header"
+            title={t("partner.customer.titleQuickAdd")}
+          />
           <CardContent>
             <Grid container spacing={1}>
               <Grid item xs={6}>
-                <TextFieldCpn 
+                <TextFieldCpn
                   className="uppercaseInput"
                   autoComplete="off"
                   label={t("Tên khách hàng (*)")}
                   onChange={handleChange}
                   value={customerInfo.cust_nm_v || ""}
                   name="cust_nm_v"
-                  inputRef = {refFocus1}
-                  autoFocus = {true}
+                  inputRef={refFocus1}
+                  autoFocus={true}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -382,26 +397,29 @@ const CustomerAdd = ({
                 />
               </Grid>
             </Grid>
-            <div className="mt-2" style={{ color: "var(--danger)", fontSize: "0.875rem" }}>
-              {t("* Vui lòng qua trang Quản lý thông tin khách hàng để cập nhật thông tin")}
+            <div
+              className="mt-2"
+              style={{ color: "var(--danger)", fontSize: "0.875rem" }}
+            >
+              {t(
+                "* Vui lòng qua trang Quản lý thông tin khách hàng để cập nhật thông tin"
+              )}
             </div>
           </CardContent>
-          <CardActions
-            className="align-items-end justify-content-end p-3"
-          >
-             <ButtonCpn.ButtonClose
-            process={process}
-            onClick={() => {
-              setShouldOpenModal(false);
-              setCustomerInfo({ ...defaultModalAdd });
-            }}
-          />
-          <ButtonCpn.ButtonUpdate
-            onClick={handleCreateCustomer}
-            process={process}
-            disabled={checkValidate()}
-            title="Lưu (F3)"
-          />
+          <CardActions className="align-items-end justify-content-end p-3">
+            <ButtonCpn.ButtonClose
+              process={process}
+              onClick={() => {
+                setShouldOpenModal(false);
+                setCustomerInfo({ ...defaultModalAdd });
+              }}
+            />
+            <ButtonCpn.ButtonUpdate
+              onClick={handleCreateCustomer}
+              process={process}
+              disabled={checkValidate()}
+              title="Lưu (F3)"
+            />
           </CardActions>
         </Card>
       </Dialog>

@@ -129,6 +129,7 @@ const invoiceExportModal = {
     invoice_id: null,
     order_dt: glb_sv.endDay,
     customer: null,
+    customer_id: null,
     invoice_no: '',
     staff_exp: '',
     invoice_val: 0,
