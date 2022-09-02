@@ -7,16 +7,8 @@ import {
   CardContent,
   CardActions,
   Dialog,
-  TextField,
-  Button,
   Grid,
 } from "@material-ui/core";
-import NumberFormat from "react-number-format";
-
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SaveIcon from "@material-ui/icons/Save";
-import Product_Autocomplete from "../../Products/Product/Control/Product.Autocomplete";
-import Unit_Autocomplete from "../Unit/Control/Unit.Autocomplete";
 
 import SnackBarService from "../../../utils/service/snackbar_service";
 import sendRequest from "../../../utils/service/sendReq";
@@ -187,9 +179,6 @@ const StoreLimitEdit = ({
       fullWidth={true}
       maxWidth="sm"
       open={shouldOpenModal}
-      // onClose={e => {
-      //     setShouldOpenModal(false)
-      // }}
     >
       <Card>
         <CardHeader
@@ -199,13 +188,6 @@ const StoreLimitEdit = ({
         <CardContent>
           <Grid container spacing={1}>
             <Grid item xs={6}>
-              {/* <Product_Autocomplete
-                disabled={true}
-                value={StoreLimit.o_3}
-                style={{ marginTop: 8, marginBottom: 4 }}
-                size={"small"}
-                label={t("menu.product")}
-              /> */}
               <Product
                 size={"small"}
                 label={t("menu.product")}
@@ -214,20 +196,6 @@ const StoreLimitEdit = ({
               />
             </Grid>
             <Grid item xs={6}>
-              {/* <Unit_Autocomplete
-                value={StoreLimit.o_5 || ""}
-                // unitID={StoreLimit.o_5 || null}
-                style={{ marginTop: 8, marginBottom: 4 }}
-                size={"small"}
-                label={t("menu.configUnit")}
-                onSelect={handleSelectUnit}
-                inputRef={step1Ref}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    step2Ref.current.focus();
-                  }
-                }}
-              /> */}
               <Unit
                 size={"small"}
                 label={t("Đơn vị")}
@@ -255,30 +223,6 @@ const StoreLimitEdit = ({
                   }
                 }}
               />
-              {/* <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                required
-                value={StoreLimit.o_6}
-                label={t("config.store_limit.minQuantity")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-                onValueChange={handleMinQuantityChange}
-                inputProps={{
-                  min: 0,
-                }}
-                onFocus={(e) => e.target.select()}
-                inputRef={step2Ref}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    step3Ref.current.focus();
-                  }
-                }}
-              /> */}
             </Grid>
             <Grid item xs={6}>
               <TextFieldCpn
@@ -293,50 +237,15 @@ const StoreLimitEdit = ({
                   }
                 }}
               />
-              {/* <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                required
-                value={StoreLimit.o_7}
-                helperText={
-                  <div style={{ color: "red" }}>
-                    {StoreLimit.o_6 > StoreLimit.o_7
-                      ? "Phải lớn hơn hạn mức tối thiểu"
-                      : ""}
-                  </div>
-                }
-                label={t("config.store_limit.maxQuantity")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-                onValueChange={handleMaxQuantityChange}
-                inputProps={{
-                  min: 0,
-                }}
-                inputRef={step3Ref}
-                onFocus={(e) => e.target.select()}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    handleUpdate();
-                  }
-                }}
-              /> */}
             </Grid>
           </Grid>
         </CardContent>
         <CardActions
           className="align-items-end justify-content-end mr-2 ml-2"
-          //   style={{ justifyContent: "flex-end" }}
         >
           <ButtonCpn.ButtonClose
             process={process}
             onClick={() => {
-              //   if (process) return;
-              //   setShouldOpenModal(false);
-              //   setUnitRate({});
               if (
                 (controlTimeOutKey &&
                   control_sv.ControlTimeOutObj[controlTimeOutKey]) ||
@@ -357,43 +266,6 @@ const StoreLimitEdit = ({
             process={process}
             disabled={checkValidate()}
           />
-          {/* <Button
-            size="small"
-            onClick={(e) => {
-              if (
-                controlTimeOutKey &&
-                control_sv.ControlTimeOutObj[controlTimeOutKey]
-              ) {
-                return;
-              }
-              setShouldOpenModal(false);
-              setStoreLimit({});
-            }}
-            variant="contained"
-            disableElevation
-            startIcon={<ExitToAppIcon />}
-          >
-            {t("btn.close")} (Esc)
-          </Button> */}
-          {/* <Button
-            size="small"
-            onClick={() => {
-              handleUpdate(StoreLimit);
-            }}
-            variant="contained"
-            disabled={checkValidate()}
-            className={
-              checkValidate() === false
-                ? process
-                  ? "button-loading bg-success text-white"
-                  : "bg-success text-white"
-                : ""
-            }
-            endIcon={process && <LoopIcon />}
-            startIcon={<SaveIcon />}
-          >
-            {t("btn.update")} (F3)
-          </Button> */}
         </CardActions>
       </Card>
     </Dialog>

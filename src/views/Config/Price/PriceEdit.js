@@ -7,16 +7,9 @@ import {
   CardContent,
   CardActions,
   Dialog,
-  TextField,
-  Button,
   Grid,
 } from "@material-ui/core";
 import NumberFormat from "react-number-format";
-
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SaveIcon from "@material-ui/icons/Save";
-import Product_Autocomplete from "../../Products/Product/Control/Product.Autocomplete";
-import Unit_Autocomplete from "../Unit/Control/Unit.Autocomplete";
 
 import SnackBarService from "../../../utils/service/snackbar_service";
 import sendRequest from "../../../utils/service/sendReq";
@@ -265,19 +258,6 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                   }
                 }}
               />
-              {/* <Unit_Autocomplete
-                value={unitSelect}
-                style={{ marginTop: 8, marginBottom: 4 }}
-                size={"small"}
-                label={t("menu.configUnit")}
-                onSelect={handleSelectUnit}
-                inputRef={step1Ref}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    step2Ref.current.focus();
-                  }
-                }}
-              /> */}
             </Grid>
             <Grid item xs={6} sm={6}>
               <TextFieldCpn
@@ -292,71 +272,7 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                   }
                 }}
               />
-              {/* <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                required
-                value={Price.o_6}
-                label={t("config.price.importPrice")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-                onValueChange={handleImportPriceChange}
-                inputProps={{
-                  min: 0,
-                }}
-                inputRef={step2Ref}
-                onFocus={(e) => e.target.select()}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    step3Ref.current.focus();
-                  }
-                }}
-              /> */}
             </Grid>
-            {/* <Grid item xs={6} sm={4}> */}
-              {/* <TextFieldCpn
-                label={t("VAT nhập (*)")}
-                onChange={handleImportVATChange}
-                onFocus={(e) => e.target.select()}
-                inputRef={step3Ref}
-                value={Price.o_7 || 0}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    step4Ref.current.focus();
-                  }
-                }}
-              /> */}
-              {/* <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                required
-                value={Price.o_7}
-                label={t("config.price.importVAT")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                suffix="%"
-                thousandSeparator={true}
-                onValueChange={handleImportVATChange}
-                inputProps={{
-                  min: 0,
-                  max: 100,
-                }}
-                inputRef={step3Ref}
-                onFocus={(e) => e.target.select()}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    step4Ref.current.focus();
-                  }
-                }}
-              /> */}
-            {/* </Grid> */}
           </Grid>
           <Grid container spacing={1}>
             <Grid item xs>
@@ -372,30 +288,6 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                   }
                 }}
               />
-              {/* <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                required
-                value={Price.o_8}
-                label={t("config.price.price")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-                onValueChange={handlePriceChange}
-                inputProps={{
-                  min: 0,
-                }}
-                inputRef={step4Ref}
-                onFocus={(e) => e.target.select()}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    step5Ref.current.focus();
-                  }
-                }}
-              /> */}
             </Grid>
             <Grid item xs>
               <TextFieldCpn
@@ -410,71 +302,7 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                   }
                 }}
               />
-              {/* <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                required
-                value={Price.o_9}
-                label={t("config.price.wholePrice")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-                onValueChange={handleWholePriceChange}
-                inputProps={{
-                  min: 0,
-                }}
-                inputRef={step5Ref}
-                onFocus={(e) => e.target.select()}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    step6Ref.current.focus();
-                  }
-                }}
-              /> */}
             </Grid>
-            {/* <Grid item xs={6} sm={6}> */}
-              {/* <TextFieldCpn
-                label={t("VAT xuất % (*)")}
-                onChange={handleExportVATChange}
-                onFocus={(e) => e.target.select()}
-                inputRef={step6Ref}
-                value={Price.o_10 || 0}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    step7Ref.current.focus();
-                  }
-                }}
-              /> */}
-              {/* <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                required
-                value={Price.o_10}
-                label={t("config.price.exportVAT")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                suffix="%"
-                thousandSeparator={true}
-                onValueChange={handleExportVATChange}
-                inputProps={{
-                  min: 0,
-                  max: 100,
-                }}
-                inputRef={step6Ref}
-                onFocus={(e) => e.target.select()}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    step7Ref.current.focus();
-                  }
-                }}
-              /> */}
-            {/* </Grid> */}
           </Grid>
           <Grid container>
             <TextAreaCpn
@@ -490,26 +318,6 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
                 }
               }}
             />
-            {/* <TextField
-              fullWidth={true}
-              margin="dense"
-              multiline
-              rows={1}
-              rowsMax={5}
-              autoComplete="off"
-              label={t("config.price.note")}
-              onChange={handleChange}
-              value={Price.o_11 || ""}
-              name="o_11"
-              variant="outlined"
-              inputRef={step7Ref}
-              onFocus={(e) => e.target.select()}
-              onKeyPress={(event) => {
-                if (event.key === "Enter") {
-                  handleUpdate();
-                }
-              }}
-            /> */}
           </Grid>
         </CardContent>
         <CardActions
@@ -531,51 +339,12 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
               setUnitSelect("");
             }}
           />
-          {/* <Button
-            size="small"
-            onClick={(e) => {
-              if (
-                (controlTimeOutKey &&
-                  control_sv.ControlTimeOutObj[controlTimeOutKey]) ||
-                process
-              ) {
-                return;
-              }
-              setShouldOpenModal(false);
-              setPrice({});
-              setUnitSelect("");
-            }}
-            variant="contained"
-            disableElevation
-            startIcon={<ExitToAppIcon />}
-          >
-            {t("btn.close")} (Esc)
-          </Button> */}
           <ButtonCpn.ButtonUpdate
             title="Lưu (F3)"
             onClick={handleUpdate}
             process={process}
             disabled={checkValidate()}
           />
-          {/* <Button
-            size="small"
-            onClick={() => {
-              handleUpdate();
-            }}
-            variant="contained"
-            disabled={checkValidate()}
-            className={
-              checkValidate() === false
-                ? process
-                  ? "button-loading bg-success text-white"
-                  : "bg-success text-white"
-                : ""
-            }
-            endIcon={process && <LoopIcon />}
-            startIcon={<SaveIcon />}
-          >
-            {t("btn.update")} (F3)
-          </Button> */}
         </CardActions>
       </Card>
     </Dialog>

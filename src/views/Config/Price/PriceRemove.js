@@ -5,7 +5,6 @@ import {
   CardContent,
   CardActions,
   Dialog,
-  Button,
 } from "@material-ui/core";
 import { ButtonCpn } from "../../../basicComponents";
 import { useTranslation } from "react-i18next";
@@ -56,29 +55,6 @@ const PriceRemove = (props) => {
             disabled={processing}
             process={processing}
           />
-          {/* <Button
-            size="small"
-            onClick={(e) => {
-              if (processing) return;
-              setShouldOpenRemoveModal(false);
-            }}
-            startIcon={<ExitToAppIcon />}
-            variant="contained"
-            disableElevation
-          >
-            {t("btn.close")} (Esc)
-          </Button>
-          <Button
-            className={processing ? "button-loading" : ""}
-            endIcon={processing && <LoopIcon />}
-            size="small"
-            onClick={handleDelete}
-            variant="contained"
-            color="secondary"
-            startIcon={<DeleteIcon />}
-          >
-            {t("btn.delete")} (f10)
-          </Button> */}
         </CardActions>
       </Card>
     </Dialog>

@@ -6,9 +6,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import FastForwardIcon from "@material-ui/icons/FastForward";
-import Chip from "@material-ui/core/Chip";
-import ColumnCtrComp from "../../../components/_ColumnCtr";
 
 import glb_sv from "../../../utils/service/global_service";
 import control_sv from "../../../utils/service/control_services";
@@ -18,7 +15,6 @@ import sendRequest from "../../../utils/service/sendReq";
 
 import { tableColumn, searchDefaultModal } from "./Modal/Import.modal";
 import ImportSearch from "./ImportSearch";
-import { Card, CardHeader, CardContent, CardActions } from "@material-ui/core";
 import moment from "moment";
 import ExportExcel from "../../../components/ExportExcel";
 import DisplayColumn from "../../../components/DisplayColumn";
@@ -26,9 +22,7 @@ import Breadcrumb from "../../../components/Breadcrumb/View";
 
 
 import {
-  TitleFilterCpn,
   Wrapper,
-  IconButtonCpn,
   ButtonCpn,
 } from "../../../basicComponents";
 
@@ -44,7 +38,7 @@ const serviceInfo = {
 
 const ImportList = () => {
   const { t } = useTranslation();
-  const [anChorEl, setAnChorEl] = useState(null);
+  // const [anChorEl, setAnChorEl] = useState(null);
   const [column, setColumn] = useState(tableColumn);
   const [searchModal, setSearchModal] = useState({ ...searchDefaultModal });
   const [totalRecords, setTotalRecords] = useState(0);
@@ -145,9 +139,9 @@ const ImportList = () => {
   //   setAnChorEl(e.currentTarget);
   // };
 
-  const onCloseColumn = () => {
-    setAnChorEl(null);
-  };
+  // const onCloseColumn = () => {
+  //   setAnChorEl(null);
+  // };
 
   const onChangeColumnView = (item) => {
     const newColumn = [...column];
@@ -363,145 +357,6 @@ const ImportList = () => {
           </Wrapper.WrapperFooter>
         </Wrapper.WrapperTable>
       </div>
-      {false && (
-        <>
-          <Card className="mb-2">
-            <CardHeader
-              title={
-                <div className="flex aligh-item-center">{<Breadcrumb />}</div>
-              }
-            />
-            <CardContent>
-              <ImportSearch
-                process={searchProcess}
-                handleSearch={searchSubmit}
-              />
-            </CardContent>
-          </Card>
-          <ColumnCtrComp
-            anchorEl={anChorEl}
-            columns={tableColumn}
-            handleClose={onCloseColumn}
-            checkColumnChange={onChangeColumnView}
-          />
-          <Card>
-            <CardHeader
-              title={
-                <>
-                  {t("order.import.titleListeee")}
-                  <DisplayColumn
-                    columns={tableColumn}
-                    handleCheckChange={onChangeColumnView}
-                  />
-                </>
-              }
-            />
-            <CardContent>
-              <TableContainer className="tableContainer tableReport">
-                <Table stickyHeader>
-                  <caption
-                    className={[
-                      "text-center text-danger border-bottom",
-                      dataSource.length > 0 ? "d-none" : "",
-                    ].join(" ")}
-                  >
-                    {t("lbl.emptyData")}
-                  </caption>
-                  <TableHead>
-                    <TableRow>
-                      {column.map((col) => (
-                        <TableCell
-                          nowrap="true"
-                          align={col.align}
-                          className={[
-                            "p-2 border-0",
-                            col.show ? "d-table-cell" : "d-none",
-                          ].join(" ")}
-                          key={col.field}
-                        >
-                          {t(col.title)}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {dataSource.map((item, index) => {
-                      return (
-                        <TableRow
-                          className="table-row-p8"
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={index}
-                        >
-                          {column.map((col, indexRow) => {
-                            let value = item[col.field];
-                            if (col.show) {
-                              switch (col.field) {
-                                case "stt":
-                                  return (
-                                    <TableCell
-                                      nowrap="true"
-                                      key={indexRow}
-                                      align={col.align}
-                                    >
-                                      {index + 1}
-                                    </TableCell>
-                                  );
-                                default:
-                                  return (
-                                    <TableCell
-                                      nowrap="true"
-                                      key={indexRow}
-                                      align={col.align}
-                                    >
-                                      {glb_sv.formatValue(value, col["type"])}
-                                    </TableCell>
-                                  );
-                              }
-                            }
-                          })}
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-            <CardActions>
-              <div className="d-flex align-items-center">
-                <Chip
-                  size="small"
-                  variant="outlined"
-                  className="mr-1"
-                  label={
-                    dataSourceRef.current.length +
-                    "/" +
-                    totalRecords +
-                    " " +
-                    t("rowData")
-                  }
-                />
-                <Chip
-                  variant="outlined"
-                  size="small"
-                  className="mr-1"
-                  deleteIcon={<FastForwardIcon />}
-                  onDelete={() => null}
-                  label={t("getMoreData")}
-                  onClick={getNextData}
-                  disabled={dataSourceRef.current.length >= totalRecords}
-                />
-                <ExportExcel
-                  filename="report-import"
-                  data={dataCSV()}
-                  headers={headersCSV}
-                />
-              </div>
-            </CardActions>
-          </Card>
-        </>
-      )}
     </>
   );
 };
