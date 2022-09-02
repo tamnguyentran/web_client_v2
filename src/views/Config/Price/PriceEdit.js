@@ -9,7 +9,6 @@ import {
   Dialog,
   Grid,
 } from "@material-ui/core";
-import NumberFormat from "react-number-format";
 
 import SnackBarService from "../../../utils/service/snackbar_service";
 import sendRequest from "../../../utils/service/sendReq";
@@ -19,7 +18,6 @@ import { config } from "./Modal/Price.modal";
 import { Unit, Product } from "../../../components/Autocomplete";
 import { TextFieldCpn, ButtonCpn, TextAreaCpn } from "../../../basicComponents";
 
-import LoopIcon from "@material-ui/icons/Loop";
 
 const serviceInfo = {
   GET_PRICE_BY_ID: {
@@ -230,13 +228,6 @@ const PriceEdit = ({ id, shouldOpenModal, setShouldOpenModal, onRefresh }) => {
         <CardContent>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={12}>
-              {/* <Product_Autocomplete
-                disabled={true}
-                value={Price.o_3}
-                style={{ marginTop: 8, marginBottom: 4 }}
-                size={"small"}
-                label={t("menu.product")}
-              /> */}
               <Product
                 size={"small"}
                 label={t("Sản phẩm (*)")}

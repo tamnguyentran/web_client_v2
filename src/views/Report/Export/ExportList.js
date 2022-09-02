@@ -60,7 +60,7 @@ const ExportList = () => {
   }, []);
 
   const getList = (
-    startdate,
+    startDate,
     endDate,
     customer_id,
     invoice_no,
@@ -71,7 +71,7 @@ const ExportList = () => {
   ) => {
     setSearchProcess(true);
     const inputParam = [
-      startdate,
+      startDate,
       endDate,
       customer_id,
       invoice_no,

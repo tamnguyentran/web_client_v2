@@ -1,33 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardActions,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  Dialog,
-  Button,
-  Chip,
-  IconButton,
+  TableRow
 } from "@material-ui/core";
 
-import FastForwardIcon from "@material-ui/icons/FastForward";
-import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-import EditIcon from "@material-ui/icons/Edit";
-import LoopIcon from "@material-ui/icons/Loop";
-
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SaveIcon from "@material-ui/icons/Save";
-import CheckIcon from "@material-ui/icons/Check";
-import DeleteIcon from "@material-ui/icons/Delete";
 import SearchOne from "../../../components/SearchOne";
-import ColumnCtrComp from "../../../components/_ColumnCtr";
 import ExportExcel from "../../../components/ExportExcel";
 import DisplayColumn from "../../../components/DisplayColumn";
 
@@ -66,7 +48,7 @@ const serviceInfo = {
 
 const WarnTimeList = () => {
   const { t } = useTranslation();
-  const [anChorEl, setAnChorEl] = useState(null);
+  // const [anChorEl, setAnChorEl] = useState(null);
   const [column, setColumn] = useState(tableColumn);
   const [searchValue, setSearchValue] = useState("");
   const [totalRecords, setTotalRecords] = useState(0);
@@ -176,9 +158,9 @@ const WarnTimeList = () => {
     setSearchProcess(false);
   };
 
-  const onCloseColumn = () => {
-    setAnChorEl(null);
-  };
+  // const onCloseColumn = () => {
+  //   setAnChorEl(null);
+  // };
 
   const onChangeColumnView = (item) => {
     const newColumn = [...column];
@@ -405,309 +387,9 @@ const WarnTimeList = () => {
           setShouldOpenRemoveModal={setShouldOpenRemoveModal}
           processing={processing}
           handleDelete={handleDelete}
+          name={name}
         />
-        {/* <PriceEdit
-          id={id}
-          shouldOpenModal={shouldOpenEditModal}
-          setShouldOpenModal={setShouldOpenEditModal}
-          onRefresh={handleRefresh}
-        /> */}
-        {/* <PriceRemove
-          name={name}
-          shouldOpenRemoveModal={shouldOpenRemoveModal}
-          setShouldOpenRemoveModal={setShouldOpenRemoveModal}
-          processing={processing}
-          handleDelete={handleDelete}
-        /> */}
-        {/* <Dialog
-          maxWidth="xs"
-          fullWidth={true}
-          TransitionProps={{
-            addEndListener: (node, done) => {
-              // use the css transitionend event to mark the finish of a transition
-              node.addEventListener("keypress", function (e) {
-                if (e.key === "Enter") {
-                  handleDelete();
-                }
-              });
-            },
-          }}
-          open={shouldOpenRemoveModal}
-          onClose={(e) => {
-            setShouldOpenRemoveModal(false);
-          }}
-        >
-          <Card>
-            <CardHeader title={t("config.price.titleRemove", { name: name })} />
-            <CardContent>{name}</CardContent>
-            <CardActions
-              className="align-items-end"
-              style={{ justifyContent: "flex-end" }}
-            >
-              <Button
-                size="small"
-                onClick={(e) => {
-                  if (processing) return;
-                  setShouldOpenRemoveModal(false);
-                }}
-                startIcon={<ExitToAppIcon />}
-                variant="contained"
-                disableElevation
-              >
-                {t("btn.close")} (Esc)
-              </Button>
-              <Button
-                className={processing ? "button-loading" : ""}
-                endIcon={processing && <LoopIcon />}
-                size="small"
-                onClick={handleDelete}
-                variant="contained"
-                color="secondary"
-                startIcon={<DeleteIcon />}
-              >
-                {t("btn.delete")} (f10)
-              </Button>
-            </CardActions>
-          </Card>
-        </Dialog> */}
-        {/* <StoreLimitRemove
-          name={name}
-          shouldOpenRemoveModal={shouldOpenRemoveModal}
-          setShouldOpenRemoveModal={setShouldOpenRemoveModal}
-          processing={processing}
-          handleDelete={handleDelete}
-        /> */}
       </div>
-      {false && (
-        <>
-          <Card className="mb-2">
-            <CardHeader
-              title={
-                <div className="flex aligh-item-center">{<Breadcrumb />}</div>
-              }
-            />
-            <CardContent>
-              <SearchOne
-                process={searchProcess}
-                name="product_name"
-                label={"product.search_name"}
-                searchSubmit={searchSubmit}
-              />
-            </CardContent>
-          </Card>
-          <ColumnCtrComp
-            anchorEl={anChorEl}
-            columns={tableColumn}
-            handleClose={onCloseColumn}
-            checkColumnChange={onChangeColumnView}
-          />
-          <Card>
-            <CardHeader
-              title={
-                <>
-                  {t("config.warnTime.titleList")}
-                  <DisplayColumn
-                    columns={tableColumn}
-                    handleCheckChange={onChangeColumnView}
-                  />
-                </>
-              }
-              action={
-                <div className="d-flex align-items-center">
-                  <WarnTimeAdd onRefresh={handleRefresh} />
-                </div>
-              }
-            />
-            <CardContent>
-              <TableContainer className="height-table-260 tableContainer">
-                <Table stickyHeader>
-                  <caption
-                    className={[
-                      "text-center text-danger border-bottom",
-                      dataSource.length > 0 ? "d-none" : "",
-                    ].join(" ")}
-                  >
-                    {t("lbl.emptyData")}
-                  </caption>
-                  <TableHead>
-                    <TableRow>
-                      {column.map((col) => (
-                        <TableCell
-                          nowrap="true"
-                          className={[
-                            "p-2 border-0",
-                            col.show ? "d-table-cell" : "d-none",
-                          ].join(" ")}
-                          key={col.field}
-                        >
-                          {t(col.title)}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {dataSource.map((item, index) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={index}
-                        >
-                          {column.map((col, indexRow) => {
-                            let value = item[col.field];
-                            if (col.show) {
-                              switch (col.field) {
-                                case "stt":
-                                  return (
-                                    <TableCell
-                                      nowrap="true"
-                                      key={indexRow}
-                                      align={col.align}
-                                    >
-                                      {index + 1}
-                                    </TableCell>
-                                  );
-                                case "action":
-                                  return (
-                                    <TableCell
-                                      nowrap="true"
-                                      key={indexRow}
-                                      align={col.align}
-                                    >
-                                      <IconButton
-                                        onClick={(e) => {
-                                          onRemove(item);
-                                        }}
-                                      >
-                                        <DeleteIcon
-                                          style={{ color: "red" }}
-                                          fontSize="small"
-                                        />
-                                      </IconButton>
-                                      <IconButton
-                                        onClick={(e) => {
-                                          onEdit(item);
-                                        }}
-                                      >
-                                        <EditIcon fontSize="small" />
-                                      </IconButton>
-                                    </TableCell>
-                                  );
-                                default:
-                                  return (
-                                    <TableCell
-                                      nowrap="true"
-                                      key={indexRow}
-                                      align={col.align}
-                                    >
-                                      {glb_sv.formatValue(value, col["type"])}
-                                    </TableCell>
-                                  );
-                              }
-                            }
-                          })}
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-            <CardActions>
-              <div className="d-flex align-items-center">
-                <Chip
-                  size="small"
-                  variant="outlined"
-                  className="mr-1"
-                  label={
-                    dataSourceRef.current.length +
-                    "/" +
-                    totalRecords +
-                    " " +
-                    t("rowData")
-                  }
-                />
-                <Chip
-                  variant="outlined"
-                  size="small"
-                  className="mr-1"
-                  deleteIcon={<FastForwardIcon />}
-                  onDelete={() => null}
-                  label={t("getMoreData")}
-                  onClick={getNextData}
-                  disabled={dataSourceRef.current.length >= totalRecords}
-                />
-                <ExportExcel
-                  filename="warnTime"
-                  data={dataCSV()}
-                  headers={headersCSV}
-                />
-              </div>
-            </CardActions>
-          </Card>
-
-          {/* modal delete */}
-          <Dialog
-            maxWidth="xs"
-            fullWidth={true}
-            TransitionProps={{
-              addEndListener: (node, done) => {
-                // use the css transitionend event to mark the finish of a transition
-                node.addEventListener("keypress", function (e) {
-                  if (e.key === "Enter") {
-                    handleDelete();
-                  }
-                });
-              },
-            }}
-            open={shouldOpenRemoveModal}
-          >
-            <Card>
-              <CardHeader
-                title={t("config.warnTime.titleRemove", { name: name })}
-              />
-              <CardContent>{name}</CardContent>
-              <CardActions
-                className="align-items-end"
-                style={{ justifyContent: "flex-end" }}
-              >
-                <Button
-                  size="small"
-                  onClick={(e) => {
-                    if (processing) return;
-                    setShouldOpenRemoveModal(false);
-                  }}
-                  startIcon={<ExitToAppIcon />}
-                  variant="contained"
-                  disableElevation
-                >
-                  {t("btn.close")} (Esc)
-                </Button>
-                <Button
-                  className={processing ? "button-loading" : ""}
-                  size="small"
-                  onClick={handleDelete}
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<DeleteIcon />}
-                  endIcon={processing && <LoopIcon />}
-                >
-                  {t("btn.delete")} (f10)
-                </Button>
-              </CardActions>
-            </Card>
-          </Dialog>
-
-          {/* modal edit */}
-          <WarnTimeEdit
-            id={id}
-            shouldOpenModal={shouldOpenEditModal}
-            setShouldOpenModal={setShouldOpenEditModal}
-            onRefresh={handleRefresh}
-          />
-        </>
-      )}
     </>
   );
 };

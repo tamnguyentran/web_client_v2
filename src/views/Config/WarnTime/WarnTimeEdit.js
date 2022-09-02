@@ -7,24 +7,14 @@ import {
   CardContent,
   CardActions,
   Dialog,
-  TextField,
-  Button,
   Grid,
 } from "@material-ui/core";
-import NumberFormat from "react-number-format";
-
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SaveIcon from "@material-ui/icons/Save";
-import Product_Autocomplete from "../../Products/Product/Control/Product.Autocomplete";
-import Dictionary from "../../../components/Dictionary/index";
 
 import SnackBarService from "../../../utils/service/snackbar_service";
 import sendRequest from "../../../utils/service/sendReq";
 import glb_sv from "../../../utils/service/global_service";
 import control_sv from "../../../utils/service/control_services";
 import { config } from "./Modal/WarnTime.modal";
-
-import LoopIcon from "@material-ui/icons/Loop";
 
 import { TextFieldCpn, ButtonCpn, TextAreaCpn } from "../../../basicComponents";
 import { Unit, Product, Time } from "../../../components/Autocomplete";
@@ -172,9 +162,6 @@ const WarnTimeEdit = ({
       fullWidth={true}
       maxWidth="sm"
       open={shouldOpenModal}
-      // onClose={e => {
-      //     setShouldOpenModal(false)
-      // }}
     >
       <Card>
         <CardHeader
@@ -184,13 +171,6 @@ const WarnTimeEdit = ({
         <CardContent>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={12}>
-              {/* <Product_Autocomplete
-                disabled={true}
-                value={warnTime?.o_3}
-                style={{ marginTop: 8, marginBottom: 4 }}
-                size={"small"}
-                label={t("menu.product")}
-              /> */}
               <Product
                 disabled={true}
                 value={warnTime?.o_3}
@@ -199,30 +179,6 @@ const WarnTimeEdit = ({
               />
             </Grid>
             <Grid item xs={6} sm={6}>
-              {/* <NumberFormat
-                className="inputNumber"
-                style={{ width: "100%" }}
-                required
-                value={warnTime?.o_4}
-                label={t("config.warnTime.warn_amt")}
-                customInput={TextField}
-                autoComplete="off"
-                margin="dense"
-                type="text"
-                variant="outlined"
-                thousandSeparator={true}
-                onValueChange={handleChangeAmt}
-                inputProps={{
-                  min: 0,
-                }}
-                inputRef={step1Ref}
-                onFocus={(e) => e.target.select()}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    step2Ref.current.focus();
-                  }
-                }}
-              /> */}
               <TextFieldCpn
                 label={t("Khoảng thời gian tính (*)")}
                 onChange={handleChangeAmt}
@@ -237,20 +193,6 @@ const WarnTimeEdit = ({
               />
             </Grid>
             <Grid item xs={6} sm={6}>
-              {/* <Dictionary
-                value={warnTime.o_6 || ""}
-                diectionName="warn_time_tp"
-                style={{ marginTop: 8, marginBottom: 4 }}
-                size={"small"}
-                label={t("config.warnTime.warn_time_tp")}
-                onSelect={handleChangeTimeTp}
-                inputRef={step2Ref}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    handleUpdate();
-                  }
-                }}
-              /> */}
               <Time
                 value={warnTime.o_6 || ""}
                 label={t("config.warnTime.warn_time_tp")}
@@ -266,8 +208,7 @@ const WarnTimeEdit = ({
           </Grid>
         </CardContent>
         <CardActions
-          className="align-items-end"
-          style={{ justifyContent: "flex-end" }}
+          className="align-items-end justify-content-end"
         >
           <ButtonCpn.ButtonClose
             process={process}

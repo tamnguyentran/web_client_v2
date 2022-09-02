@@ -4,8 +4,7 @@ import {
   CardHeader,
   CardContent,
   CardActions,
-  Dialog,
-  Button,
+  Dialog
 } from "@material-ui/core";
 import { ButtonCpn } from "../../../basicComponents";
 import { useTranslation } from "react-i18next";

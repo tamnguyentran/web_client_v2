@@ -59,7 +59,7 @@ const ImportInventoryList = () => {
   }, []);
 
   const getList = (
-    startdate,
+    startDate,
     endDate,
     invoice_no,
     invoice_status,
@@ -69,7 +69,7 @@ const ImportInventoryList = () => {
   ) => {
     setSearchProcess(true);
     const inputParam = [
-      startdate,
+      startDate,
       endDate,
       invoice_no,
       invoice_status,

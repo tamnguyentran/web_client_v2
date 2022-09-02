@@ -24,7 +24,6 @@ const PriceRemove = (props) => {
       fullWidth={true}
       TransitionProps={{
         addEndListener: (node, done) => {
-          // use the css transitionend event to mark the finish of a transition
           node.addEventListener("keypress", function (e) {
             if (e.key === "Enter") {
               handleDelete();

@@ -310,7 +310,7 @@ const ExportRepayList = () => {
         >
           <Wrapper.WrapperHeader>
             <div>
-              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, xem thông tin trả hàng của sản phẩm" />
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, xem thông tin thu tiền trả hàng của sản phẩm" />
             </div>
             <div className="flex">
               {/* <WarnTimeAdd onRefresh={handleRefresh} /> */}

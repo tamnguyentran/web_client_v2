@@ -307,10 +307,9 @@ const ImportList = () => {
         >
           <Wrapper.WrapperHeader>
             <div>
-              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, xem thông đơn nhập hàng của sản phẩm" />
+              <Breadcrumb description="Đây là trang giúp bạn tìm kiếm, xem thông tin trả tiền nhập hàng của sản phẩm" />
             </div>
             <div className="flex">
-              {/* <WarnTimeAdd onRefresh={handleRefresh} /> */}
               &ensp;
               <DisplayColumn
                 columns={tableColumn}

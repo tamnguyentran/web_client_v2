@@ -61,7 +61,7 @@ const ExportRepayList = () => {
   }, []);
 
   const getList = (
-    startdate,
+    startDate,
     endDate,
     supplier_id,
     invoice_no,
@@ -72,7 +72,7 @@ const ExportRepayList = () => {
   ) => {
     setSearchProcess(true);
     const inputParam = [
-      startdate,
+      startDate,
       endDate,
       supplier_id,
       invoice_no,
