@@ -28,22 +28,14 @@ const ListProductImport = (props) => {
   const { t } = useTranslation();
   const {
     column = [],
-    // handleClickEdit,
-    isIndexRow,
-    setIsIndexRow,
     updateDataListProduct,
     onRemove,
-    setProductDeleteIndex,
-    handleChangeType,
-    handleChangeUpdate,
     dataSource = [],
     handleClickSortColum,
     sortColumn,
     showIconSort,
     productInfo,
     setProductInfo,
-    step2Ref,
-    step3Ref,
   } = props;
 
   const handleChangeQtyProductInvoice = (type, item, index, valueQty) => {

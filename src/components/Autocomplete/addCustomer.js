@@ -152,7 +152,7 @@ const CustomerAdd = ({
     if (message["PROC_DATA"]) {
       let newData = message["PROC_DATA"];
       setDataSource(newData.rows || []);
-      const customerSelect = newData.rows.find((item) => item.o_3 === "Y");
+      const customerSelect = newData?.rows?.find((item) => item.o_3 === "Y");
       setValueSelect(customerSelect);
       // setCustomerId(customerSelect.o_1 || null)
     }

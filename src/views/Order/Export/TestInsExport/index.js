@@ -5,10 +5,6 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router";
 import TextImage from "../../../../components/TextImage";
-import Modal from "../../../../components/Modal/View";
-import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
-import HistoryIcon from "@material-ui/icons/History";
-import FastForwardIcon from "@material-ui/icons/FastForward";
 import { debounce, sortBy } from "lodash";
 import {
   Grid,
@@ -20,13 +16,10 @@ import {
   TableHead,
   TableRow,
   Button,
-  TextField,
   Card,
   CardHeader,
   CardContent,
   Divider,
-  FormControlLabel,
-  Select,
   MenuItem,
   ImageListItem,
   ImageListItemBar,
@@ -35,32 +28,16 @@ import {
   List,
   Dialog,
   CardActions,
-  FormControl,
-  Switch,
-  Drawer,
-  Chip,
   Checkbox,
 } from "@material-ui/core";
-import Breadcrumb from "../../../../components/Breadcrumb/View";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import NumberFormat from "react-number-format";
-import IconButton from "@material-ui/core/IconButton";
 import LoopIcon from "@material-ui/icons/Loop";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import glb_sv from "../../../../utils/service/global_service";
 import control_sv from "../../../../utils/service/control_services";
 import SnackBarService from "../../../../utils/service/snackbar_service";
 import reqFunction from "../../../../utils/constan/functions";
 import sendRequest from "../../../../utils/service/sendReq";
 import DisplayColumn from "../../../../components/DisplayColumn";
-import Dictionary_Autocomplete from "../../../../components/Dictionary_Autocomplete/index";
 import { invoiceExportModal, tableListAddColumn2 } from "../Modal/Export.modal";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import CustomerAdd_Autocomplete from "../../../Partner/Customer/Control/CustomerAdd.Autocomplete";
 import { useReactToPrint } from "react-to-print";
 import Export_Bill from "../../../../components/Bill/Export_Bill";
 import ExportExcel from "../../../../components/ExportExcel";
@@ -69,24 +46,17 @@ import {
   defaultDataUpdateProduct,
   searchDefaultModalInvoice,
 } from "../Modal/Export.modal";
-import DeleteIcon from "@material-ui/icons/Delete";
-import CancelIcon from "@material-ui/icons/Cancel";
-import SaveIcon from "@material-ui/icons/Save";
 import SearchIcon from "@material-ui/icons/Search";
-import BorderColorIcon from "@material-ui/icons/BorderColor";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
 import {
-  TitleFilterCpn,
   Wrapper,
   IconButtonCpn,
   ButtonCpn,
   TextFieldCpn,
   DatePickerCpn,
-  TextAreaCpn,
   SelectCpn,
-  CheckBoxCpn,
 } from "../../../../basicComponents";
 
 import { Dictionary } from "../../../../components/Autocomplete";
@@ -185,10 +155,8 @@ const InsExport = () => {
   const [isScan, setIsScan] = useState(true);
   const [dataSearchInput, setDataSearchInput] = useState("");
   const [listInventoryProduct, setListInventoryProduct] = useState([]);
-  const [open, setOpen] = useState(false);
   const [typeSale, setTypeSale] = useState("1");
   const [expPrice, setExpPrice] = useState(0);
-  const [isIndexRow, setIsIndexRow] = useState(null);
   const [productDeleteModal, setProductDeleteModal] = useState({});
   const [productDeleteIndex, setProductDeleteIndex] = useState(null);
   const [shouldOpenDeleteModal, setShouldOpenDeleteModal] = useState(false);
@@ -215,17 +183,12 @@ const InsExport = () => {
     ...searchDefaultModalInvoice,
   });
   const [totalRecordsListInvoice, setTotalRecordsListInvoice] = useState(0);
-  const [customerId, setCustomerId] = useState(null);
 
 
   const componentPrint = useRef(null);
   const dataWaitAdd = useRef({});
   const newInvoiceId = useRef(-1);
   const dataSourceRef = useRef([]);
-
-  const step2Ref = useRef(null);
-  const step3Ref = useRef(null);
-  const step4Ref = useRef(null);
 
   const dataProduct = useRef(null);
 
@@ -259,7 +222,6 @@ const InsExport = () => {
       newData.invoice_val - newData.invoice_discount || 0;
     setPaymentInfo(newData);
   }, [dataSource, Export.discount_tp, Export.invoice_discount]);
-console.log(paymentInfo)
   useEffect(() => {
     dataSourceRef.current = [];
     getList(
@@ -276,7 +238,6 @@ console.log(paymentInfo)
       handleRefresh();
       setOpenModalShowBill(false);
       setInvoiceFlag(true);
-      setIsIndexRow(null);
       setDisableUpdateInvoice(false);
     }
   }, []);
@@ -443,8 +404,6 @@ console.log(paymentInfo)
     []
   );
 
-  const handleFocus = (event) => event.target.select();
-
   const handleSearchInput = (e) => {
     if (e.target.value === "") {
       setTimeout(() => {
@@ -567,7 +526,6 @@ console.log(paymentInfo)
       handleCallApiFail(reqInfoMap, message);
     } else if (message["PROC_DATA"]) {
       dataWaitAdd.current = {};
-      setIsIndexRow(null);
       handleRefresh();
       // xử lý thành công
     }
@@ -789,19 +747,7 @@ console.log(paymentInfo)
       handleRefresh();
     } else if (message["PROC_DATA"]) {
       handleRefresh();
-      // setIsIndexRow(null);
     }
-  };
-
-  const handleChangeUpdate = (inputKey, inputValue) => {
-    const newProductInfo = { ...productInfo };
-    if (inputKey === "expPrice" || inputKey === "expQty") {
-      newProductInfo[inputKey] = inputValue;
-    } else {
-      newProductInfo[inputKey] =
-        inputValue >= 0 && inputValue <= 100 ? Math.round(inputValue) : 10;
-    }
-    setProductInfo(newProductInfo);
   };
 
   const updateDataListProduct = useCallback(
@@ -972,7 +918,6 @@ console.log(paymentInfo)
       handleAddProduce();
       return;
     }
-    setOpen(true);
     setExpPrice(0);
   };
 
@@ -981,18 +926,18 @@ console.log(paymentInfo)
     glb_sv.setReqInfoMapValue(cltSeqResult, reqInfoMap);
     control_sv.clearReqInfoMapRequest(cltSeqResult);
   };
-  const onChangeColumnView = (item) => {
-    const newColumn = [...column];
-    const index = newColumn.findIndex((obj) => obj.field === item.field);
-    if (index >= 0) {
-      newColumn[index]["show"] = !column[index]["show"];
-      localStorage.setItem(
-        `exportTableTop-${glb_sv.newVersion}`,
-        JSON.stringify(newColumn)
-      );
-      setColumn(newColumn);
-    }
-  };
+  // const onChangeColumnView = (item) => {
+  //   const newColumn = [...column];
+  //   const index = newColumn.findIndex((obj) => obj.field === item.field);
+  //   if (index >= 0) {
+  //     newColumn[index]["show"] = !column[index]["show"];
+  //     localStorage.setItem(
+  //       `exportTableTop-${glb_sv.newVersion}`,
+  //       JSON.stringify(newColumn)
+  //     );
+  //     setColumn(newColumn);
+  //   }
+  // };
 
   const checkValidate = () => {
     if (!!Export.customer_id && !!Export.order_dt && invoiceFlag) {
@@ -1085,17 +1030,6 @@ console.log(paymentInfo)
     setSearchModal(newSearchModal);
   };
 
-  const handleClickEdit = (item, index) => {
-    setIsIndexRow(index);
-    setProductInfo({
-      ...productInfo,
-      expType: item.o_2,
-      expQty: item.o_7,
-      expPrice: item.o_10,
-      expDisCount: item.o_11,
-      expVAT: item.o_12,
-    });
-  };
 
   const getNextData = () => {
     const lastIndex = dataSourceRef.current.length - 1;
@@ -1354,7 +1288,6 @@ console.log(paymentInfo)
                         handleRefresh();
                         setOpenModalShowBill(false);
                         setInvoiceFlag(true);
-                        setIsIndexRow(null);
                         setDisableUpdateInvoice(false);
                       }}
                     >
@@ -1768,13 +1701,6 @@ console.log(paymentInfo)
                 {invoiceType ? "H.Đ bán lẻ" : "H.Đ bán sỉ"} ?
               </div>
               <div className="p-2">
-                {/* <TextFieldCpn
-                  label="Tên nhân viên nhập (*)"
-                  placeholder="Bắt buộc nhập"
-                  onChange={handleChangeBill}
-                  name="staff_exp"
-                  value={Export.staff_exp}
-                /> */}
                 <TextFieldCpn
                   label="Số hoá đơn"
                   placeholder="Nhập tay hoặc tự sinh"
@@ -1967,1164 +1893,6 @@ console.log(paymentInfo)
           </Card>
         </Dialog>
       </div>
-      {false && (
-        <>
-          <Modal
-            setOpen={setOpen}
-            open={open}
-            typeSale={typeSale}
-            setTypeSale={setTypeSale}
-            expPrice={expPrice}
-            setExpPrice={setExpPrice}
-            handleAddProduce={handleAddProduce}
-          />
-          <div
-            className={`${
-              (listInventoryProduct.length || openModalShowBill) &&
-              "full-screen"
-            }`}
-            onClick={() => {
-              setDataSearchInput("");
-              setListInventoryProduct([]);
-              setOpenModalShowBill(false);
-            }}
-          ></div>
-          <Drawer
-            anchor="right"
-            open={openModalShowBill}
-            onClose={() => {
-              setOpenModalShowBill(false);
-            }}
-          >
-            <CardHeader
-              title={t("order.export.list_invoiced")}
-              action={
-                <div
-                  className="cursor-pointer"
-                  onClick={() => {
-                    setOpenModalShowBill(false);
-                  }}
-                >
-                  X
-                </div>
-              }
-            />
-            <List style={{ minWidth: "270px", overflowY: "scroll" }}>
-              {!dataHistoryListInvoice.length && (
-                <ListItem>
-                  <div className="w-100">
-                    <div className="text-center fz14">
-                      {t("order.export.no_invoice_for_the_day")}
-                    </div>
-                  </div>
-                </ListItem>
-              )}
-              {dataHistoryListInvoice.map((data, index) => {
-                return (
-                  <>
-                    <ListItem
-                      button
-                      className="w-100"
-                      key={index}
-                      onClick={() => {
-                        newInvoiceId.current = data.o_1;
-                        handleRefresh();
-                        setOpenModalShowBill(false);
-                        setInvoiceFlag(true);
-                        setIsIndexRow(null);
-                        setDisableUpdateInvoice(false);
-                      }}
-                    >
-                      <div className="w-100">
-                        <div className="fz12">
-                          <div className="fz14 font-weight-500"></div>
-                          <div>
-                            <span className="weight-title">
-                              {t("order.export.invoice_no_hd")}
-                            </span>
-                            <span>: {data.o_2}</span>
-                          </div>
-                          <div className="flex">
-                            <span className="weight-title">
-                              {t("order.export.bill_invoice")}
-                            </span>
-                            <span>
-                              : {glb_sv.formatValue(data.o_9, "currency")}
-                            </span>
-                          </div>
-                          <div className="flex">
-                            <span className="weight-title">
-                              {t("order.export.cust_nm_v")}
-                            </span>
-                            <span>: {data.o_4}</span>
-                          </div>
-                          <div>
-                            <span className="weight-title">
-                              {t("order.export.time_export")}
-                            </span>
-                            <span>
-                              :{" "}
-                              {moment(data.o_5, "YYYYMMDD").format(
-                                "DD/MM/YYYY"
-                              )}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </ListItem>
-                    <Divider component="li" />
-                  </>
-                );
-              })}
-              <ListItem>
-                <div className="d-flex align-items-center justify-content-between">
-                  <Chip
-                    size="small"
-                    variant="outlined"
-                    className="mr-1"
-                    label={
-                      dataHistoryListInvoiceRef.current.length +
-                      "/" +
-                      totalRecordsListInvoice +
-                      " " +
-                      t("Hóa đơn")
-                    }
-                  />
-                  <Chip
-                    variant="outlined"
-                    size="small"
-                    className="mr-1"
-                    deleteIcon={<FastForwardIcon />}
-                    onDelete={() => null}
-                    color="primary"
-                    label={t("getMoreData")}
-                    onClick={getNextDataListInvoice}
-                    disabled={
-                      dataHistoryListInvoiceRef.current.length >=
-                      totalRecordsListInvoice
-                    }
-                  />
-                </div>
-              </ListItem>
-            </List>
-          </Drawer>
-          <Grid container spacing={1} className="h-100">
-            <Grid item md={9} xs={12} className="h-100">
-              <Card className="mb-2" style={{ height: "53%" }}>
-                <CardHeader
-                  title={
-                    <div className="flex aligh-item-center">
-                      {<Breadcrumb />}
-                    </div>
-                  }
-                />
-                <CardContent>
-                  <div className="flex justify-content-between aligh-item-center">
-                    <div className="mb-1 flex aligh-item-center">
-                      {isScan ? (
-                        <div id="search-product">
-                          <TextField
-                            style={{ width: "350px" }}
-                            size={"small"}
-                            label={t("search_btn")}
-                            variant="outlined"
-                            onChange={handleSearchInput}
-                            value={dataSearchInput}
-                          />
-                          <List
-                            className={`list-product-inventory ${
-                              !listInventoryProduct.length && "dl-none"
-                            }`}
-                          >
-                            {listInventoryProduct.map((data, index) => {
-                              return (
-                                <>
-                                  <ListItem
-                                    button
-                                    className="item-inventory cursor-pointer w-100"
-                                    key={index}
-                                    onClick={() => {
-                                      handleShowModalPrice(data);
-                                      setDataSearchInput("");
-                                      setListInventoryProduct([]);
-                                      setOpenModalShowBill(false);
-                                    }}
-                                  >
-                                    <Avatar
-                                      style={{ width: "60px" }}
-                                      className="medium-avata"
-                                      sizes="100"
-                                      variant="square"
-                                      src={`${glb_sv.configInfo.domain}/upload/product/${data.o_10}`}
-                                    >
-                                      <TextImage />
-                                    </Avatar>
-                                    <div className="w-100">
-                                      <div className="fz12">
-                                        <div className="fz14 font-weight-500">
-                                          {data.o_2}
-                                        </div>
-                                        <div className="flex justify-content-between">
-                                          <div>
-                                            {t("order.export.lot_no")}:{" "}
-                                            {data.o_3}
-                                          </div>
-                                          <div>
-                                            {t("order.export.HSD")}:{" "}
-                                            {moment(
-                                              data.o_4,
-                                              "YYYYMMDD"
-                                            ).format("DD/MM/YYYY")}
-                                          </div>
-                                        </div>
-                                        <div>
-                                          <div>
-                                            {t("order.export.inven")}:{" "}
-                                            {data.o_5}
-                                          </div>
-                                          <div>
-                                            {typePrice(
-                                              invoiceType,
-                                              data?.o_13,
-                                              data?.o_14
-                                            )
-                                              ? `${t(
-                                                  "order.export.price"
-                                                )}: ${glb_sv.formatValue(
-                                                  typePrice(
-                                                    invoiceType,
-                                                    data?.o_13,
-                                                    data?.o_14
-                                                  ),
-                                                  "currency"
-                                                )}`
-                                              : t(
-                                                  "order.export.selling_price_has_not_been_set"
-                                                )}
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </ListItem>
-                                  <Divider component="li" />
-                                </>
-                              );
-                            })}
-                          </List>
-                        </div>
-                      ) : (
-                        <TextField
-                          id="bar-code-id"
-                          style={{ width: "300px" }}
-                          size={"small"}
-                          label={t("product.barcodevbb")}
-                          variant="outlined"
-                          autoFocus={true}
-                          // disabled={disableInputBarCode}
-                          onKeyUp={handleBarcode}
-                        />
-                      )}
-                      <span className="ml-2 p-1 action_ctr">
-                        {isScan ? (
-                          <Tooltip
-                            onClick={() => {
-                              setIsScan(false);
-                            }}
-                            title={t("scan_barcode")}
-                          >
-                            <IC_ADD_BASIC />
-                          </Tooltip>
-                        ) : (
-                          <Tooltip
-                            onClick={() => {
-                              setIsScan(true);
-                            }}
-                            title={t("edit_base")}
-                          >
-                            <SearchIcon />
-                          </Tooltip>
-                        )}
-                      </span>
-                    </div>
-                    <div>
-                      <ExportExcel
-                        filename={`export_${Export.invoice_no}`}
-                        data={dataCSV()}
-                        headers={headersCSV}
-                        style={{ backgroundColor: "#00A248", color: "#066190" }}
-                      />
-                      <DisplayColumn
-                        style={{ backgroundColor: "#066190", color: "#fff" }}
-                        columns={column}
-                        handleCheckChange={onChangeColumnView}
-                      />
-                    </div>
-                  </div>
-                  <TableContainer className="height-table-260 export tableContainer tableOrder">
-                    <Table stickyHeader>
-                      <caption
-                        className={[
-                          "text-center text-danger border-bottom-0",
-                          dataSource.length > 0 ? "d-none" : "",
-                        ].join(" ")}
-                      >
-                        {t("lbl.emptyData")}
-                      </caption>
-                      <TableHead>
-                        <TableRow>
-                          {column.map((col, index) => {
-                            return (
-                              <Tooltip
-                                placement="top"
-                                disableFocusListener
-                                disableTouchListener
-                                title={t(col.tootip)}
-                              >
-                                <TableCell
-                                  colSpan={col.field === "action" ? 2 : 1}
-                                  nowrap="true"
-                                  align={col.align}
-                                  className={[
-                                    "p-2 border-0 cursor-pointer",
-                                    col.show ? "d-table-cell" : "d-none",
-                                  ].join(" ")}
-                                  key={col.field}
-                                  onClick={() => {
-                                    handleClickSortColum(col, index);
-                                  }}
-                                >
-                                  {t(col.title)}{" "}
-                                  {sortColumn?.columIndex === index &&
-                                    showIconSort()}
-                                </TableCell>
-                              </Tooltip>
-                            );
-                          })}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {dataSource.map((item, index) => {
-                          return (
-                            <TableRow
-                              hover
-                              role="checkbox"
-                              tabIndex={-1}
-                              key={index}
-                              onDoubleClick={() => {
-                                handleClickEdit(item, index);
-                              }}
-                            >
-                              {column.map((col, indexRow) => {
-                                let value = item[col.field];
-                                if (col.show) {
-                                  switch (col.field) {
-                                    case "stt":
-                                      return (
-                                        <TableCell
-                                          nowrap="true"
-                                          key={indexRow}
-                                          align={col.align}
-                                        >
-                                          {index + 1}
-                                        </TableCell>
-                                      );
-                                    case "action":
-                                      return (
-                                        <>
-                                          <TableCell
-                                            align="center"
-                                            nowrap="true"
-                                          >
-                                            {isIndexRow === index ? (
-                                              <Tooltip
-                                                placement="top"
-                                                title={t("save")}
-                                              >
-                                                <IconButton
-                                                  size="small"
-                                                  onClick={() => {
-                                                    updateDataListProduct(item);
-                                                  }}
-                                                >
-                                                  <SaveIcon
-                                                    style={{ color: "#066190" }}
-                                                    fontSize="midlle"
-                                                  />
-                                                </IconButton>
-                                              </Tooltip>
-                                            ) : (
-                                              <Tooltip
-                                                placement="top"
-                                                title={t("delete")}
-                                              >
-                                                <IconButton
-                                                  size="small"
-                                                  onClick={() => {
-                                                    onRemove(item);
-                                                    setProductDeleteIndex(
-                                                      index + 1
-                                                    );
-                                                  }}
-                                                >
-                                                  <DeleteIcon
-                                                    style={{ color: "red" }}
-                                                    fontSize="middle"
-                                                  />
-                                                </IconButton>
-                                              </Tooltip>
-                                            )}
-                                          </TableCell>
-
-                                          <TableCell
-                                            align="center"
-                                            nowrap="true"
-                                          >
-                                            {isIndexRow === index ? (
-                                              <Tooltip
-                                                placement="top"
-                                                title={t("cancel")}
-                                              >
-                                                <IconButton
-                                                  size="small"
-                                                  onClick={() => {
-                                                    setIsIndexRow(null);
-                                                  }}
-                                                >
-                                                  <CancelIcon
-                                                    style={{ color: "#732424" }}
-                                                    fontSize="midlle"
-                                                  />
-                                                </IconButton>
-                                              </Tooltip>
-                                            ) : (
-                                              <>
-                                                <Tooltip
-                                                  placement="top"
-                                                  title={t("update")}
-                                                >
-                                                  <IconButton
-                                                    size="small"
-                                                    onClick={() => {
-                                                      handleClickEdit(
-                                                        item,
-                                                        index
-                                                      );
-                                                    }}
-                                                  >
-                                                    <BorderColorIcon fontSize="midlle" />
-                                                  </IconButton>
-                                                </Tooltip>
-                                              </>
-                                            )}
-                                          </TableCell>
-                                        </>
-                                      );
-                                    case "stt":
-                                      return (
-                                        <TableCell
-                                          nowrap="true"
-                                          key={indexRow}
-                                          align={col.align}
-                                        >
-                                          {index + 1}
-                                        </TableCell>
-                                      );
-                                    case "o_3":
-                                      return (
-                                        <TableCell align="center" nowrap="true">
-                                          {isIndexRow === index ? (
-                                            <Select
-                                              id="outlined-margin-dense"
-                                              margin="dense"
-                                              fullWidth={true}
-                                              labelId="export_type"
-                                              name="expType"
-                                              value={productInfo.expType}
-                                              onChange={(event) => {
-                                                handleChangeType(event, item);
-                                              }}
-                                              variant="outlined"
-                                            >
-                                              <MenuItem value="1">
-                                                {t(
-                                                  "order.export.export_type_buy"
-                                                )}
-                                              </MenuItem>
-                                              <MenuItem value="2">
-                                                {t(
-                                                  "order.export.export_type_selloff"
-                                                )}
-                                              </MenuItem>
-                                            </Select>
-                                          ) : (
-                                            item.o_3
-                                          )}
-                                        </TableCell>
-                                      );
-                                    case "o_14":
-                                      return (
-                                        <TableCell align="center" nowrap="true">
-                                          {moment(item.o_14, "DDMMYYYY").format(
-                                            "DD/MM/YYYY"
-                                          )}
-                                        </TableCell>
-                                      );
-                                    case "o_7":
-                                      return (
-                                        <TableCell align="center" nowrap="true">
-                                          {isIndexRow === index ? (
-                                            <NumberFormat
-                                              size={"small"}
-                                              className="inputNumber"
-                                              required
-                                              type="teft"
-                                              customInput={TextField}
-                                              autoComplete="off"
-                                              autoFocus={true}
-                                              margin="dense"
-                                              variant="outlined"
-                                              onFocus={handleFocus}
-                                              thousandSeparator={true}
-                                              onKeyPress={(event) => {
-                                                if (event.key === "Tab") {
-                                                  step2Ref.current.focus();
-                                                }
-                                              }}
-                                              onValueChange={(value) => {
-                                                handleChangeUpdate(
-                                                  "expQty",
-                                                  value.floatValue
-                                                );
-                                              }}
-                                              value={productInfo.expQty}
-                                            />
-                                          ) : (
-                                            glb_sv.formatValue(
-                                              item.o_7,
-                                              col["type"]
-                                            )
-                                          )}
-                                        </TableCell>
-                                      );
-
-                                    case "o_10":
-                                      return (
-                                        <TableCell align="center" nowrap="true">
-                                          {isIndexRow === index ? (
-                                            <NumberFormat
-                                              inputRef={step2Ref}
-                                              className="inputNumber"
-                                              required
-                                              customInput={TextField}
-                                              autoComplete="off"
-                                              margin="dense"
-                                              type="text"
-                                              variant="outlined"
-                                              value={productInfo.expPrice}
-                                              thousandSeparator={true}
-                                              disabled={
-                                                productInfo.expType === "1"
-                                                  ? false
-                                                  : true
-                                              }
-                                              onValueChange={(value) => {
-                                                handleChangeUpdate(
-                                                  "expPrice",
-                                                  value.floatValue
-                                                );
-                                              }}
-                                              onKeyPress={(event) => {
-                                                if (event.key === "Tab") {
-                                                  step3Ref.current.focus();
-                                                }
-                                              }}
-                                            />
-                                          ) : (
-                                            glb_sv.formatValue(
-                                              item.o_10,
-                                              col["type"]
-                                            )
-                                          )}
-                                        </TableCell>
-                                      );
-
-                                    case "o_11":
-                                      return (
-                                        <TableCell align="center" nowrap="true">
-                                          {isIndexRow === index ? (
-                                            <NumberFormat
-                                              inputRef={step3Ref}
-                                              className="inputNumber"
-                                              required
-                                              customInput={TextField}
-                                              autoComplete="off"
-                                              margin="dense"
-                                              type="text"
-                                              variant="outlined"
-                                              value={productInfo.expDisCount}
-                                              disabled={
-                                                productInfo.expType === "1"
-                                                  ? false
-                                                  : true
-                                              }
-                                              onValueChange={(value) => {
-                                                handleChangeUpdate(
-                                                  "expDisCount",
-                                                  value.floatValue
-                                                );
-                                              }}
-                                              onKeyPress={(event) => {
-                                                if (event.key === "Tab") {
-                                                  step4Ref.current.focus();
-                                                }
-                                              }}
-                                            />
-                                          ) : (
-                                            item.o_11
-                                          )}
-                                        </TableCell>
-                                      );
-                                    case "o_12":
-                                      return (
-                                        <TableCell
-                                          align="center"
-                                          nowrap="true"
-                                          style={{ minWidth: "100px" }}
-                                        >
-                                          {isIndexRow === index ? (
-                                            <NumberFormat
-                                              inputRef={step4Ref}
-                                              className="inputNumber"
-                                              required
-                                              customInput={TextField}
-                                              autoComplete="off"
-                                              margin="dense"
-                                              type="text"
-                                              value={productInfo.expVAT}
-                                              disabled={
-                                                productInfo.expType === "1"
-                                                  ? false
-                                                  : true
-                                              }
-                                              variant="outlined"
-                                              onValueChange={(value) => {
-                                                handleChangeUpdate(
-                                                  "expVAT",
-                                                  value.floatValue
-                                                );
-                                              }}
-                                            />
-                                          ) : (
-                                            item.o_12
-                                          )}
-                                        </TableCell>
-                                      );
-
-                                    default:
-                                      return (
-                                        <TableCell
-                                          nowrap="true"
-                                          key={indexRow}
-                                          align={col.align}
-                                        >
-                                          {glb_sv.formatValue(
-                                            value,
-                                            col["type"]
-                                          )}
-                                        </TableCell>
-                                      );
-                                  }
-                                }
-                              })}
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </CardContent>
-              </Card>
-              <Card
-                className="list-product-bottom"
-                style={{ height: "calc(47% - 8px)", position: "relative" }}
-              >
-                <CardHeader
-                  title={t("product.titleList")}
-                  action={
-                    <div className="flex">
-                      <div style={{ minWidth: "270px" }}>
-                        <Dictionary_Autocomplete
-                          placeholder={t(
-                            "order.export.filter_by_product_group"
-                          )}
-                          diectionName="groups"
-                          value={searchModal.group_nm || ""}
-                          style={{
-                            marginTop: 8,
-                            marginBottom: 4,
-                            background: "#fff",
-                            borderRadius: "5px",
-                            fontSize: "12px",
-                          }}
-                          size={"small"}
-                          onSelect={handleSelectGroup}
-                        />
-                      </div>
-                      <FormControl
-                        margin="dense"
-                        variant="outlined"
-                        className="w-100 ml-1"
-                        style={{ minWidth: "150px" }}
-                      >
-                        <Select
-                          className="status-select"
-                          labelId="status"
-                          id="status-select"
-                          value={searchModal.invent_yn || "Y"}
-                          onChange={handleChange}
-                          name="invent_yn"
-                        >
-                          <MenuItem value="N">{t("report.all")}</MenuItem>
-                          <MenuItem value="Y">
-                            {t("order.export.inventory_lot_no")}
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-                    </div>
-                  }
-                />
-                <CardContent
-                  style={{ maxHeight: "calc(35vh - 2px)", overflow: "auto" }}
-                >
-                  <MuiThemeProvider theme={theme}>
-                    <Grid container spacing={2}>
-                      {listInventory.map((item, index) => {
-                        return (
-                          <Grid
-                            item
-                            xs={4}
-                            md={3}
-                            sm={3}
-                            lg={3}
-                            xl={2}
-                            key={index}
-                            className="custom-img"
-                          >
-                            <ImageListItem
-                              className="cursor-pointer list-style"
-                              key={index}
-                              onClick={() => {
-                                handleShowModalPrice(item);
-                              }}
-                            >
-                              <Avatar
-                                variant="square"
-                                style={{
-                                  height: "150px",
-                                  width: "100%",
-                                  marginRight: "10px",
-                                }}
-                                src={`${glb_sv.configInfo.domain}/upload/product/${item.o_10}`}
-                              >
-                                <TextImage />
-                              </Avatar>
-                              <ImageListItemBar
-                                className="show-info-bottom"
-                                title={<div className="fz14">{item.o_2}</div>}
-                                subtitle={
-                                  <div style={{ fontSize: "10px" }}>
-                                    <div>
-                                      <span>
-                                        {t("order.export.lot_no")}: {item.o_3}
-                                      </span>{" "}
-                                      <span className="ml-2">
-                                        {t("order.export.HSD")}:{" "}
-                                        {moment(item.o_4, "YYYYMMDD").format(
-                                          "DD/MM/YYYY"
-                                        )}
-                                      </span>
-                                    </div>
-                                    <div className="mt-1">
-                                      {t("order.export.inven")}: {item.o_5}
-                                    </div>
-                                  </div>
-                                }
-                              />
-                            </ImageListItem>
-                          </Grid>
-                        );
-                      })}
-                    </Grid>
-                  </MuiThemeProvider>
-                </CardContent>
-                <CardActions
-                  disableSpacing
-                  style={{ position: "absolute", bottom: 0, width: "100%" }}
-                >
-                  <div className="d-flex align-items-center">
-                    <Chip
-                      size="small"
-                      variant="outlined"
-                      className="mr-1"
-                      label={
-                        dataSourceRef.current.length +
-                        "/" +
-                        totalRecords +
-                        " " +
-                        t("Sản phẩm")
-                      }
-                    />
-                    <Chip
-                      variant="outlined"
-                      size="small"
-                      className="mr-1"
-                      deleteIcon={<FastForwardIcon />}
-                      onDelete={() => null}
-                      color="primary"
-                      label={t("getMoreData")}
-                      onClick={getNextData}
-                      disabled={dataSourceRef.current.length >= totalRecords}
-                    />
-                  </div>
-                </CardActions>
-              </Card>
-            </Grid>
-            <Grid item md={3} xs={12}>
-              <Card className="h-100">
-                <CardHeader
-                  title={
-                    <div className="flex justify-content-between aligh-item-center">
-                      <div>{t("order.export.invoice_infobbbb")}</div>{" "}
-                      <div className="cursor-pointer flex">
-                        <div className="mr-1">
-                          <Tooltip
-                            disableFocusListener
-                            title={t("order.exportRepay.intraday_trans_his")}
-                          >
-                            <HistoryIcon
-                              onClick={() => {
-                                dataHistoryListInvoiceRef.current = [];
-                                getListInvoice(
-                                  searchModalInvoice.start_dt,
-                                  searchModalInvoice.end_dt,
-                                  searchModalInvoice.last_id
-                                );
-                                setOpenModalShowBill((pre) => !pre);
-                              }}
-                            />
-                          </Tooltip>
-                        </div>
-                        <div className="mr-1">
-                          bdbd
-                          <Tooltip
-                            disableFocusListener
-                            title={t("order.exportRepay.new_invoice")}
-                          >
-                            <AddShoppingCartIcon
-                              onClick={() => {
-                                setExport({ ...invoiceExportModal });
-                                setDataSource([]);
-                                setInvoiceFlag(false);
-                                setCustomerSelect("");
-                              }}
-                            />
-                          </Tooltip>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                />
-                <CardContent>
-                  <Grid container>
-                    <FormControlLabel
-                      style={{ margin: 0 }}
-                      control={
-                        <Switch
-                          checked={invoiceType}
-                          onChange={(e) => setInvoiceType(e.target.checked)}
-                          inputProps={{ "aria-label": "controlled" }}
-                        />
-                      }
-                      label={
-                        <>
-                          {t(
-                            `${
-                              invoiceType
-                                ? "retail_invoice"
-                                : "wholesale_invoice"
-                            }`
-                          )}
-                          <Tooltip
-                            title={t(
-                              `${
-                                invoiceType
-                                  ? "tooltip_retail_invoice"
-                                  : "tooltip_wholesale_invoice"
-                              }`
-                            )}
-                          >
-                            <IconButton size="small" aria-label="help">
-                              <HelpOutlineIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </>
-                      }
-                    />
-                    <Tooltip placement="top" title={t("auto_invoice")} arrow>
-                      <TextField
-                        fullWidth={true}
-                        disabled={invoiceFlag}
-                        margin="dense"
-                        autoComplete="off"
-                        label={t("auto_invoice")}
-                        // Mã hóa đơn
-                        onChange={handleChangeBill}
-                        value={Export.invoice_no || ""}
-                        name="invoice_no"
-                        variant="outlined"
-                      />
-                    </Tooltip>
-                    <div className="d-flex align-items-center w-100">
-                      <CustomerAdd_Autocomplete
-                        value={customerSelect || ""}
-                        // autoFocus={true}
-                        size={"small"}
-                        label={t("menu.customer")}
-                        onSelect={handleSelectCustomer}
-                        onCreate={(id) =>
-                          setExport({ ...Export, ...{ customer: id } })
-                        }
-                      />
-                    </div>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <KeyboardDatePicker
-                        disabled
-                        className="w-100"
-                        disableToolbar
-                        margin="dense"
-                        variant="outlined"
-                        inputVariant="outlined"
-                        format="dd/MM/yyyy"
-                        id="order_dt-picker-inline"
-                        label={t("order.export.order_dt")}
-                        value={Export.order_dt}
-                        onChange={handleDateChange}
-                        // disabled = {true}
-                        KeyboardButtonProps={{
-                          "aria-label": "change date",
-                        }}
-                      />
-                    </MuiPickersUtilsProvider>
-                    <TextField
-                      fullWidth={true}
-                      margin="dense"
-                      multiline
-                      autoComplete="off"
-                      rows={1}
-                      label={t("order.export.note")}
-                      onChange={handleChangeBill}
-                      value={Export.note || ""}
-                      name="note"
-                      variant="outlined"
-                    />
-                    <NumberFormat
-                      className="inputNumber w-100"
-                      required
-                      value={Export.invoice_val || 0}
-                      label={t("order.export.invoice_val")}
-                      customInput={TextField}
-                      autoComplete="off"
-                      margin="dense"
-                      type="text"
-                      variant="outlined"
-                      thousandSeparator={true}
-                      disabled={true}
-                    />
-                    <NumberFormat
-                      className="inputNumber w-100"
-                      required
-                      value={Export.invoice_discount || 0}
-                      label={t("order.export.invoice_discount")}
-                      customInput={TextField}
-                      autoComplete="off"
-                      margin="dense"
-                      type="text"
-                      variant="outlined"
-                      thousandSeparator={true}
-                      disabled={true}
-                    />
-                    <NumberFormat
-                      className="inputNumber w-100"
-                      style={{ width: "100%" }}
-                      required
-                      value={Export.invoice_vat || 0}
-                      label={t("order.export.invoice_vat")}
-                      customInput={TextField}
-                      autoComplete="off"
-                      margin="dense"
-                      type="text"
-                      variant="outlined"
-                      thousandSeparator={true}
-                      disabled={true}
-                    />
-                    <Divider orientation="horizontal" />
-                    <NumberFormat
-                      className="inputNumber w-100"
-                      style={{ width: "100%" }}
-                      required
-                      value={paymentInfo.invoice_needpay}
-                      label={t("order.export.invoice_needpay")}
-                      customInput={TextField}
-                      autoComplete="off"
-                      margin="dense"
-                      type="text"
-                      variant="outlined"
-                      thousandSeparator={true}
-                      disabled={true}
-                    />
-                    <NumberFormat
-                      className="inputNumber w-100"
-                      required
-                      value={Export.payment_amount}
-                      label={t("settlement.payment_amount")}
-                      onValueChange={handleAmountChange}
-                      name="payment_amount"
-                      customInput={TextField}
-                      autoComplete="off"
-                      margin="dense"
-                      type="text"
-                      variant="outlined"
-                      thousandSeparator={true}
-                    />
-                    <Divider orientation="horizontal" flexItem />
-                    <NumberFormat
-                      className="inputNumber w-100"
-                      value={
-                        Export.payment_amount - paymentInfo.invoice_needpay > 0
-                          ? Export.payment_amount - paymentInfo.invoice_needpay
-                          : 0
-                      }
-                      label={t("settlement.excess_cash")}
-                      customInput={TextField}
-                      autoComplete="off"
-                      margin="dense"
-                      type="text"
-                      variant="outlined"
-                      thousandSeparator={true}
-                      disabled={true}
-                    />
-                  </Grid>
-                  <Grid container className="mt-2">
-                    <Button
-                      size="small"
-                      style={{
-                        width: "calc(60% - 0.25rem)",
-                        marginRight: "0.5rem",
-                      }}
-                      onClick={() => {
-                        handleUpdateInvoice();
-                      }}
-                      variant="contained"
-                      disabled={checkValidate()}
-                      className={
-                        checkValidate() === false
-                          ? updateProcess
-                            ? "button-loading bg-success text-white"
-                            : "bg-success text-white"
-                          : ""
-                      }
-                      endIcon={updateProcess && <LoopIcon />}
-                    >
-                      {t("btn.payment2")}
-                    </Button>
-                    <Button
-                      onClick={handlePrint}
-                      disabled={!invoiceFlag}
-                      className={invoiceFlag ? "bg-print text-white" : ""}
-                      id="buttonPrint"
-                      size="small"
-                      variant="contained"
-                      style={{ width: "calc(40% - 0.25rem)" }}
-                    >
-                      {t("print")}
-                    </Button>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <div className="dl-none">
-              <Export_Bill
-                headerModal={Export}
-                detailModal={dataSource}
-                componentRef={componentPrint}
-              />
-            </div>
-            {/* modal delete */}
-            <Dialog
-              maxWidth="xs"
-              fullWidth={true}
-              TransitionProps={{
-                addEndListener: (node, done) => {
-                  node.addEventListener("keypress", function (e) {
-                    if (e.key === "Enter") {
-                      handleDelete();
-                    }
-                  });
-                },
-              }}
-              open={shouldOpenDeleteModal}
-              onClose={(e) => {
-                setShouldOpenDeleteModal(false);
-              }}
-            >
-              <Card>
-                <CardHeader title={t("order.export.productDelete")} />
-                <CardContent>
-                  <Grid container>
-                    {productDeleteModal.o_5 +
-                      " - " +
-                      t("order.export.qty") +
-                      ": " +
-                      productDeleteModal.o_7 +
-                      " " +
-                      productDeleteModal.o_9 +
-                      " (" +
-                      t("stt") +
-                      " " +
-                      productDeleteIndex +
-                      ")"}
-                  </Grid>
-                </CardContent>
-                <CardActions className="align-items-end justify-content-end">
-                  <Button
-                    size="small"
-                    onClick={(e) => {
-                      setShouldOpenDeleteModal(false);
-                    }}
-                    startIcon={<ExitToAppIcon />}
-                    variant="contained"
-                    disableElevation
-                  >
-                    {t("btn.close")} (Esc)
-                  </Button>
-                  <Button
-                    className={deleteProcess ? "button-loading" : ""}
-                    endIcon={deleteProcess && <LoopIcon />}
-                    size="small"
-                    onClick={handleDelete}
-                    variant="contained"
-                    color="secondary"
-                    startIcon={!deleteProcess && <DeleteIcon />}
-                  >
-                    {t("btn.delete")} (f10)
-                  </Button>
-                </CardActions>
-              </Card>
-            </Dialog>
-          </Grid>
-        </>
-      )}
     </>
   );
 };
